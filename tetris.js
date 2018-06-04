@@ -1,3 +1,5 @@
+//(function() {
+
 /*
 var socket = io.connect('http://www.jcreative.co.kr:1313');
 socket.on('chat', function (data) {
@@ -362,9 +364,9 @@ socket.on('chat', function (data) {
 
 		var sb = document.getElementById("special");
 
-		score.innerHTML = "<h3>SCORE="+GV_scoreTotal+"</h3>";	//점수갱신
+		score.innerHTML = "<span>SCORE="+GV_scoreTotal+"</span>";	//점수갱신
 
-		sb.innerHTML = "<h4>Special Block =" + special_block +"</h4>"; 
+		sb.innerHTML = "<span>Special Block =" + special_block +"</span>"; 
 
 		GV_timeID = setTimeout("runGame()", GV_level);		//내리고
 
@@ -1637,3 +1639,4 @@ socket.on('chat', function (data) {
 
 	}
 
+//})();

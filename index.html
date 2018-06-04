@@ -2,57 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Portpolio</title>
-	
-<link rel="stylesheet" type="text/css" href="./tetris.css">
-<script src="./tetris.js"></script>
+<title>YongHoon Jeon - Portpolio</title>
 </head>
 <body>
-<h2>Timeline</h2>
+<h2>Dev Timeline</h2>
 	<iframe src='https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?source=1cfiq9vbZB5r7dxz3oZCS6DgEBHjiADIgamKsH_MJfrI&font=Default&lang=ko&initial_zoom=2&height=650' width='100%' height='650' webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder='0'></iframe>                           
-	
-	<h4>테트리스 한판?</h4>
-	<div id="preview">
-		<table>
-			<tbody>
-				<tr><td id="score" class="score" colspan="3"></td></tr>
-				<tr><td id="special" class="special" colspan="3"></td></tr>
-			</tbody>
-		</table> 
-		<table id="preBlockArea">
-			<tbody>
-				<tr><td id="dis36" class="blockBody">	</td><td id="dis35" class="blockBody">	</td><td id="dis34" class="blockBody"></td></tr>
-				<tr><td id="dis26" class="blockBody">	</td><td id="dis25" class="blockBody">	</td><td id="dis24" class="blockBody"></td></tr>
-				<tr><td id="dis16" class="blockBody">	</td><td id="dis15" class="blockBody">	</td><td id="dis14" class="blockBody"></td></tr>
-				<tr><td id="dis6" class="blockBody">	</td><td id="dis5" class="blockBody">		</td><td id="dis4" class="blockBody"><br /></td></tr>
-			</tbody>
-		</table>
-		<table id="saveBlockArea">
-			<tbody>
-				<tr><td id="save36" class="blockBody">	</td><td id="save35" class="blockBody"></td>	<td id="save34" class="blockBody"></td></tr>
-				<tr><td id="save26" class="blockBody">	</td><td id="save25" class="blockBody"></td>	<td id="save24" class="blockBody"></td></tr>
-				<tr><td id="save16" class="blockBody">	</td><td id="save15" class="blockBody"></td>	<td id="save14" class="blockBody"></td></tr>
-				<tr><td id="save6" class="blockBody">		</td><td id="save5" class="blockBody"></td>	<td id="save4" class="blockBody"></td></tr>
-			</tbody>
-		</table>
-		<ul>
-			<li><span onclick="gameStart();" style="cursor:hand;" onmouseover="this.style.color='blue';" onmouseout="this.style.color='black';">start</span></li>
-			<li><span onclick="gamePause();" style="cursor: pointer; color: black; " onmouseover="this.style.color='red';" onmouseout="this.style.color='black';">pause</span></li>
-			<li><span onclick="reStart();" style="cursor:hand;" onmouseover="this.style.color='green';" onmouseout="this.style.color='black';">restart</span></li>
-			<li><span onclick="reSet();" style="cursor:hand;" onmouseover="this.style.color='green';" onmouseout="this.style.color='black';">reset</span></li>
-		
-			<li class="divide"></li>
-			
-			<li><span onclick="gameStartLev(1, '', 30, 25);">이등병 모드</span></li>
-			<li><span onclick="gameStartLev(2, 3, 20, 30);">일병 모드</span></li>
-			<li><span onclick="gameStartLev(3, 2, 20, 30);">상병 모드</span></li>
-			<li><span onclick="gameStartLev(4, 7, 10, 30);">병장 모드</span></li>
-			<li><span onclick="gameStartLev(5, 2, 3, 30);">간부 모드</span></li>
-		</ul>
-	</div>
-	<div id="mainview">
-		<table id="body" border="1" style="background-color:white;">
-		</table>
-	</div>
 </body>
 </html>
