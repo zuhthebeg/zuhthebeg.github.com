@@ -34,12 +34,11 @@
 }
 
 #mainview TABLE td{
-	width : 13pt;
-	height : 16pt;
+	width : 10pt;
+	height : 10pt;
 }
 #mainview{
     float: right;
-    margin-top: -98px;
 }
 display{
 	margin:0px;
