@@ -1,0 +1,65 @@
+@charset "UTF-8";
+
+#mainview td.blockBody{
+	background-color:white;
+	height:16pt;
+	width:16pt;
+	text-align:center;
+	font-size:12px;
+	border-width:1px;
+	border-style:solid;
+	border-color:white;
+	padding:3px;
+}
+
+#mainview td.score{
+	background-color:white;
+	height:16pt;
+	width:16pt;
+	text-align:center;
+	font-size:12px;
+	border-width:0px;
+	border-style:solid;
+	border-color:black;
+	padding:3px;
+}
+
+#mainview TABLE{
+	margin:0px;
+	border-width:0px;
+	border-style:solid;	
+	border-collapse:collapse;
+	font-size:12px;
+	empty-cells:show;
+}
+
+#mainview TABLE td{
+	width : 10pt;
+	height : 10pt;
+}
+#mainview{
+    float: right;
+}
+display{
+	margin:0px;
+	border-width:0px;
+	border-style:solid;
+	border-collapse:collapse;
+	font-size:12px;
+	empty-cells:show;	
+}
+#preview {	
+	float: right;
+    width: 300px;
+}	
+#preview #preBlockArea{
+	border : 2px;
+}
+#preview  TABLE td {
+    width: 13pt;
+    height: 16pt;
+}
+#preview #saveBlockArea{
+	border : 2px;
+}
+.divide {list-style: none;height:20px;}
