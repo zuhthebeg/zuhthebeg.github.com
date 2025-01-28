@@ -147,39 +147,68 @@
         // 보드 생성
         function generateBoard(size) {
             board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+            board.innerHTML = '';
+            tiles = [];
             
-            tiles = Array.from({length: size * size - 1}, (_, i) => {
+            // 타일 생성 및 배치
+            for(let i = 0; i < size * size; i++) {
                 const tile = document.createElement('div');
-                tile.className = 'tile';
-                tile.textContent = i + 1;
-                tile.dataset.value = i + 1;
-                tile.style.width = `calc(${100/currentLevel}% - 2px)`;
-                tile.style.height = `calc(${100/currentLevel}% - 2px)`;
-                return tile;
-            });
-            
-            tiles.push(createEmptyTile());
-            shuffleTiles();
-        }
-
-        function createEmptyTile() {
-            const empty = document.createElement('div');
-            empty.className = 'tile empty';
-            empty.style.width = `calc(${100/currentLevel}% - 2px)`;
-            empty.style.height = `calc(${100/currentLevel}% - 2px)`;
-            return empty;
-        }
-
-        // 타일 섞기 (Fisher-Yates 알고리즘)
-        async function shuffleTiles() {
-            let shuffled = [...tiles.filter(t => !t.classList?.contains('empty'))];
-            for(let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                tile.style.width = `calc(${100/size}% - 2px)`;
+                tile.style.height = `calc(${100/size}% - 2px)`;
+                
+                if(i === size * size - 1) {
+                    // 마지막 위치에 빈 칸 생성
+                    tile.className = 'tile empty';
+                } else {
+                    tile.className = 'tile';
+                    tile.textContent = i + 1;
+                    tile.dataset.value = i + 1;
+                }
+                
+                // 초기 위치 설정
+                const x = (i % size) * 100;
+                const y = Math.floor(i / size) * 100;
+                tile.style.transform = `translate(${x}%, ${y}%)`;
+                
+                board.appendChild(tile);
+                tiles.push(tile);
             }
-            shuffled.push(tiles.find(t => t.classList?.contains('empty')));
-            tiles = shuffled;
-            await updateBoardPositions(true);
+            
+            // 타일 섞기 전에 잠시 대기
+            setTimeout(() => {
+                shuffleTiles();
+            }, 100);
+        }
+
+        async function shuffleTiles() {
+            const size = currentLevel;
+            const lastIndex = size * size - 1;
+            
+            // 빈 칸을 제외한 타일들의 인덱스만 섞기
+            let indices = Array.from({length: lastIndex}, (_, i) => i);
+            for(let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [indices[i], indices[j]] = [indices[j], indices[i]];
+            }
+            
+            // 섞인 인덱스에 따라 타일 재배치
+            const newTiles = [];
+            for(let i = 0; i < lastIndex; i++) {
+                const tile = tiles[indices[i]];
+                const x = (i % size) * 100;
+                const y = Math.floor(i / size) * 100;
+                tile.style.transform = `translate(${x}%, ${y}%)`;
+                newTiles.push(tile);
+            }
+            
+            // 빈 칸은 항상 마지막 위치에
+            const emptyTile = tiles[lastIndex];
+            const x = (lastIndex % size) * 100;
+            const y = Math.floor(lastIndex / size) * 100;
+            emptyTile.style.transform = `translate(${x}%, ${y}%)`;
+            newTiles.push(emptyTile);
+            
+            tiles = newTiles;
         }
 
         // 타일 이동 처리
@@ -197,13 +226,25 @@
             if(movePath.length === 0) return;
 
             isAnimating = true;
-            for(const path of movePath) {
-                await performSlideAnimation(path.from, path.to);
-                moves++;
-                document.getElementById('moves').textContent = moves;
-                updateTileStates();
-                checkWin();
+            
+            // 타일 배열 업데이트
+            for(const {from, to} of movePath) {
+                [tiles[from], tiles[to]] = [tiles[to], tiles[from]];
             }
+            
+            // 시각적 위치 업데이트
+            tiles.forEach((tile, index) => {
+                const x = (index % currentLevel) * 100;
+                const y = Math.floor(index / currentLevel) * 100;
+                tile.style.transform = `translate(${x}%, ${y}%)`;
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            moves++;
+            document.getElementById('moves').textContent = moves;
+            updateTileStates();
+            checkWin();
             isAnimating = false;
         }
 
@@ -232,62 +273,62 @@
         // 이동 경로 생성
         function getMovePath(clickedIndex, emptyIndex, direction) {
             const path = [];
-            let current = clickedIndex;
             const step = direction === 'horizontal' 
-                ? (clickedIndex > emptyIndex ? -1 : 1)
-                : (clickedIndex > emptyIndex ? -currentLevel : currentLevel);
-
-            while(current !== emptyIndex) {
-                const next = current + step;
-                if(tiles[next]?.classList.contains('empty')) {
-                    path.push({from: current, to: next});
-                    break;
-                }
-                if(!tiles[next]) break;
-                path.push({from: current, to: next});
-                current = next;
+                ? (clickedIndex > emptyIndex ? 1 : -1)
+                : (clickedIndex > emptyIndex ? currentLevel : -currentLevel);
+            
+            // 시작 위치부터 클릭한 타일까지의 모든 타일을 이동 경로에 추가
+            for (let current = emptyIndex; 
+                 direction === 'horizontal' 
+                    ? (step > 0 ? current < clickedIndex : current > clickedIndex)
+                    : (step > 0 ? current < clickedIndex : current > clickedIndex); 
+                 current += step) {
+                path.push({
+                    from: current + step,
+                    to: current
+                });
             }
+            
             return path;
         }
 
         // 애니메이션 수행
-        async function performSlideAnimation(from, to) {
+        function performSlideAnimation(movePath) {
             return new Promise(resolve => {
-                const temp = tiles[from];
-                tiles[from] = tiles[to];
-                tiles[to] = temp;
-
-                const fromX = (from % currentLevel) * 100;
-                const fromY = Math.floor(from / currentLevel) * 100;
-                const toX = (to % currentLevel) * 100;
-                const toY = Math.floor(to / currentLevel) * 100;
-
-                tiles[to].style.transform = `translate(${toX}%, ${toY}%)`;
+                // 타일 배열 업데이트
+                for(const {from, to} of movePath) {
+                    [tiles[from], tiles[to]] = [tiles[to], tiles[from]];
+                }
                 
-                tiles[from].style.transition = 'transform 0.2s ease';
-                tiles[from].style.transform = `translate(${fromX}%, ${fromY}%)`;
+                // 시각적 위치 업데이트
+                tiles.forEach((tile, index) => {
+                    const x = (index % currentLevel) * 100;
+                    const y = Math.floor(index / currentLevel) * 100;
+                    tile.style.transform = `translate(${x}%, ${y}%)`;
+                });
 
-                setTimeout(() => {
-                    tiles[from].style.transition = '';
-                    resolve();
-                }, 200);
+                setTimeout(resolve, 200);
             });
         }
 
         // 보드 위치 업데이트
-        async function updateBoardPositions(shuffle = false) {
+        function updateBoardPositions(shuffle = false) {
             tiles.forEach((tile, index) => {
-                if(!tile) return;
                 const x = (index % currentLevel) * 100;
                 const y = Math.floor(index / currentLevel) * 100;
                 if(shuffle) {
                     tile.style.transition = 'none';
-                    tile.style.transform = `translate(${x}%, ${y}%)`;
-                    setTimeout(() => tile.style.transition = '', 10);
-                } else {
-                    tile.style.transform = `translate(${x}%, ${y}%)`;
                 }
+                tile.style.transform = `translate(${x}%, ${y}%)`;
             });
+            
+            if(shuffle) {
+                setTimeout(() => {
+                    tiles.forEach(tile => {
+                        tile.style.transition = 'transform 0.2s ease';
+                    });
+                }, 10);
+            }
         }
 
         // 타일 상태 업데이트
