@@ -2,91 +2,148 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>숫자 퍼즐 게임</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모던 숫자 퍼즐</title>
     <style>
+        :root {
+            --tile-size: min(20vw, 80px);
+            --main-color: #2c3e50;
+            --accent-color: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            touch-action: manipulation;
         }
 
         #game-container {
-            margin: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 2vh auto;
+            padding: 2vh;
+            width: 95%;
+            max-width: 400px;
+        }
+
+        #stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2vh;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: clamp(14px, 3vw, 16px);
         }
 
         #puzzle-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-            background: #333;
-            padding: 5px;
-            border-radius: 5px;
+            gap: 0.5vmin;
+            background: var(--main-color);
+            padding: 0.5vmin;
+            border-radius: 8px;
+            touch-action: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .tile {
-            width: 80px;
-            height: 80px;
-            background: #fff;
+            position: relative;
+            width: var(--tile-size);
+            height: var(--tile-size);
+            background: white;
+            border-radius: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: calc(var(--tile-size) * 0.4);
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
-            border-radius: 5px;
+            user-select: none;
+            transition: 
+                transform 0.2s ease-in-out,
+                background-color 0.3s ease;
+            color: var(--main-color);
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
         }
 
-        .tile:hover {
-            background: #e0e0e0;
+        .tile::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: opacity 0.2s;
+        }
+
+        .tile:hover::after {
+            opacity: 0.8;
+        }
+
+        .tile.moving {
+            transform: scale(0.95);
+            z-index: 1;
         }
 
         .empty {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
             cursor: default;
         }
 
-        #controls {
-            margin-top: 20px;
-            text-align: center;
-        }
-
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background: #4CAF50;
+            padding: 12px 24px;
+            font-size: clamp(14px, 4vw, 16px);
+            background: var(--accent-color);
             color: white;
             border: none;
-            border-radius: 5px;
-            transition: background 0.3s;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 
+                transform 0.2s,
+                box-shadow 0.2s;
+            margin-top: 2vh;
+            width: 100%;
+            max-width: 200px;
         }
 
-        button:hover {
-            background: #45a049;
+        button:active {
+            transform: scale(0.96);
         }
 
-        #stats {
-            margin: 10px 0;
-            font-size: 18px;
+        @media (max-width: 480px) {
+            .tile {
+                font-size: calc(var(--tile-size) * 0.35);
+            }
         }
+
+        /* 색상 변동 효과 */
+        .tile:nth-child(4n+1) { background: #ffeaa7; }
+        .tile:nth-child(4n+2) { background: #fab1a0; }
+        .tile:nth-child(4n+3) { background: #a29bfe; }
+        .tile:nth-child(4n+4) { background: #55efc4; }
     </style>
 </head>
 <body>
     <div id="game-container">
         <div id="stats">
-            <span>시간: <span id="timer">0</span>초</span>
-            <span style="margin-left: 20px;">이동 횟수: <span id="moves">0</span></span>
+            <div>⏱ <span id="timer">0</span>초</div>
+            <div>🚶♀️ <span id="moves">0</span>회</div>
         </div>
         <div id="puzzle-board"></div>
-        <div id="controls">
-            <button onclick="shuffleTiles()">새 게임</button>
-        </div>
+        <button onclick="shuffleTiles()">새 게임</button>
     </div>
 
     <script>
@@ -96,50 +153,53 @@
         const board = document.getElementById('puzzle-board');
         const tiles = [];
 
-        // 게임 초기화
         function initGame() {
-            // 타일 생성
             for(let i = 1; i <= 15; i++) {
                 const tile = document.createElement('div');
                 tile.className = 'tile';
                 tile.textContent = i;
-                tile.addEventListener('click', () => moveTile(i));
+                tile.addEventListener('click', handleTileClick);
+                tile.addEventListener('touchstart', handleTileClick, {passive: true});
                 tiles.push(tile);
             }
-            tiles.push(null); // 빈 공간
-
-            // 보드에 타일 추가
+            tiles.push(null);
             shuffleTiles();
         }
 
-        // 타일 섞기
+        function handleTileClick(e) {
+            e.preventDefault();
+            const number = parseInt(e.target.textContent);
+            if(number) moveTile(number);
+        }
+
         function shuffleTiles() {
             resetGame();
-            let shuffledTiles = [...tiles].sort(() => Math.random() - 0.5);
-            
-            // 빈 공간 위치 조정
-            const emptyIndex = shuffledTiles.indexOf(null);
-            shuffledTiles.splice(emptyIndex, 1);
+            let shuffledTiles = [...tiles.slice(0, 15)].sort(() => Math.random() - 0.5);
             shuffledTiles.push(null);
-            
             updateBoard(shuffledTiles);
         }
 
-        // 타일 이동
         function moveTile(number) {
-            const currentIndex = tiles.findIndex(tile => tile?.textContent == number);
+            const currentIndex = tiles.findIndex(t => t?.textContent == number);
             const emptyIndex = tiles.indexOf(null);
             
             if(isAdjacent(currentIndex, emptyIndex)) {
+                animateMovement(currentIndex, emptyIndex);
                 [tiles[currentIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[currentIndex]];
                 moves++;
                 document.getElementById('moves').textContent = moves;
-                updateBoard(tiles);
                 checkWin();
             }
         }
 
-        // 인접 여부 확인
+        function animateMovement(from, to) {
+            tiles[from].classList.add('moving');
+            setTimeout(() => {
+                updateBoard(tiles);
+                tiles[from].classList.remove('moving');
+            }, 200);
+        }
+
         function isAdjacent(a, b) {
             const rowA = Math.floor(a / 4);
             const colA = a % 4;
@@ -148,13 +208,10 @@
             return Math.abs(rowA - rowB) + Math.abs(colA - colB) === 1;
         }
 
-        // 보드 업데이트
         function updateBoard(tileArray) {
             board.innerHTML = '';
             tileArray.forEach(tile => {
                 if(tile) {
-                    tile.className = 'tile';
-                    if(!tile.textContent) tile.className += ' empty';
                     board.appendChild(tile);
                 } else {
                     const empty = document.createElement('div');
@@ -164,17 +221,16 @@
             });
         }
 
-        // 승리 확인
         function checkWin() {
-            const currentOrder = tiles.map(tile => tile?.textContent).join(',');
-            const winCondition = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,';
-            if(currentOrder === winCondition) {
+            const currentOrder = tiles.map(t => t?.textContent).join(',');
+            if(currentOrder === '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,') {
                 clearInterval(timerInterval);
-                alert(`축하합니다! ${timer}초 걸렸고 ${moves}번 움직였습니다!`);
+                setTimeout(() => {
+                    alert(`🎉 성공!\n시간: ${timer}초\n이동 횟수: ${moves}회`);
+                }, 300);
             }
         }
 
-        // 게임 리셋
         function resetGame() {
             moves = 0;
             timer = 0;
@@ -187,7 +243,6 @@
             }, 1000);
         }
 
-        // 게임 시작
         initGame();
     </script>
 </body>
