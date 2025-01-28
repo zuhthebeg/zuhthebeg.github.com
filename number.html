@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>다단계 숫자 퍼즐</title>
+    <title>개선된 숫자 퍼즐</title>
     <style>
         :root {
-            --tile-size: min(18vw, 70px);
-            --main-color: #2c3e50;
-            --correct-color: #2ecc71;
-            --empty-color: #bdc3c7;
+            --main-color: #34495e;
+            --correct-color: #27ae60;
+            --empty-color: #7f8c8d;
+            --text-color: #ecf0f1;
         }
 
         * {
@@ -23,119 +23,107 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Segoe UI', sans-serif;
-            background: #f5f6fa;
+            font-family: 'Malgun Gothic', sans-serif;
+            background: #2c3e50;
             touch-action: manipulation;
+            padding: 10px;
         }
 
         #game-container {
-            margin: 2vh auto;
-            padding: 2vh;
-            width: 95%;
+            width: 100%;
             max-width: 500px;
+            margin: 10px auto;
         }
 
-        #level-selector {
+        #controls {
             display: flex;
             gap: 10px;
-            margin-bottom: 2vh;
-            justify-content: center;
+            margin-bottom: 15px;
+            align-items: center;
         }
 
-        .level-btn {
-            padding: 8px 16px;
+        select, button {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
             background: #3498db;
             color: white;
-            border: none;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s;
+            flex: 1;
         }
 
-        .level-btn.active {
-            background: #2980b9;
+        button {
+            max-width: 100px;
         }
 
         #stats {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 2vh;
+            background: rgba(255,255,255,0.1);
             padding: 10px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            margin-bottom: 15px;
+            color: var(--text-color);
         }
 
         #puzzle-board {
             display: grid;
             background: var(--main-color);
-            padding: 0.5vmin;
-            border-radius: 8px;
+            gap: 2px;
+            border-radius: 6px;
+            overflow: hidden;
             touch-action: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin: 0 auto;
+            width: 100%;
+            aspect-ratio: 1;
         }
 
         .tile {
-            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: white;
-            font-size: calc(var(--tile-size) * 0.35);
+            background: #ecf0f1;
+            font-size: 1.5rem;
             font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-            transition: 
-                transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                background-color 0.3s;
             color: var(--main-color);
-            border-radius: 4px;
+            transition: 
+                transform 0.3s ease, 
+                background 0.3s ease;
+            user-select: none;
         }
 
         .tile.correct {
             background: var(--correct-color);
-            color: white;
+            color: var(--text-color);
         }
 
         .tile.empty {
             background: var(--empty-color);
             cursor: default;
-            visibility: visible !important;
         }
 
-        button {
-            padding: 12px 24px;
-            font-size: 14px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 2vh;
-            width: 100%;
-            max-width: 200px;
-            transition: transform 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.96);
+        @media (max-width: 480px) {
+            .tile {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div id="game-container">
-        <div id="level-selector">
-            <button class="level-btn active" data-size="3">3x3</button>
-            <button class="level-btn" data-size="4">4x4</button>
-            <button class="level-btn" data-size="5">5x5</button>
+        <div id="controls">
+            <select id="level-select">
+                <option value="3">3x3</option>
+                <option value="4" selected>4x4</option>
+                <option value="5">5x5</option>
+            </select>
+            <button onclick="startNewGame()">새게임</button>
         </div>
         <div id="stats">
             <div>⏱ <span id="timer">0</span>초</div>
-            <div>🚶♀️ <span id="moves">0</span>회</div>
+            <div>🔢 <span id="moves">0</span>회</div>
         </div>
         <div id="puzzle-board"></div>
-        <button onclick="startNewGame()">새 게임</button>
     </div>
 
     <script>
@@ -151,21 +139,22 @@
             currentLevel = size;
             resetGame();
             generateBoard(size);
-            addLevelEventListeners();
+            addEventListeners();
         }
 
         // 보드 생성
         function generateBoard(size) {
             board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            board.style.gap = '0.5vmin';
             
             tiles = Array.from({length: size * size - 1}, (_, i) => {
                 const tile = document.createElement('div');
                 tile.className = 'tile';
                 tile.textContent = i + 1;
-                tile.style.width = `calc(${100/size}% - 0.5vmin)`;
-                tile.style.height = `calc(${100/size}% - 0.5vmin)`;
                 tile.addEventListener('click', () => moveTile(i + 1));
+                tile.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    moveTile(i + 1);
+                }, {passive: false});
                 return tile;
             });
             
@@ -173,12 +162,16 @@
             shuffleTiles();
         }
 
-        // 타일 섞기
+        // 타일 섞기 (Fisher-Yates 알고리즘)
         function shuffleTiles() {
-            resetGame();
-            let shuffledTiles = [...tiles.slice(0, -1)].sort(() => Math.random() - 0.5);
-            shuffledTiles.push(null);
-            updateBoard(shuffledTiles);
+            let shuffled = [...tiles.filter(t => t)];
+            for(let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            shuffled.push(null);
+            tiles = shuffled;
+            updateBoard();
         }
 
         // 타일 이동
@@ -187,7 +180,7 @@
             const emptyIndex = tiles.indexOf(null);
             
             if(isAdjacent(currentIndex, emptyIndex)) {
-                animateTileMovement(currentIndex, emptyIndex);
+                animateMovement(currentIndex, emptyIndex);
                 [tiles[currentIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[currentIndex]];
                 moves++;
                 document.getElementById('moves').textContent = moves;
@@ -196,20 +189,17 @@
             }
         }
 
-        // 애니메이션 처리
-        function animateTileMovement(from, to) {
-            const tile = tiles[from];
-            tile.style.transform = `translate(${(to%currentLevel - from%currentLevel)*100}%, ${(Math.floor(to/currentLevel) - Math.floor(from/currentLevel))*100}%)`;
-            
+        // 이동 애니메이션
+        function animateMovement(from, to) {
+            tiles[from].style.transform = 'scale(0.9)';
             setTimeout(() => {
-                tile.style.transform = 'none';
-                updateBoard(tiles);
+                tiles[from].style.transform = 'none';
+                updateBoard();
             }, 300);
         }
 
         // 인접 여부 확인
         function isAdjacent(a, b) {
-            if(a === -1 || b === -1) return false;
             const rowA = Math.floor(a / currentLevel);
             const colA = a % currentLevel;
             const rowB = Math.floor(b / currentLevel);
@@ -218,42 +208,41 @@
         }
 
         // 보드 업데이트
-        function updateBoard(tileArray) {
+        function updateBoard() {
             board.innerHTML = '';
-            tileArray.forEach(tile => {
+            tiles.forEach(tile => {
                 if(tile) {
                     board.appendChild(tile);
                 } else {
                     const empty = document.createElement('div');
                     empty.className = 'tile empty';
-                    empty.style.width = `calc(${100/currentLevel}% - 0.5vmin)`;
-                    empty.style.height = `calc(${100/currentLevel}% - 0.5vmin)`;
                     board.appendChild(empty);
                 }
             });
         }
 
-        // 정답 상태 확인
+        // 타일 상태 업데이트
         function updateTileStates() {
             tiles.forEach((tile, index) => {
                 if(tile) {
-                    const shouldBe = parseInt(tile.textContent);
-                    tile.classList.toggle('correct', index === shouldBe - 1);
+                    const correctPos = parseInt(tile.textContent) - 1 === index;
+                    tile.classList.toggle('correct', correctPos);
                 }
             });
         }
 
         // 승리 조건 확인
         function checkWin() {
-            const winCondition = tiles.slice(0, -1).every((tile, index) => 
-                tile?.textContent == index + 1
+            const isWin = tiles.every((tile, index) => 
+                index === tiles.length - 1 || 
+                (tile && parseInt(tile.textContent) === index + 1)
             );
             
-            if(winCondition) {
+            if(isWin) {
                 clearInterval(timerInterval);
                 setTimeout(() => {
-                    alert(`🎉 레벨 ${currentLevel}x${currentLevel} 클리어!\n시간: ${timer}초\n이동 횟수: ${moves}회`);
-                }, 300);
+                    alert(`🎉 성공! ${currentLevel}x${currentLevel}\n시간: ${timer}초\n이동: ${moves}회`);
+                }, 100);
             }
         }
 
@@ -262,23 +251,18 @@
             moves = 0;
             timer = 0;
             clearInterval(timerInterval);
-            document.getElementById('moves').textContent = 0;
-            document.getElementById('timer').textContent = 0;
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('timer').textContent = '0';
             timerInterval = setInterval(() => {
                 timer++;
                 document.getElementById('timer').textContent = timer;
             }, 1000);
         }
 
-        // 레벨 선택 이벤트
-        function addLevelEventListeners() {
-            document.querySelectorAll('.level-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.level-btn').forEach(b => 
-                        b.classList.remove('active'));
-                    btn.classList.add('active');
-                    initGame(parseInt(btn.dataset.size));
-                });
+        // 이벤트 리스너
+        function addEventListeners() {
+            document.getElementById('level-select').addEventListener('change', (e) => {
+                initGame(parseInt(e.target.value));
             });
         }
 
@@ -288,7 +272,7 @@
         }
 
         // 초기 실행
-        initGame(3);
+        initGame(4);
     </script>
 </body>
 </html>
