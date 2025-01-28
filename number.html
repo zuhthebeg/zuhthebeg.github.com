@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>개선된 숫자 퍼즐</title>
+    <title>슬라이드 퍼즐 게임</title>
     <style>
         :root {
-            --main-color: #34495e;
+            --main-color: #2c3e50;
             --correct-color: #27ae60;
             --empty-color: #7f8c8d;
             --text-color: #ecf0f1;
@@ -76,6 +76,7 @@
             touch-action: none;
             width: 100%;
             aspect-ratio: 1;
+            position: relative;
         }
 
         .tile {
@@ -86,10 +87,10 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--main-color);
-            transition: 
-                transform 0.3s ease, 
-                background 0.3s ease;
+            transition: transform 0.3s ease;
             user-select: none;
+            position: absolute;
+            will-change: transform;
         }
 
         .tile.correct {
@@ -133,6 +134,7 @@
         let timerInterval;
         let tiles = [];
         const board = document.getElementById('puzzle-board');
+        let isAnimating = false;
 
         // 게임 초기화
         function initGame(size) {
@@ -150,73 +152,140 @@
                 const tile = document.createElement('div');
                 tile.className = 'tile';
                 tile.textContent = i + 1;
-                tile.addEventListener('click', () => moveTile(i + 1));
-                tile.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    moveTile(i + 1);
-                }, {passive: false});
+                tile.dataset.value = i + 1;
+                tile.style.width = `calc(${100/currentLevel}% - 2px)`;
+                tile.style.height = `calc(${100/currentLevel}% - 2px)`;
                 return tile;
             });
             
-            tiles.push(null); // 빈 타일
+            tiles.push(createEmptyTile());
             shuffleTiles();
         }
 
+        function createEmptyTile() {
+            const empty = document.createElement('div');
+            empty.className = 'tile empty';
+            empty.style.width = `calc(${100/currentLevel}% - 2px)`;
+            empty.style.height = `calc(${100/currentLevel}% - 2px)`;
+            return empty;
+        }
+
         // 타일 섞기 (Fisher-Yates 알고리즘)
-        function shuffleTiles() {
-            let shuffled = [...tiles.filter(t => t)];
+        async function shuffleTiles() {
+            let shuffled = [...tiles.filter(t => !t.classList?.contains('empty'))];
             for(let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
-            shuffled.push(null);
+            shuffled.push(tiles.find(t => t.classList?.contains('empty')));
             tiles = shuffled;
-            updateBoard();
+            await updateBoardPositions(true);
         }
 
-        // 타일 이동
-        function moveTile(number) {
-            const currentIndex = tiles.findIndex(t => t?.textContent == number);
-            const emptyIndex = tiles.indexOf(null);
+        // 타일 이동 처리
+        async function handleMove(clickedTile) {
+            if(isAnimating) return;
             
-            if(isAdjacent(currentIndex, emptyIndex)) {
-                animateMovement(currentIndex, emptyIndex);
-                [tiles[currentIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[currentIndex]];
+            const emptyTile = tiles.find(t => t.classList.contains('empty'));
+            const clickedIndex = tiles.indexOf(clickedTile);
+            const emptyIndex = tiles.indexOf(emptyTile);
+
+            const {direction, distance} = getSlideDirection(clickedIndex, emptyIndex);
+            if(!direction) return;
+
+            const movePath = getMovePath(clickedIndex, emptyIndex, direction);
+            if(movePath.length === 0) return;
+
+            isAnimating = true;
+            for(const path of movePath) {
+                await performSlideAnimation(path.from, path.to);
                 moves++;
                 document.getElementById('moves').textContent = moves;
-                checkWin();
                 updateTileStates();
+                checkWin();
             }
+            isAnimating = false;
         }
 
-        // 이동 애니메이션
-        function animateMovement(from, to) {
-            tiles[from].style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                tiles[from].style.transform = 'none';
-                updateBoard();
-            }, 300);
+        // 슬라이드 방향 및 거리 계산
+        function getSlideDirection(clickedIndex, emptyIndex) {
+            const clickedRow = Math.floor(clickedIndex / currentLevel);
+            const clickedCol = clickedIndex % currentLevel;
+            const emptyRow = Math.floor(emptyIndex / currentLevel);
+            const emptyCol = emptyIndex % currentLevel;
+
+            if(clickedRow === emptyRow) {
+                return {
+                    direction: 'horizontal',
+                    distance: clickedCol - emptyCol
+                };
+            }
+            if(clickedCol === emptyCol) {
+                return {
+                    direction: 'vertical',
+                    distance: clickedRow - emptyRow
+                };
+            }
+            return {direction: null};
         }
 
-        // 인접 여부 확인
-        function isAdjacent(a, b) {
-            const rowA = Math.floor(a / currentLevel);
-            const colA = a % currentLevel;
-            const rowB = Math.floor(b / currentLevel);
-            const colB = b % currentLevel;
-            return Math.abs(rowA - rowB) + Math.abs(colA - colB) === 1;
+        // 이동 경로 생성
+        function getMovePath(clickedIndex, emptyIndex, direction) {
+            const path = [];
+            let current = clickedIndex;
+            const step = direction === 'horizontal' 
+                ? (clickedIndex > emptyIndex ? -1 : 1)
+                : (clickedIndex > emptyIndex ? -currentLevel : currentLevel);
+
+            while(current !== emptyIndex) {
+                const next = current + step;
+                if(tiles[next]?.classList.contains('empty')) {
+                    path.push({from: current, to: next});
+                    break;
+                }
+                if(!tiles[next]) break;
+                path.push({from: current, to: next});
+                current = next;
+            }
+            return path;
         }
 
-        // 보드 업데이트
-        function updateBoard() {
-            board.innerHTML = '';
-            tiles.forEach(tile => {
-                if(tile) {
-                    board.appendChild(tile);
+        // 애니메이션 수행
+        async function performSlideAnimation(from, to) {
+            return new Promise(resolve => {
+                const temp = tiles[from];
+                tiles[from] = tiles[to];
+                tiles[to] = temp;
+
+                const fromX = (from % currentLevel) * 100;
+                const fromY = Math.floor(from / currentLevel) * 100;
+                const toX = (to % currentLevel) * 100;
+                const toY = Math.floor(to / currentLevel) * 100;
+
+                tiles[to].style.transform = `translate(${toX}%, ${toY}%)`;
+                
+                tiles[from].style.transition = 'transform 0.2s ease';
+                tiles[from].style.transform = `translate(${fromX}%, ${fromY}%)`;
+
+                setTimeout(() => {
+                    tiles[from].style.transition = '';
+                    resolve();
+                }, 200);
+            });
+        }
+
+        // 보드 위치 업데이트
+        async function updateBoardPositions(shuffle = false) {
+            tiles.forEach((tile, index) => {
+                if(!tile) return;
+                const x = (index % currentLevel) * 100;
+                const y = Math.floor(index / currentLevel) * 100;
+                if(shuffle) {
+                    tile.style.transition = 'none';
+                    tile.style.transform = `translate(${x}%, ${y}%)`;
+                    setTimeout(() => tile.style.transition = '', 10);
                 } else {
-                    const empty = document.createElement('div');
-                    empty.className = 'tile empty';
-                    board.appendChild(empty);
+                    tile.style.transform = `translate(${x}%, ${y}%)`;
                 }
             });
         }
@@ -224,10 +293,9 @@
         // 타일 상태 업데이트
         function updateTileStates() {
             tiles.forEach((tile, index) => {
-                if(tile) {
-                    const correctPos = parseInt(tile.textContent) - 1 === index;
-                    tile.classList.toggle('correct', correctPos);
-                }
+                if(tile.classList.contains('empty')) return;
+                const correctPos = parseInt(tile.dataset.value) === index + 1;
+                tile.classList.toggle('correct', correctPos);
             });
         }
 
@@ -235,7 +303,7 @@
         function checkWin() {
             const isWin = tiles.every((tile, index) => 
                 index === tiles.length - 1 || 
-                (tile && parseInt(tile.textContent) === index + 1)
+                (tile && parseInt(tile.dataset.value) === index + 1)
             );
             
             if(isWin) {
@@ -263,6 +331,39 @@
         function addEventListeners() {
             document.getElementById('level-select').addEventListener('change', (e) => {
                 initGame(parseInt(e.target.value));
+            });
+
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            // 터치 이벤트 처리
+            board.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                e.preventDefault();
+            }, {passive: false});
+
+            board.addEventListener('touchend', e => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                const dx = touchEndX - touchStartX;
+                const dy = touchEndY - touchStartY;
+
+                if(Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+                    const target = document.elementFromPoint(touchEndX, touchEndY);
+                    if(target?.classList.contains('tile') && !target.classList.contains('empty')) {
+                        handleMove(target);
+                    }
+                }
+                e.preventDefault();
+            }, {passive: false});
+
+            // 마우스 이벤트 처리
+            board.addEventListener('click', e => {
+                const target = e.target;
+                if(target.classList.contains('tile') && !target.classList.contains('empty')) {
+                    handleMove(target);
+                }
             });
         }
 
