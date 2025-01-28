@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>모던 숫자 퍼즐</title>
+    <title>다단계 숫자 퍼즐</title>
     <style>
         :root {
-            --tile-size: min(20vw, 80px);
+            --tile-size: min(18vw, 70px);
             --main-color: #2c3e50;
-            --accent-color: #3498db;
+            --correct-color: #2ecc71;
+            --empty-color: #bdc3c7;
         }
 
         * {
@@ -22,8 +23,8 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f6fa;
             touch-action: manipulation;
         }
 
@@ -31,7 +32,28 @@
             margin: 2vh auto;
             padding: 2vh;
             width: 95%;
-            max-width: 400px;
+            max-width: 500px;
+        }
+
+        #level-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2vh;
+            justify-content: center;
+        }
+
+        .level-btn {
+            padding: 8px 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .level-btn.active {
+            background: #2980b9;
         }
 
         #stats {
@@ -39,175 +61,163 @@
             justify-content: space-between;
             margin-bottom: 2vh;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            font-size: clamp(14px, 3vw, 16px);
         }
 
         #puzzle-board {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5vmin;
             background: var(--main-color);
             padding: 0.5vmin;
             border-radius: 8px;
             touch-action: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 0 auto;
         }
 
         .tile {
             position: relative;
-            width: var(--tile-size);
-            height: var(--tile-size);
-            background: white;
-            border-radius: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: calc(var(--tile-size) * 0.4);
+            background: white;
+            font-size: calc(var(--tile-size) * 0.35);
             font-weight: bold;
             cursor: pointer;
             user-select: none;
             transition: 
-                transform 0.2s ease-in-out,
-                background-color 0.3s ease;
+                transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background-color 0.3s;
             color: var(--main-color);
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 4px;
         }
 
-        .tile::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: opacity 0.2s;
+        .tile.correct {
+            background: var(--correct-color);
+            color: white;
         }
 
-        .tile:hover::after {
-            opacity: 0.8;
-        }
-
-        .tile.moving {
-            transform: scale(0.95);
-            z-index: 1;
-        }
-
-        .empty {
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: none;
+        .tile.empty {
+            background: var(--empty-color);
             cursor: default;
+            visibility: visible !important;
         }
 
         button {
             padding: 12px 24px;
-            font-size: clamp(14px, 4vw, 16px);
-            background: var(--accent-color);
+            font-size: 14px;
+            background: #3498db;
             color: white;
             border: none;
-            border-radius: 25px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: 
-                transform 0.2s,
-                box-shadow 0.2s;
             margin-top: 2vh;
             width: 100%;
             max-width: 200px;
+            transition: transform 0.2s;
         }
 
         button:active {
             transform: scale(0.96);
         }
-
-        @media (max-width: 480px) {
-            .tile {
-                font-size: calc(var(--tile-size) * 0.35);
-            }
-        }
-
-        /* 색상 변동 효과 */
-        .tile:nth-child(4n+1) { background: #ffeaa7; }
-        .tile:nth-child(4n+2) { background: #fab1a0; }
-        .tile:nth-child(4n+3) { background: #a29bfe; }
-        .tile:nth-child(4n+4) { background: #55efc4; }
     </style>
 </head>
 <body>
     <div id="game-container">
+        <div id="level-selector">
+            <button class="level-btn active" data-size="3">3x3</button>
+            <button class="level-btn" data-size="4">4x4</button>
+            <button class="level-btn" data-size="5">5x5</button>
+        </div>
         <div id="stats">
             <div>⏱ <span id="timer">0</span>초</div>
             <div>🚶♀️ <span id="moves">0</span>회</div>
         </div>
         <div id="puzzle-board"></div>
-        <button onclick="shuffleTiles()">새 게임</button>
+        <button onclick="startNewGame()">새 게임</button>
     </div>
 
     <script>
+        let currentLevel = 4;
         let moves = 0;
         let timer = 0;
         let timerInterval;
+        let tiles = [];
         const board = document.getElementById('puzzle-board');
-        const tiles = [];
 
-        function initGame() {
-            for(let i = 1; i <= 15; i++) {
+        // 게임 초기화
+        function initGame(size) {
+            currentLevel = size;
+            resetGame();
+            generateBoard(size);
+            addLevelEventListeners();
+        }
+
+        // 보드 생성
+        function generateBoard(size) {
+            board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+            board.style.gap = '0.5vmin';
+            
+            tiles = Array.from({length: size * size - 1}, (_, i) => {
                 const tile = document.createElement('div');
                 tile.className = 'tile';
-                tile.textContent = i;
-                tile.addEventListener('click', handleTileClick);
-                tile.addEventListener('touchstart', handleTileClick, {passive: true});
-                tiles.push(tile);
-            }
-            tiles.push(null);
+                tile.textContent = i + 1;
+                tile.style.width = `calc(${100/size}% - 0.5vmin)`;
+                tile.style.height = `calc(${100/size}% - 0.5vmin)`;
+                tile.addEventListener('click', () => moveTile(i + 1));
+                return tile;
+            });
+            
+            tiles.push(null); // 빈 타일
             shuffleTiles();
         }
 
-        function handleTileClick(e) {
-            e.preventDefault();
-            const number = parseInt(e.target.textContent);
-            if(number) moveTile(number);
-        }
-
+        // 타일 섞기
         function shuffleTiles() {
             resetGame();
-            let shuffledTiles = [...tiles.slice(0, 15)].sort(() => Math.random() - 0.5);
+            let shuffledTiles = [...tiles.slice(0, -1)].sort(() => Math.random() - 0.5);
             shuffledTiles.push(null);
             updateBoard(shuffledTiles);
         }
 
+        // 타일 이동
         function moveTile(number) {
             const currentIndex = tiles.findIndex(t => t?.textContent == number);
             const emptyIndex = tiles.indexOf(null);
             
             if(isAdjacent(currentIndex, emptyIndex)) {
-                animateMovement(currentIndex, emptyIndex);
+                animateTileMovement(currentIndex, emptyIndex);
                 [tiles[currentIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[currentIndex]];
                 moves++;
                 document.getElementById('moves').textContent = moves;
                 checkWin();
+                updateTileStates();
             }
         }
 
-        function animateMovement(from, to) {
-            tiles[from].classList.add('moving');
+        // 애니메이션 처리
+        function animateTileMovement(from, to) {
+            const tile = tiles[from];
+            tile.style.transform = `translate(${(to%currentLevel - from%currentLevel)*100}%, ${(Math.floor(to/currentLevel) - Math.floor(from/currentLevel))*100}%)`;
+            
             setTimeout(() => {
+                tile.style.transform = 'none';
                 updateBoard(tiles);
-                tiles[from].classList.remove('moving');
-            }, 200);
+            }, 300);
         }
 
+        // 인접 여부 확인
         function isAdjacent(a, b) {
-            const rowA = Math.floor(a / 4);
-            const colA = a % 4;
-            const rowB = Math.floor(b / 4);
-            const colB = b % 4;
+            if(a === -1 || b === -1) return false;
+            const rowA = Math.floor(a / currentLevel);
+            const colA = a % currentLevel;
+            const rowB = Math.floor(b / currentLevel);
+            const colB = b % currentLevel;
             return Math.abs(rowA - rowB) + Math.abs(colA - colB) === 1;
         }
 
+        // 보드 업데이트
         function updateBoard(tileArray) {
             board.innerHTML = '';
             tileArray.forEach(tile => {
@@ -216,21 +226,38 @@
                 } else {
                     const empty = document.createElement('div');
                     empty.className = 'tile empty';
+                    empty.style.width = `calc(${100/currentLevel}% - 0.5vmin)`;
+                    empty.style.height = `calc(${100/currentLevel}% - 0.5vmin)`;
                     board.appendChild(empty);
                 }
             });
         }
 
+        // 정답 상태 확인
+        function updateTileStates() {
+            tiles.forEach((tile, index) => {
+                if(tile) {
+                    const shouldBe = parseInt(tile.textContent);
+                    tile.classList.toggle('correct', index === shouldBe - 1);
+                }
+            });
+        }
+
+        // 승리 조건 확인
         function checkWin() {
-            const currentOrder = tiles.map(t => t?.textContent).join(',');
-            if(currentOrder === '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,') {
+            const winCondition = tiles.slice(0, -1).every((tile, index) => 
+                tile?.textContent == index + 1
+            );
+            
+            if(winCondition) {
                 clearInterval(timerInterval);
                 setTimeout(() => {
-                    alert(`🎉 성공!\n시간: ${timer}초\n이동 횟수: ${moves}회`);
+                    alert(`🎉 레벨 ${currentLevel}x${currentLevel} 클리어!\n시간: ${timer}초\n이동 횟수: ${moves}회`);
                 }, 300);
             }
         }
 
+        // 게임 리셋
         function resetGame() {
             moves = 0;
             timer = 0;
@@ -243,7 +270,25 @@
             }, 1000);
         }
 
-        initGame();
+        // 레벨 선택 이벤트
+        function addLevelEventListeners() {
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.level-btn').forEach(b => 
+                        b.classList.remove('active'));
+                    btn.classList.add('active');
+                    initGame(parseInt(btn.dataset.size));
+                });
+            });
+        }
+
+        // 새 게임 시작
+        function startNewGame() {
+            initGame(currentLevel);
+        }
+
+        // 초기 실행
+        initGame(3);
     </script>
 </body>
 </html>
