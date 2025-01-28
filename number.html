@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>숫자 퍼즐 게임</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        #game-container {
+            margin: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            background: #333;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .tile {
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 5px;
+        }
+
+        .tile:hover {
+            background: #e0e0e0;
+        }
+
+        .empty {
+            background: transparent;
+            cursor: default;
+        }
+
+        #controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #stats {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="stats">
+            <span>시간: <span id="timer">0</span>초</span>
+            <span style="margin-left: 20px;">이동 횟수: <span id="moves">0</span></span>
+        </div>
+        <div id="puzzle-board"></div>
+        <div id="controls">
+            <button onclick="shuffleTiles()">새 게임</button>
+        </div>
+    </div>
+
+    <script>
+        let moves = 0;
+        let timer = 0;
+        let timerInterval;
+        const board = document.getElementById('puzzle-board');
+        const tiles = [];
+
+        // 게임 초기화
+        function initGame() {
+            // 타일 생성
+            for(let i = 1; i <= 15; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.textContent = i;
+                tile.addEventListener('click', () => moveTile(i));
+                tiles.push(tile);
+            }
+            tiles.push(null); // 빈 공간
+
+            // 보드에 타일 추가
+            shuffleTiles();
+        }
+
+        // 타일 섞기
+        function shuffleTiles() {
+            resetGame();
+            let shuffledTiles = [...tiles].sort(() => Math.random() - 0.5);
+            
+            // 빈 공간 위치 조정
+            const emptyIndex = shuffledTiles.indexOf(null);
+            shuffledTiles.splice(emptyIndex, 1);
+            shuffledTiles.push(null);
+            
+            updateBoard(shuffledTiles);
+        }
+
+        // 타일 이동
+        function moveTile(number) {
+            const currentIndex = tiles.findIndex(tile => tile?.textContent == number);
+            const emptyIndex = tiles.indexOf(null);
+            
+            if(isAdjacent(currentIndex, emptyIndex)) {
+                [tiles[currentIndex], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[currentIndex]];
+                moves++;
+                document.getElementById('moves').textContent = moves;
+                updateBoard(tiles);
+                checkWin();
+            }
+        }
+
+        // 인접 여부 확인
+        function isAdjacent(a, b) {
+            const rowA = Math.floor(a / 4);
+            const colA = a % 4;
+            const rowB = Math.floor(b / 4);
+            const colB = b % 4;
+            return Math.abs(rowA - rowB) + Math.abs(colA - colB) === 1;
+        }
+
+        // 보드 업데이트
+        function updateBoard(tileArray) {
+            board.innerHTML = '';
+            tileArray.forEach(tile => {
+                if(tile) {
+                    tile.className = 'tile';
+                    if(!tile.textContent) tile.className += ' empty';
+                    board.appendChild(tile);
+                } else {
+                    const empty = document.createElement('div');
+                    empty.className = 'tile empty';
+                    board.appendChild(empty);
+                }
+            });
+        }
+
+        // 승리 확인
+        function checkWin() {
+            const currentOrder = tiles.map(tile => tile?.textContent).join(',');
+            const winCondition = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,';
+            if(currentOrder === winCondition) {
+                clearInterval(timerInterval);
+                alert(`축하합니다! ${timer}초 걸렸고 ${moves}번 움직였습니다!`);
+            }
+        }
+
+        // 게임 리셋
+        function resetGame() {
+            moves = 0;
+            timer = 0;
+            clearInterval(timerInterval);
+            document.getElementById('moves').textContent = 0;
+            document.getElementById('timer').textContent = 0;
+            timerInterval = setInterval(() => {
+                timer++;
+                document.getElementById('timer').textContent = timer;
+            }, 1000);
+        }
+
+        // 게임 시작
+        initGame();
+    </script>
+</body>
+</html>
