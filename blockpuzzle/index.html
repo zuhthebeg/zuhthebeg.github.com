@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>블럭 퍼즐 게임</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            touch-action: none;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 2px;
+            background-color: #ccc;
+            padding: 2px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background-color: #fff;
+            border-radius: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .block-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .block {
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .block.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .block.preview {
+            opacity: 0.5;
+        }
+
+        .cell.valid-target {
+            background-color: rgba(52, 152, 219, 0.2);
+        }
+
+        .cell.filled {
+            background-color: #3498db;
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                max-width: 100%;
+            }
+            
+            .block {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        .block-wrapper {
+            padding: 0;
+            margin: 0 10px;
+            background-color: transparent;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+            position: relative;
+        }
+
+        .block-wrapper.dragging {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .block-preview {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.5;
+            z-index: 999;
+            display: grid;
+            gap: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        .block-cell {
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            border-radius: 2px;
+        }
+
+        .preview-cell {
+            width: 40px !important;
+            height: 40px !important;
+            background-color: #3498db;
+            opacity: 0.5;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 480px) {
+            .block-cell, .preview-cell {
+                width: 35px !important;
+                height: 35px !important;
+            }
+        }
+
+        .block-grid {
+            display: grid;
+            gap: 2px;
+            padding: 2px;
+            background-color: #eee;
+            border-radius: 4px;
+        }
+
+        .cell.filled {
+            background-color: #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .cell.clearing {
+            animation: clearAnimation 0.5s ease-out;
+        }
+
+        @keyframes clearAnimation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.5;
+                background-color: #f1c40f;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+                background-color: #e74c3c;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="score">점수: <span id="score">0</span></div>
+        <div id="board" class="board"></div>
+        <div id="block-container" class="block-container"></div>
+    </div>
+
+    <script>
+        const BOARD_SIZE = 9;
+        const BLOCK_PATTERNS = [
+            // 1칸
+            [[1]],
+            
+            // 2칸
+            [[1,1]],
+            [[1],
+             [1]],
+             
+            // 3칸
+            [[1,1,1]],
+            [[1],
+             [1],
+             [1]],
+            [[1,1],
+             [1]],
+            [[1,1],
+             [0,1]],
+            [[0,1],
+             [1,1]],
+            [[1],
+             [1,1]],
+            [[1,0],
+             [1,1]],
+             
+            // 4칸
+            [[1,1],
+             [1,1]], // 정사각형
+            [[1,1,1,1]], // 직선
+            [[1],
+             [1],
+             [1],
+             [1]],
+            [[1,1,1],
+             [0,1,0]], // T자
+            [[0,1,0],
+             [1,1,1]], // 역T자
+            [[1,1,0],
+             [0,1,1]], // Z자
+            [[0,1,1],
+             [1,1,0]], // S자
+            
+            // 5칸
+            [[1,1,1],
+             [1,1,0]], // ㄱ자 변형
+            [[1,1,1],
+             [0,1,1]], // ㄴ자 변형
+            [[1,1,1],
+             [1,0,1]],
+            [[1,0,1],
+             [1,1,1]],
+            
+            // L자형 변형들
+            [[1,0],
+             [1,0],
+             [1,1]],
+            [[0,1],
+             [0,1],
+             [1,1]],
+            [[1,1],
+             [1,0],
+             [1,0]],
+            [[1,1],
+             [0,1],
+             [0,1]]
+        ];
+
+        let board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(false));
+        let score = 0;
+        let selectedBlock = null;
+        let draggedBlock = null;
+        let dragOffset = { x: 0, y: 0 };
+        let preview = null;
+
+        function initGame() {
+            createBoard();
+            generateNewBlocks();
+            updateScore();
+        }
+
+        function createBoard() {
+            const boardElement = document.getElementById('board');
+            boardElement.innerHTML = '';
+            
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    
+                    cell.addEventListener('click', () => handleCellClick(i, j));
+                    cell.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        handleCellClick(i, j);
+                    });
+                    
+                    boardElement.appendChild(cell);
+                }
+            }
+        }
+
+        function generateNewBlocks() {
+            const container = document.getElementById('block-container');
+            container.innerHTML = '';
+            
+            const cellSize = document.querySelector('.cell').offsetWidth; // 보드 셀 크기 가져오기
+            
+            for (let i = 0; i < 3; i++) {
+                const blockWrapper = document.createElement('div');
+                blockWrapper.className = 'block-wrapper';
+                
+                const pattern = BLOCK_PATTERNS[Math.floor(Math.random() * BLOCK_PATTERNS.length)];
+                blockWrapper.dataset.pattern = JSON.stringify(pattern);
+                
+                const blockGrid = document.createElement('div');
+                blockGrid.className = 'block-grid';
+                blockGrid.style.gridTemplateColumns = `repeat(${pattern[0].length}, 1fr)`;
+                
+                pattern.forEach(row => {
+                    row.forEach(cell => {
+                        const blockCell = document.createElement('div');
+                        if (cell === 1) {
+                            blockCell.className = 'block-cell';
+                            blockCell.style.width = `${cellSize}px`;
+                            blockCell.style.height = `${cellSize}px`;
+                        } else {
+                            blockCell.style.width = `${cellSize}px`;
+                            blockCell.style.height = `${cellSize}px`;
+                        }
+                        blockGrid.appendChild(blockCell);
+                    });
+                });
+                
+                blockWrapper.appendChild(blockGrid);
+                initDragEvents(blockWrapper);
+                container.appendChild(blockWrapper);
+            }
+        }
+
+        function selectBlock(blockWrapper) {
+            if (selectedBlock) {
+                selectedBlock.classList.remove('selected');
+            }
+            if (selectedBlock === blockWrapper) {
+                selectedBlock = null;
+            } else {
+                selectedBlock = blockWrapper;
+                selectedBlock.classList.add('selected');
+            }
+            updateValidCells();
+        }
+
+        function canPlaceBlock(row, col, pattern) {
+            for (let i = 0; i < pattern.length; i++) {
+                for (let j = 0; j < pattern[0].length; j++) {
+                    if (pattern[i][j] === 1) {
+                        const newRow = row + i;
+                        const newCol = col + j;
+                        
+                        if (newRow >= BOARD_SIZE || newCol >= BOARD_SIZE || board[newRow][newCol]) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        function handleCellClick(row, col) {
+            if (!draggedBlock) return;
+            
+            const pattern = JSON.parse(draggedBlock.dataset.pattern);
+            if (!canPlaceBlock(row, col, pattern)) return;
+            
+            // 블록 배치
+            pattern.forEach((patternRow, i) => {
+                patternRow.forEach((cell, j) => {
+                    if (cell === 1) {
+                        const newRow = row + i;
+                        const newCol = col + j;
+                        board[newRow][newCol] = true;
+                        const cellElement = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`);
+                        cellElement.classList.add('filled');
+                    }
+                });
+            });
+            
+            draggedBlock.remove();
+            draggedBlock = null;
+            
+            checkLines();
+            
+            // 블록 생성 체크 및 실행
+            const container = document.getElementById('block-container');
+            if (container.children.length === 0) {
+                setTimeout(generateNewBlocks, 100);  // 약간의 지연을 주어 안정적으로 생성
+            }
+            
+            updateValidCells();
+            checkGameOver();
+        }
+
+        function updateValidCells() {
+            if (!selectedBlock) {
+                document.querySelectorAll('.cell').forEach(cell => {
+                    cell.classList.remove('valid-target');
+                });
+                return;
+            }
+
+            const pattern = JSON.parse(selectedBlock.dataset.pattern);
+            
+            document.querySelectorAll('.cell').forEach(cell => {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                
+                cell.classList.remove('valid-target');
+                if (canPlaceBlock(row, col, pattern)) {
+                    cell.classList.add('valid-target');
+                }
+            });
+        }
+
+        function checkLines() {
+            let linesCleared = false;
+            
+            // 가로줄 체크
+            for (let row = 0; row < BOARD_SIZE; row++) {
+                if (board[row].every(cell => cell)) {
+                    clearLine(row, 'row');
+                    score += 100;
+                    linesCleared = true;
+                }
+            }
+            
+            // 세로줄 체크
+            for (let col = 0; col < BOARD_SIZE; col++) {
+                if (board.every(row => row[col])) {
+                    clearLine(col, 'col');
+                    score += 100;
+                    linesCleared = true;
+                }
+            }
+            
+            if (linesCleared) {
+                updateScore();
+            }
+        }
+
+        function clearLine(index, type) {
+            const cells = [];
+            
+            if (type === 'row') {
+                for (let col = 0; col < BOARD_SIZE; col++) {
+                    const cell = document.querySelector(`[data-row="${index}"][data-col="${col}"]`);
+                    cells.push(cell);
+                }
+            } else {
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    const cell = document.querySelector(`[data-row="${row}"][data-col="${index}"]`);
+                    cells.push(cell);
+                }
+            }
+
+            // 애니메이션 적용
+            cells.forEach(cell => {
+                cell.classList.add('clearing');
+            });
+
+            // 애니메이션 완료 후 실제 클리어
+            setTimeout(() => {
+                cells.forEach(cell => {
+                    cell.classList.remove('clearing');
+                    cell.classList.remove('filled');
+                    
+                    if (type === 'row') {
+                        board[index][cell.dataset.col] = false;
+                    } else {
+                        board[cell.dataset.row][index] = false;
+                    }
+                });
+            }, 500);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function checkGameOver() {
+            const hasEmptyCell = board.some(row => row.some(cell => !cell));
+            if (!hasEmptyCell) {
+                alert(`게임 오버!\n최종 점수: ${score}`);
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(false));
+            score = 0;
+            selectedBlock = null;
+            initGame();
+        }
+
+        function initDragEvents(blockWrapper) {
+            blockWrapper.addEventListener('mousedown', startDragging);
+            blockWrapper.addEventListener('touchstart', startDragging, { passive: false });
+            
+            document.addEventListener('mousemove', handleDrag);
+            document.addEventListener('touchmove', handleDrag, { passive: false });
+            
+            document.addEventListener('mouseup', endDragging);
+            document.addEventListener('touchend', endDragging);
+        }
+
+        function startDragging(e) {
+            e.preventDefault();
+            const blockWrapper = e.currentTarget;
+            draggedBlock = blockWrapper;
+            
+            const rect = blockWrapper.getBoundingClientRect();
+            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+            
+            dragOffset.x = clientX - rect.left;
+            dragOffset.y = clientY - rect.top;
+            
+            blockWrapper.classList.add('dragging');
+            
+            // 미리보기 생성
+            preview = blockWrapper.cloneNode(true);
+            preview.classList.add('block-preview');
+            preview.classList.remove('dragging');
+            preview.style.margin = '0';
+            preview.style.padding = '0';
+            document.body.appendChild(preview);
+        }
+
+        function handleDrag(e) {
+            if (!draggedBlock) return;
+            e.preventDefault();
+            
+            const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+            
+            // 드래그 중인 블록 이동
+            draggedBlock.style.left = `${clientX - dragOffset.x}px`;
+            draggedBlock.style.top = `${clientY - dragOffset.y}px`;
+            
+            // 보드 위치 계산
+            const board = document.getElementById('board');
+            const boardRect = board.getBoundingClientRect();
+            const cellSize = boardRect.width / BOARD_SIZE;
+            
+            const boardX = clientX - boardRect.left;
+            const boardY = clientY - boardRect.top;
+            
+            const col = Math.floor(boardX / cellSize);
+            const row = Math.floor(boardY / cellSize);
+            
+            // 미리보기 업데이트
+            if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE) {
+                const pattern = JSON.parse(draggedBlock.dataset.pattern);
+                if (canPlaceBlock(row, col, pattern)) {
+                    showPreview(row, col, pattern, boardRect, cellSize);
+                } else {
+                    hidePreview();
+                }
+            } else {
+                hidePreview();
+            }
+        }
+
+        function showPreview(row, col, pattern, boardRect, cellSize) {
+            if (!preview) {
+                preview = document.createElement('div');
+                preview.className = 'block-preview';
+                document.body.appendChild(preview);
+            }
+
+            // 미리보기 그리드 생성
+            preview.style.display = 'grid';
+            preview.style.gridTemplateColumns = `repeat(${pattern[0].length}, ${cellSize}px)`; // 보드 셀 크기와 동일하게
+            preview.style.gap = '0';
+            preview.style.position = 'absolute';
+            preview.style.left = `${boardRect.left + col * cellSize}px`;
+            preview.style.top = `${boardRect.top + row * cellSize}px`;
+            
+            // 미리보기 내용 업데이트
+            preview.innerHTML = '';
+            pattern.forEach(patternRow => {
+                patternRow.forEach(cell => {
+                    const previewCell = document.createElement('div');
+                    if (cell === 1) {
+                        previewCell.className = 'preview-cell';
+                        previewCell.style.width = `${cellSize}px`;
+                        previewCell.style.height = `${cellSize}px`;
+                    } else {
+                        previewCell.style.width = `${cellSize}px`;
+                        previewCell.style.height = `${cellSize}px`;
+                    }
+                    preview.appendChild(previewCell);
+                });
+            });
+
+            preview.dataset.row = row;
+            preview.dataset.col = col;
+        }
+
+        function hidePreview() {
+            if (preview) {
+                preview.style.display = 'none';
+            }
+        }
+
+        function endDragging(e) {
+            if (!draggedBlock) return;
+            
+            try {
+                if (preview && preview.style.display !== 'none') {
+                    const row = parseInt(preview.dataset.row);
+                    const col = parseInt(preview.dataset.col);
+                    const pattern = JSON.parse(draggedBlock.dataset.pattern);
+                    
+                    if (canPlaceBlock(row, col, pattern)) {
+                        handleCellClick(row, col);
+                    }
+                }
+            } finally {
+                if (draggedBlock) {
+                    draggedBlock.style.left = '';
+                    draggedBlock.style.top = '';
+                    draggedBlock.classList.remove('dragging');
+                    draggedBlock = null;
+                }
+                
+                if (preview) {
+                    preview.remove();
+                    preview = null;
+                }
+            }
+        }
+
+        // 게임 시작
+        initGame();
+    </script>
+</body>
+</html>
