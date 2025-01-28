@@ -45,11 +45,23 @@
             border: 1px solid #eee;
             border-radius: 5px;
             transition: transform 0.2s;
+            display: flex;
+            align-items: start;
+            gap: 15px;
         }
         
         .project-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .project-icon {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .project-content {
+            flex: 1;
         }
         
         .project-link {
@@ -71,26 +83,44 @@
         
         <ul class="project-list">
             <li class="project-item">
-                <a href="/pikmin/" class="project-link">피크민 블룸 트래커</a>
-                <p class="project-description">
-                    피크민 블룸의 디코레이션 수집 현황을 체크하고 관리할 수 있는 체크리스트입니다.
-                    다국어(한국어, 영어, 일본어, 중국어 간체/번체) 지원
-                </p>
-            </li>
-            <!-- 추후 다른 프로젝트 추가 시 여기에 추가 -->
-            <li class="project-item">
-                <a href="numberpuzzle/" class="project-link">숫자 퍼즐</a>
-                <p class="project-description">
-                    웹 숫자 퍼즐
-                </p>
+                <img src="/pikmin/icons/icon.svg" alt="피크민 아이콘" class="project-icon">
+                <div class="project-content">
+                    <a href="/pikmin/" class="project-link">피크민 블룸 트래커</a>
+                    <p class="project-description">
+                        피크민 블룸의 디코레이션 수집 현황을 체크하고 관리할 수 있는 체크리스트입니다.
+                        다국어(한국어, 영어, 일본어, 중국어 간체/번체) 지원
+                    </p>
+                </div>
             </li>
             <li class="project-item">
-                <a href="blockpuzzle/" class="project-link">숫자 퍼즐</a>
-                <p class="project-description">
-                    블럭 퍼즐
-                </p>
+                <img src="/numberpuzzle/icons/icon.svg" alt="숫자퍼즐 아이콘" class="project-icon">
+                <div class="project-content">
+                    <a href="numberpuzzle/" class="project-link">숫자 퍼즐</a>
+                    <p class="project-description">
+                        웹 숫자 퍼즐
+                    </p>
+                </div>
             </li>
-            
+            <li class="project-item">
+                <img src="/blockpuzzle/icons/icon.svg" alt="블럭퍼즐 아이콘" class="project-icon">
+                <div class="project-content">
+                    <a href="blockpuzzle/" class="project-link">블럭 퍼즐</a>
+                    <p class="project-description">
+                        블럭 퍼즐
+                    </p>
+                </div>
+            </li>
+            <!--
+            <li class="project-item">
+                <img src="/tetris/icons/icon.svg" alt="테트리스 아이콘" class="project-icon">
+                <div class="project-content">
+                    <a href="tetris/" class="project-link">테트리스</a>
+                    <p class="project-description">
+                        클래식 테트리스 게임
+                    </p>
+                </div>
+            </li>
+        -->
         </ul>
     </div>
 </body>

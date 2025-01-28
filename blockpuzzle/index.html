@@ -49,9 +49,41 @@
 
         .block-container {
             display: flex;
+            align-items: center;
             justify-content: space-around;
             margin-top: 20px;
-            gap: 10px;
+            min-height: 100px;
+            padding: 0;
+            gap: 1px;
+        }
+
+        .block-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+            border: none;
+        }
+
+        .block-grid {
+            display: grid;
+            gap: 1px;
+            padding: 1px;
+            background-color: #eee;
+            font-size: 0;
+            line-height: 0;
+        }
+
+        .block-cell {
+            width: 40px !important;
+            height: 40px !important;
+            background-color: #3498db;
+            margin: 0;
+            padding: 0;
+            display: block;
         }
 
         .block {
@@ -85,27 +117,26 @@
                 max-width: 100%;
             }
             
-            .block {
-                width: 30px;
-                height: 30px;
+            .block-container {
+                min-height: 80px;
+                padding: 8px;
             }
-        }
-
-        .block-wrapper {
-            padding: 0;
-            margin: 0 10px;
-            background-color: transparent;
-            border-radius: 4px;
-            cursor: move;
-            user-select: none;
-            touch-action: none;
-            position: relative;
+            
+            .block-wrapper {
+                margin: 0 8px;
+            }
+            
+            .block-cell, .preview-cell {
+                width: 35px !important;
+                height: 35px !important;
+            }
         }
 
         .block-wrapper.dragging {
             position: fixed;
             pointer-events: none;
             z-index: 1000;
+            opacity: 0.6;
             margin: 0;
             padding: 0;
         }
@@ -113,7 +144,6 @@
         .block-preview {
             position: absolute;
             pointer-events: none;
-            opacity: 0.5;
             z-index: 999;
             display: grid;
             gap: 0;
@@ -121,34 +151,14 @@
             margin: 0;
         }
 
-        .block-cell {
-            width: 40px;
-            height: 40px;
-            background-color: #3498db;
-            border-radius: 2px;
-        }
-
         .preview-cell {
             width: 40px !important;
             height: 40px !important;
             background-color: #3498db;
-            opacity: 0.5;
-            border-radius: 2px;
-        }
-
-        @media (max-width: 480px) {
-            .block-cell, .preview-cell {
-                width: 35px !important;
-                height: 35px !important;
-            }
-        }
-
-        .block-grid {
-            display: grid;
-            gap: 2px;
-            padding: 2px;
-            background-color: #eee;
-            border-radius: 4px;
+            opacity: 0.4;
+            margin: 0;
+            padding: 0;
+            display: block;
         }
 
         .cell.filled {
@@ -511,17 +521,23 @@
             const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
             const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
             
+            // 터치/클릭 지점을 기준으로 오프셋 계산
             dragOffset.x = clientX - rect.left;
             dragOffset.y = clientY - rect.top;
             
             blockWrapper.classList.add('dragging');
             
-            // 미리보기 생성
+            // 미리보기 생성 및 위치 조정
             preview = blockWrapper.cloneNode(true);
             preview.classList.add('block-preview');
             preview.classList.remove('dragging');
             preview.style.margin = '0';
             preview.style.padding = '0';
+            
+            // 드래그 시작 위치 설정
+            blockWrapper.style.left = `${clientX - dragOffset.x}px`;
+            blockWrapper.style.top = `${clientY - dragOffset.y}px`;
+            
             document.body.appendChild(preview);
         }
 
@@ -532,7 +548,7 @@
             const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
             const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
             
-            // 드래그 중인 블록 이동
+            // 터치/클릭 지점을 기준으로 블록 이동
             draggedBlock.style.left = `${clientX - dragOffset.x}px`;
             draggedBlock.style.top = `${clientY - dragOffset.y}px`;
             
