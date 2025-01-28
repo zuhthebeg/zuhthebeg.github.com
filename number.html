@@ -8,7 +8,7 @@
         :root {
             --main-color: #2c3e50;
             --correct-color: #27ae60;
-            --empty-color: #7f8c8d;
+            --empty-color: #34495e;
             --text-color: #ecf0f1;
         }
 
@@ -84,7 +84,7 @@
             justify-content: center;
             align-items: center;
             background: #ecf0f1;
-            font-size: 1.5rem;
+            font-size: 3.5rem;
             font-weight: bold;
             color: var(--main-color);
             transition: transform 0.3s ease;
@@ -100,12 +100,13 @@
 
         .tile.empty {
             background: var(--empty-color);
-            cursor: default;
+            border: 2px dashed #95a5a6;
+            opacity: 0.8;
         }
 
         @media (max-width: 480px) {
             .tile {
-                font-size: 1.2rem;
+                font-size: 3rem;
             }
         }
     </style>
@@ -114,8 +115,8 @@
     <div id="game-container">
         <div id="controls">
             <select id="level-select">
-                <option value="3">3x3</option>
-                <option value="4" selected>4x4</option>
+                <option value="3" selected>3x3</option>
+                <option value="4">4x4</option>
                 <option value="5">5x5</option>
             </select>
             <button onclick="startNewGame()">새게임</button>
@@ -128,7 +129,7 @@
     </div>
 
     <script>
-        let currentLevel = 4;
+        let currentLevel = 3;
         let moves = 0;
         let timer = 0;
         let timerInterval;
@@ -350,7 +351,7 @@
             if(isWin) {
                 clearInterval(timerInterval);
                 setTimeout(() => {
-                    alert(`🎉 성공! ${currentLevel}x${currentLevel}\n시간: ${timer}초\n이동: ${moves}회`);
+                    alert(`🎉 媽媽新年快樂！\n\n${currentLevel}x${currentLevel}\n시간: ${timer}초\n이동: ${moves}회`);
                 }, 100);
             }
         }
@@ -376,24 +377,64 @@
 
             let touchStartX = 0;
             let touchStartY = 0;
+            let touchStartTime = 0;
 
             // 터치 이벤트 처리
             board.addEventListener('touchstart', e => {
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
+                touchStartTime = Date.now();
                 e.preventDefault();
             }, {passive: false});
 
             board.addEventListener('touchend', e => {
                 const touchEndX = e.changedTouches[0].clientX;
                 const touchEndY = e.changedTouches[0].clientY;
+                const touchEndTime = Date.now();
+                
                 const dx = touchEndX - touchStartX;
                 const dy = touchEndY - touchStartY;
-
-                if(Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+                const duration = touchEndTime - touchStartTime;
+                
+                // 빠른 탭 동작 처리 (200ms 미만)
+                if (duration < 200 && Math.abs(dx) < 10 && Math.abs(dy) < 10) {
                     const target = document.elementFromPoint(touchEndX, touchEndY);
                     if(target?.classList.contains('tile') && !target.classList.contains('empty')) {
                         handleMove(target);
+                    }
+                    e.preventDefault();
+                    return;
+                }
+
+                // 슬라이드 동작 처리
+                const minSwipeDistance = 30; // 최소 슬라이드 거리
+                if (Math.abs(dx) > minSwipeDistance || Math.abs(dy) > minSwipeDistance) {
+                    const emptyTile = tiles.find(t => t.classList.contains('empty'));
+                    const emptyIndex = tiles.indexOf(emptyTile);
+                    const emptyRow = Math.floor(emptyIndex / currentLevel);
+                    const emptyCol = emptyIndex % currentLevel;
+                    
+                    // 슬라이드 방향 결정
+                    let targetIndex = -1;
+                    if (Math.abs(dx) > Math.abs(dy)) {
+                        // 수평 슬라이드
+                        if (dx > 0 && emptyCol > 0) { // 오른쪽으로 슬라이드
+                            targetIndex = emptyIndex - 1;
+                        } else if (dx < 0 && emptyCol < currentLevel - 1) { // 왼쪽으로 슬라이드
+                            targetIndex = emptyIndex + 1;
+                        }
+                    } else {
+                        // 수직 슬라이드
+                        if (dy > 0 && emptyRow > 0) { // 아래로 슬라이드
+                            targetIndex = emptyIndex - currentLevel;
+                        } else if (dy < 0 && emptyRow < currentLevel - 1) { // 위로 슬라이드
+                            targetIndex = emptyIndex + currentLevel;
+                        }
+                    }
+                    
+                    // 유효한 이동이면 처리
+                    if (targetIndex >= 0 && targetIndex < tiles.length) {
+                        handleMove(tiles[targetIndex]);
                     }
                 }
                 e.preventDefault();
@@ -414,7 +455,7 @@
         }
 
         // 초기 실행
-        initGame(4);
+        initGame(3);
     </script>
 </body>
 </html>
