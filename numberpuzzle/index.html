@@ -70,6 +70,33 @@
             color: var(--text-color);
         }
 
+        /* 점수판 스타일 추가 */
+        #score-board {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            padding: 15px;
+            color: var(--text-color);
+        }
+
+        #score-board h3 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #high-scores {
+            list-style: none;
+        }
+
+        #high-scores li {
+            padding: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
         #puzzle-board {
             display: grid;
             background: var(--main-color);
@@ -176,6 +203,20 @@
             background: white;
             color: #2c3e50;
         }
+
+        /* 팝업 닫기 버튼 스타일 수정 */
+        .popup-content {
+            position: relative;
+            padding: 30px;
+        }
+        #close-popup {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 28px;
+            padding: 0 8px;
+            line-height: 1;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +245,11 @@
         <button onclick="startNewGame()" data-i18n="start-new-game">새 게임 시작</button>
     </div>
 
+    <div id="score-board">
+        <h3 data-i18n="high-scores">🏆 최고 기록</h3>
+        <ul id="high-scores"></ul>
+    </div>
+
     <select id="language-select" onchange="changeLanguage(this.value)">
         <option value="ko">한국어</option>
         <option value="en">English</option>
@@ -223,7 +269,9 @@
             "congratulations": "🎉 축하!!",
             "puzzle-completed": "퍼즐 완성!",
             "start-new-game": "새 게임 시작",
-            "puzzle-size": "퍼즐"
+            "puzzle-size": "퍼즐",
+            "high-scores": "🏆 최고 기록",
+            "no-scores": "기록이 없습니다"
         },
         en: {
             "3x3": "3x3",
@@ -235,7 +283,9 @@
             "congratulations": "🎉 Congratulations!",
             "puzzle-completed": "Puzzle Completed!",
             "start-new-game": "Start New Game",
-            "puzzle-size": "Puzzle"
+            "puzzle-size": "Puzzle",
+            "high-scores": "🏆 High Scores",
+            "no-scores": "No scores yet"
         },
         zh: {
             "3x3": "3x3",
@@ -247,11 +297,21 @@
             "congratulations": "🎉 恭喜！",
             "puzzle-completed": "拼圖完成！",
             "start-new-game": "開始新遊戲",
-            "puzzle-size": "拼圖"
+            "puzzle-size": "拼圖",
+            "high-scores": "🏆 最高紀錄",
+            "no-scores": "暫無紀錄"
         }
     };
 
     let currentLanguage = 'ko';
+    let currentLevel = 3;
+    let moves = 0;
+    let timer = 0;
+    let timerInterval;
+    let tiles = [];
+    const board = document.getElementById('puzzle-board');
+    let isAnimating = false;
+    let isGameStarted = false;
 
     // 언어 변경 함수
     function changeLanguage(lang) {
@@ -270,14 +330,6 @@
             }
         });
     }
-
-    let currentLevel = 3;
-    let moves = 0;
-    let timer = 0;
-    let timerInterval;
-    let tiles = [];
-    const board = document.getElementById('puzzle-board');
-    let isAnimating = false;
 
     // 게임 초기화
     function initGame(size) {
@@ -378,6 +430,7 @@
     // 타일 이동 처리
     async function handleMove(clickedTile) {
         if(isAnimating) return;
+        if(!isGameStarted) isGameStarted = true;
         
         const emptyTile = tiles.find(t => t.classList.contains('empty'));
         const clickedIndex = tiles.indexOf(clickedTile);
@@ -513,6 +566,8 @@
         
         if(isWin) {
             clearInterval(timerInterval);
+            saveScore();
+            updateHighScores();
             setTimeout(() => {
                 const popup = document.getElementById('win-popup');
                 const overlay = document.getElementById('overlay');
@@ -534,19 +589,25 @@
     function resetGame() {
         moves = 0;
         timer = 0;
+        isGameStarted = false;
         clearInterval(timerInterval);
         document.getElementById('moves').textContent = '0';
         document.getElementById('timer').textContent = '0';
+        
         timerInterval = setInterval(() => {
-            timer++;
-            document.getElementById('timer').textContent = timer;
+            if(isGameStarted) {
+                timer++;
+                document.getElementById('timer').textContent = timer;
+            }
         }, 1000);
     }
 
     // 이벤트 리스너
     function addEventListeners() {
         document.getElementById('level-select').addEventListener('change', (e) => {
-            initGame(parseInt(e.target.value));
+            currentLevel = parseInt(e.target.value);
+            initGame(currentLevel);
+            updateHighScores();
         });
 
         let touchStartX = 0;
@@ -625,12 +686,72 @@
 
     // 새 게임 시작
     function startNewGame() {
-        const popup = document.getElementById('win-popup');
-        const overlay = document.getElementById('overlay');
-        popup.style.display = 'none';
-        overlay.style.display = 'none';
+        closeWinPopup();
         initGame(currentLevel);
+        updateHighScores();
     }
+
+    // 점수 저장 함수
+    function saveScore() {
+        const now = new Date();
+        const scoreEntry = {
+            date: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`,
+            time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`,
+            moves: moves,
+            seconds: timer,
+            level: currentLevel
+        };
+
+        const storageKey = `puzzleScores-level${currentLevel}`;
+        const scores = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        
+        // 중복 기록 방지
+        const isDuplicate = scores.some(entry => 
+            entry.moves === moves && entry.seconds === timer
+        );
+        
+        if (!isDuplicate) {
+            scores.push(scoreEntry);
+            scores.sort((a, b) => a.moves - b.moves || a.seconds - b.seconds);
+            localStorage.setItem(storageKey, JSON.stringify(scores.slice(0, 5)));
+        }
+    }
+
+    // 최고 기록 표시 업데이트
+    function updateHighScores() {
+        const storageKey = `puzzleScores-level${currentLevel}`;
+        const scores = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        const list = document.getElementById('high-scores');
+        list.innerHTML = '';
+
+        if(scores.length === 0) {
+            list.innerHTML = `<li>${translations[currentLanguage]["no-scores"]}</li>`;
+            return;
+        }
+
+        scores.slice(0, 5).forEach(entry => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${entry.date} ${entry.time}</span>
+                <span>${entry.moves}${translations[currentLanguage]["moves"]} / ${entry.seconds}${translations[currentLanguage]["seconds"]}</span>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    // 팝업 닫기 기능 개선
+    function closeWinPopup() {
+        document.getElementById('win-popup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    // 오버레이 클릭 시 팝업 닫기
+    document.getElementById('overlay').addEventListener('click', closeWinPopup);
+
+    // 팝업 내용 클릭 시 이벤트 전파 방지
+    document.querySelector('.win-popup').addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
 
     // 초기 실행
     initGame(3);
@@ -656,6 +777,7 @@
         
         document.getElementById('language-select').value = supportedLang;
         changeLanguage(supportedLang);
+        updateHighScores();
     });
     </script>
 </body>
