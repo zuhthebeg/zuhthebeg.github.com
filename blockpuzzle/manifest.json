@@ -2,7 +2,7 @@
     "name": "블럭 퍼즐 게임",
     "short_name": "블럭퍼즐",
     "description": "재미있는 블럭 퍼즐 게임",
-    "start_url": "blockpuzzle/",
+    "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#f5f5f5",
     "theme_color": "#3498db",

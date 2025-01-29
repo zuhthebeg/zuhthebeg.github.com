@@ -131,14 +131,14 @@
         }
 
         .win-popup h2 {
-            font-size: 24px;
+            font-size: 48px;
             margin-bottom: 15px;
             color: var(--correct-color);
         }
 
         .win-popup p {
             margin: 10px 0;
-            font-size: 16px;
+            font-size: 32px;
         }
 
         .win-popup button {
@@ -198,8 +198,8 @@
     <!-- 승리 팝업 추가 -->
     <div class="overlay" id="overlay"></div>
     <div class="win-popup" id="win-popup">
-        <h2 data-i18n="congratulations">🎉 축하합니다!</h2>
-        <p data-i18n="puzzle-completed">퍼즐을 완성했습니다!</p>
+        <h2 data-i18n="congratulations">🎉 축하!</h2>
+        <p data-i18n="puzzle-completed">클리어!</p>
         <p id="win-stats"></p>
         <button onclick="startNewGame()" data-i18n="start-new-game">새 게임 시작</button>
     </div>
@@ -220,8 +220,8 @@
             "new-game": "새게임",
             "seconds": "초",
             "moves": "회",
-            "congratulations": "🎉 축하합니다!",
-            "puzzle-completed": "퍼즐을 완성했습니다!",
+            "congratulations": "🎉 축하!!",
+            "puzzle-completed": "퍼즐 완성!",
             "start-new-game": "새 게임 시작",
             "puzzle-size": "퍼즐"
         },
