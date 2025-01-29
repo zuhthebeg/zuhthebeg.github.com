@@ -149,16 +149,17 @@
             gap: 0;
             padding: 0;
             margin: 0;
+            background: transparent;
         }
 
         .preview-cell {
             width: 40px !important;
             height: 40px !important;
-            background-color: #3498db;
-            opacity: 0.4;
+            background-color: rgba(52, 152, 219, 0.4);
             margin: 0;
             padding: 0;
             display: block;
+            border: 1px solid rgba(52, 152, 219, 0.6);
         }
 
         .cell.filled {
@@ -560,8 +561,9 @@
             const boardX = clientX - boardRect.left;
             const boardY = clientY - boardRect.top;
             
-            const col = Math.floor(boardX / cellSize);
-            const row = Math.floor(boardY / cellSize);
+            // 배치 판정 완화: 셀의 30% 이상 겹치면 유효한 위치로 판단
+            const col = Math.round(boardX / cellSize);
+            const row = Math.round(boardY / cellSize);
             
             // 미리보기 업데이트
             if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE) {
