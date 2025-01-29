@@ -187,11 +187,27 @@
                 background-color: #e74c3c;
             }
         }
+
+        #restart {
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        #restart:hover {
+            background-color: #27ae60;
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
         <div class="score">점수: <span id="score">0</span></div>
+        <button id="restart" style="display: none;">다시 시작</button>
         <div id="board" class="board"></div>
         <div id="block-container" class="block-container"></div>
     </div>
@@ -488,10 +504,25 @@
         }
 
         function checkGameOver() {
-            const hasEmptyCell = board.some(row => row.some(cell => !cell));
-            if (!hasEmptyCell) {
+            const blocks = document.querySelectorAll('.block-wrapper');
+            let hasValidPlacement = false;
+
+            // 모든 블록에 대해 배치 가능한 위치가 있는지 확인
+            blocks.forEach(block => {
+                const pattern = JSON.parse(block.dataset.pattern);
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    for (let col = 0; col < BOARD_SIZE; col++) {
+                        if (canPlaceBlock(row, col, pattern)) {
+                            hasValidPlacement = true;
+                            return;
+                        }
+                    }
+                }
+            });
+
+            if (!hasValidPlacement) {
+                document.getElementById('restart').style.display = 'block';
                 alert(`게임 오버!\n최종 점수: ${score}`);
-                resetGame();
             }
         }
 
@@ -499,6 +530,7 @@
             board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(false));
             score = 0;
             selectedBlock = null;
+            document.getElementById('restart').style.display = 'none';
             initGame();
         }
 
@@ -647,6 +679,9 @@
                 }
             }
         }
+
+        // 다시 시작 버튼 이벤트 연결
+        document.getElementById('restart').addEventListener('click', resetGame);
 
         // 게임 시작
         initGame();
