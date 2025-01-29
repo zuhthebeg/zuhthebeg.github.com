@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>슬라이드 퍼즐 게임</title>
+    <title>숫자 퍼즐 게임</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon.svg">
     <meta name="theme-color" content="#2c3e50">
@@ -112,125 +112,353 @@
                 font-size: 3rem;
             }
         }
+
+        /* 승리 팝업 스타일 추가 */
+        .win-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 1000;
+            min-width: 280px;
+            display: none;
+            color: var(--main-color);
+        }
+
+        .win-popup h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--correct-color);
+        }
+
+        .win-popup p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .win-popup button {
+            margin-top: 15px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        #language-select {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 12px;
+            background: #3498db;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #language-select option {
+            background: white;
+            color: #2c3e50;
+        }
     </style>
 </head>
 <body>
     <div id="game-container">
         <div id="controls">
             <select id="level-select">
-                <option value="3" selected>3x3</option>
-                <option value="4">4x4</option>
-                <option value="5">5x5</option>
+                <option value="3" selected data-i18n="3x3">3x3</option>
+                <option value="4" data-i18n="4x4">4x4</option>
+                <option value="5" data-8n="5x5">5x5</option>
             </select>
-            <button onclick="startNewGame()">새게임</button>
+            <button onclick="startNewGame()" data-i18n="new-game">새게임</button>
         </div>
         <div id="stats">
-            <div>⏱ <span id="timer">0</span>초</div>
-            <div>🔢 <span id="moves">0</span>회</div>
+            <div>⏱ <span id="timer">0</span><span data-i18n="seconds">초</span></div>
+            <div>🔢 <span id="moves">0</span><span data-i18n="moves">회</span></div>
         </div>
         <div id="puzzle-board"></div>
     </div>
 
+    <!-- 승리 팝업 추가 -->
+    <div class="overlay" id="overlay"></div>
+    <div class="win-popup" id="win-popup">
+        <h2 data-i18n="congratulations">🎉 축하합니다!</h2>
+        <p data-i18n="puzzle-completed">퍼즐을 완성했습니다!</p>
+        <p id="win-stats"></p>
+        <button onclick="startNewGame()" data-i18n="start-new-game">새 게임 시작</button>
+    </div>
+
+    <select id="language-select" onchange="changeLanguage(this.value)">
+        <option value="ko">한국어</option>
+        <option value="en">English</option>
+        <option value="zh">繁體中文</option>
+    </select>
+
     <script>
-        let currentLevel = 3;
-        let moves = 0;
-        let timer = 0;
-        let timerInterval;
-        let tiles = [];
-        const board = document.getElementById('puzzle-board');
-        let isAnimating = false;
-
-        // 게임 초기화
-        function initGame(size) {
-            currentLevel = size;
-            resetGame();
-            generateBoard(size);
-            addEventListeners();
+    // 다국어 번역 데이터
+    const translations = {
+        ko: {
+            "3x3": "3x3",
+            "4x4": "4x4",
+            "5x5": "5x5",
+            "new-game": "새게임",
+            "seconds": "초",
+            "moves": "회",
+            "congratulations": "🎉 축하합니다!",
+            "puzzle-completed": "퍼즐을 완성했습니다!",
+            "start-new-game": "새 게임 시작",
+            "puzzle-size": "퍼즐"
+        },
+        en: {
+            "3x3": "3x3",
+            "4x4": "4x4",
+            "5x5": "5x5",
+            "new-game": "New Game",
+            "seconds": "sec",
+            "moves": "moves",
+            "congratulations": "🎉 Congratulations!",
+            "puzzle-completed": "Puzzle Completed!",
+            "start-new-game": "Start New Game",
+            "puzzle-size": "Puzzle"
+        },
+        zh: {
+            "3x3": "3x3",
+            "4x4": "4x4",
+            "5x5": "5x5",
+            "new-game": "新遊戲",
+            "seconds": "秒",
+            "moves": "步",
+            "congratulations": "🎉 恭喜！",
+            "puzzle-completed": "拼圖完成！",
+            "start-new-game": "開始新遊戲",
+            "puzzle-size": "拼圖"
         }
+    };
 
-        // 보드 생성
-        function generateBoard(size) {
-            board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            board.innerHTML = '';
-            tiles = [];
+    let currentLanguage = 'ko';
+
+    // 언어 변경 함수
+    function changeLanguage(lang) {
+        currentLanguage = lang;
+        document.documentElement.lang = lang;
+        updateTexts();
+    }
+
+    // 텍스트 업데이트 함수
+    function updateTexts() {
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[currentLanguage][key]) {
+                element.textContent = translations[currentLanguage][key];
+            }
+        });
+    }
+
+    let currentLevel = 3;
+    let moves = 0;
+    let timer = 0;
+    let timerInterval;
+    let tiles = [];
+    const board = document.getElementById('puzzle-board');
+    let isAnimating = false;
+
+    // 게임 초기화
+    function initGame(size) {
+        currentLevel = size;
+        resetGame();
+        generateBoard(size);
+        addEventListeners();
+    }
+
+    // 보드 생성
+    function generateBoard(size) {
+        board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        board.innerHTML = '';
+        tiles = [];
+        
+        // 타일 생성 및 배치
+        for(let i = 0; i < size * size; i++) {
+            const tile = document.createElement('div');
+            tile.style.width = `calc(${100/size}% - 2px)`;
+            tile.style.height = `calc(${100/size}% - 2px)`;
             
-            // 타일 생성 및 배치
-            for(let i = 0; i < size * size; i++) {
-                const tile = document.createElement('div');
-                tile.style.width = `calc(${100/size}% - 2px)`;
-                tile.style.height = `calc(${100/size}% - 2px)`;
-                
-                if(i === size * size - 1) {
-                    // 마지막 위치에 빈 칸 생성
-                    tile.className = 'tile empty';
-                } else {
-                    tile.className = 'tile';
-                    tile.textContent = i + 1;
-                    tile.dataset.value = i + 1;
-                }
-                
-                // 초기 위치 설정
-                const x = (i % size) * 100;
-                const y = Math.floor(i / size) * 100;
-                tile.style.transform = `translate(${x}%, ${y}%)`;
-                
-                board.appendChild(tile);
-                tiles.push(tile);
+            if(i === size * size - 1) {
+                // 마지막 위치에 빈 칸 생성
+                tile.className = 'tile empty';
+            } else {
+                tile.className = 'tile';
+                tile.textContent = i + 1;
+                tile.dataset.value = i + 1;
             }
             
-            // 타일 섞기 전에 잠시 대기
-            setTimeout(() => {
-                shuffleTiles();
-            }, 100);
-        }
-
-        async function shuffleTiles() {
-            const size = currentLevel;
-            const lastIndex = size * size - 1;
+            // 초기 위치 설정
+            const x = (i % size) * 100;
+            const y = Math.floor(i / size) * 100;
+            tile.style.transform = `translate(${x}%, ${y}%)`;
             
+            board.appendChild(tile);
+            tiles.push(tile);
+        }
+        
+        // 타일 섞기 전에 잠시 대기
+        setTimeout(() => {
+            shuffleTiles();
+        }, 100);
+    }
+
+    async function shuffleTiles() {
+        const size = currentLevel;
+        const lastIndex = size * size - 1;
+        
+        let solvable = false;
+        let indices;
+        
+        while (!solvable) {
             // 빈 칸을 제외한 타일들의 인덱스만 섞기
-            let indices = Array.from({length: lastIndex}, (_, i) => i);
+            indices = Array.from({length: lastIndex}, (_, i) => i);
             for(let i = indices.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [indices[i], indices[j]] = [indices[j], indices[i]];
             }
             
-            // 섞인 인덱스에 따라 타일 재배치
-            const newTiles = [];
-            for(let i = 0; i < lastIndex; i++) {
-                const tile = tiles[indices[i]];
-                const x = (i % size) * 100;
-                const y = Math.floor(i / size) * 100;
-                tile.style.transform = `translate(${x}%, ${y}%)`;
-                newTiles.push(tile);
+            // 순열의 패리티 검사
+            let inversions = 0;
+            for (let i = 0; i < indices.length - 1; i++) {
+                for (let j = i + 1; j < indices.length; j++) {
+                    if (indices[i] > indices[j]) inversions++;
+                }
             }
             
-            // 빈 칸은 항상 마지막 위치에
-            const emptyTile = tiles[lastIndex];
-            const x = (lastIndex % size) * 100;
-            const y = Math.floor(lastIndex / size) * 100;
-            emptyTile.style.transform = `translate(${x}%, ${y}%)`;
-            newTiles.push(emptyTile);
-            
-            tiles = newTiles;
+            // size가 홀수일 때: inversions가 짝수면 해결 가능
+            // size가 짝수일 때: (빈 칸의 행 번호가 아래서부터 셀 때 짝수 행이면 inversions가 홀수,
+            //                    빈 칸의 행 번호가 아래서부터 셀 때 홀수 행이면 inversions가 짝수)
+            const emptyRowFromBottom = size - Math.floor(lastIndex / size);
+            solvable = size % 2 === 1 
+                ? inversions % 2 === 0
+                : emptyRowFromBottom % 2 === inversions % 2;
         }
+        
+        // 섞인 인덱스에 따라 타일 재배치
+        const newTiles = [];
+        for(let i = 0; i < lastIndex; i++) {
+            const tile = tiles[indices[i]];
+            const x = (i % size) * 100;
+            const y = Math.floor(i / size) * 100;
+            tile.style.transform = `translate(${x}%, ${y}%)`;
+            newTiles.push(tile);
+        }
+        
+        // 빈 칸은 항상 마지막 위치에
+        const emptyTile = tiles[lastIndex];
+        const x = (lastIndex % size) * 100;
+        const y = Math.floor(lastIndex / size) * 100;
+        emptyTile.style.transform = `translate(${x}%, ${y}%)`;
+        newTiles.push(emptyTile);
+        
+        tiles = newTiles;
+    }
 
-        // 타일 이동 처리
-        async function handleMove(clickedTile) {
-            if(isAnimating) return;
-            
-            const emptyTile = tiles.find(t => t.classList.contains('empty'));
-            const clickedIndex = tiles.indexOf(clickedTile);
-            const emptyIndex = tiles.indexOf(emptyTile);
+    // 타일 이동 처리
+    async function handleMove(clickedTile) {
+        if(isAnimating) return;
+        
+        const emptyTile = tiles.find(t => t.classList.contains('empty'));
+        const clickedIndex = tiles.indexOf(clickedTile);
+        const emptyIndex = tiles.indexOf(emptyTile);
 
-            const {direction, distance} = getSlideDirection(clickedIndex, emptyIndex);
-            if(!direction) return;
+        const {direction, distance} = getSlideDirection(clickedIndex, emptyIndex);
+        if(!direction) return;
 
-            const movePath = getMovePath(clickedIndex, emptyIndex, direction);
-            if(movePath.length === 0) return;
+        const movePath = getMovePath(clickedIndex, emptyIndex, direction);
+        if(movePath.length === 0) return;
 
-            isAnimating = true;
-            
+        isAnimating = true;
+        
+        // 타일 배열 업데이트
+        for(const {from, to} of movePath) {
+            [tiles[from], tiles[to]] = [tiles[to], tiles[from]];
+        }
+        
+        // 시각적 위치 업데이트
+        tiles.forEach((tile, index) => {
+            const x = (index % currentLevel) * 100;
+            const y = Math.floor(index / currentLevel) * 100;
+            tile.style.transform = `translate(${x}%, ${y}%)`;
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        moves++;
+        document.getElementById('moves').textContent = moves;
+        updateTileStates();
+        checkWin();
+        isAnimating = false;
+    }
+
+    // 슬라이드 방향 및 거리 계산
+    function getSlideDirection(clickedIndex, emptyIndex) {
+        const clickedRow = Math.floor(clickedIndex / currentLevel);
+        const clickedCol = clickedIndex % currentLevel;
+        const emptyRow = Math.floor(emptyIndex / currentLevel);
+        const emptyCol = emptyIndex % currentLevel;
+
+        if(clickedRow === emptyRow) {
+            return {
+                direction: 'horizontal',
+                distance: clickedCol - emptyCol
+            };
+        }
+        if(clickedCol === emptyCol) {
+            return {
+                direction: 'vertical',
+                distance: clickedRow - emptyRow
+            };
+        }
+        return {direction: null};
+    }
+
+    // 이동 경로 생성
+    function getMovePath(clickedIndex, emptyIndex, direction) {
+        const path = [];
+        const step = direction === 'horizontal' 
+            ? (clickedIndex > emptyIndex ? 1 : -1)
+            : (clickedIndex > emptyIndex ? currentLevel : -currentLevel);
+        
+        // 시작 위치부터 클릭한 타일까지의 모든 타일을 이동 경로에 추가
+        for (let current = emptyIndex; 
+             direction === 'horizontal' 
+                ? (step > 0 ? current < clickedIndex : current > clickedIndex)
+                : (step > 0 ? current < clickedIndex : current > clickedIndex); 
+             current += step) {
+            path.push({
+                from: current + step,
+                to: current
+            });
+        }
+        
+        return path;
+    }
+
+    // 애니메이션 수행
+    function performSlideAnimation(movePath) {
+        return new Promise(resolve => {
             // 타일 배열 업데이트
             for(const {from, to} of movePath) {
                 [tiles[from], tiles[to]] = [tiles[to], tiles[from]];
@@ -243,235 +471,192 @@
                 tile.style.transform = `translate(${x}%, ${y}%)`;
             });
 
-            await new Promise(resolve => setTimeout(resolve, 200));
-            
-            moves++;
-            document.getElementById('moves').textContent = moves;
-            updateTileStates();
-            checkWin();
-            isAnimating = false;
-        }
+            setTimeout(resolve, 200);
+        });
+    }
 
-        // 슬라이드 방향 및 거리 계산
-        function getSlideDirection(clickedIndex, emptyIndex) {
-            const clickedRow = Math.floor(clickedIndex / currentLevel);
-            const clickedCol = clickedIndex % currentLevel;
-            const emptyRow = Math.floor(emptyIndex / currentLevel);
-            const emptyCol = emptyIndex % currentLevel;
-
-            if(clickedRow === emptyRow) {
-                return {
-                    direction: 'horizontal',
-                    distance: clickedCol - emptyCol
-                };
-            }
-            if(clickedCol === emptyCol) {
-                return {
-                    direction: 'vertical',
-                    distance: clickedRow - emptyRow
-                };
-            }
-            return {direction: null};
-        }
-
-        // 이동 경로 생성
-        function getMovePath(clickedIndex, emptyIndex, direction) {
-            const path = [];
-            const step = direction === 'horizontal' 
-                ? (clickedIndex > emptyIndex ? 1 : -1)
-                : (clickedIndex > emptyIndex ? currentLevel : -currentLevel);
-            
-            // 시작 위치부터 클릭한 타일까지의 모든 타일을 이동 경로에 추가
-            for (let current = emptyIndex; 
-                 direction === 'horizontal' 
-                    ? (step > 0 ? current < clickedIndex : current > clickedIndex)
-                    : (step > 0 ? current < clickedIndex : current > clickedIndex); 
-                 current += step) {
-                path.push({
-                    from: current + step,
-                    to: current
-                });
-            }
-            
-            return path;
-        }
-
-        // 애니메이션 수행
-        function performSlideAnimation(movePath) {
-            return new Promise(resolve => {
-                // 타일 배열 업데이트
-                for(const {from, to} of movePath) {
-                    [tiles[from], tiles[to]] = [tiles[to], tiles[from]];
-                }
-                
-                // 시각적 위치 업데이트
-                tiles.forEach((tile, index) => {
-                    const x = (index % currentLevel) * 100;
-                    const y = Math.floor(index / currentLevel) * 100;
-                    tile.style.transform = `translate(${x}%, ${y}%)`;
-                });
-
-                setTimeout(resolve, 200);
-            });
-        }
-
-        // 보드 위치 업데이트
-        function updateBoardPositions(shuffle = false) {
-            tiles.forEach((tile, index) => {
-                const x = (index % currentLevel) * 100;
-                const y = Math.floor(index / currentLevel) * 100;
-                if(shuffle) {
-                    tile.style.transition = 'none';
-                }
-                tile.style.transform = `translate(${x}%, ${y}%)`;
-            });
-            
+    // 보드 위치 업데이트
+    function updateBoardPositions(shuffle = false) {
+        tiles.forEach((tile, index) => {
+            const x = (index % currentLevel) * 100;
+            const y = Math.floor(index / currentLevel) * 100;
             if(shuffle) {
-                setTimeout(() => {
-                    tiles.forEach(tile => {
-                        tile.style.transition = 'transform 0.2s ease';
-                    });
-                }, 10);
+                tile.style.transition = 'none';
             }
+            tile.style.transform = `translate(${x}%, ${y}%)`;
+        });
+        
+        if(shuffle) {
+            setTimeout(() => {
+                tiles.forEach(tile => {
+                    tile.style.transition = 'transform 0.2s ease';
+                });
+            }, 10);
         }
+    }
 
-        // 타일 상태 업데이트
-        function updateTileStates() {
-            tiles.forEach((tile, index) => {
-                if(tile.classList.contains('empty')) return;
-                const correctPos = parseInt(tile.dataset.value) === index + 1;
-                tile.classList.toggle('correct', correctPos);
-            });
-        }
+    // 타일 상태 업데이트
+    function updateTileStates() {
+        tiles.forEach((tile, index) => {
+            if(tile.classList.contains('empty')) return;
+            const correctPos = parseInt(tile.dataset.value) === index + 1;
+            tile.classList.toggle('correct', correctPos);
+        });
+    }
 
-        // 승리 조건 확인
-        function checkWin() {
-            const isWin = tiles.every((tile, index) => 
-                index === tiles.length - 1 || 
-                (tile && parseInt(tile.dataset.value) === index + 1)
-            );
-            
-            if(isWin) {
-                clearInterval(timerInterval);
-                setTimeout(() => {
-                    alert(`🎉 媽媽新年快樂！\n\n${currentLevel}x${currentLevel}\n시간: ${timer}초\n이동: ${moves}회`);
-                }, 100);
-            }
-        }
-
-        // 게임 리셋
-        function resetGame() {
-            moves = 0;
-            timer = 0;
+    // 승리 조건 확인
+    function checkWin() {
+        const isWin = tiles.every((tile, index) => 
+            index === tiles.length - 1 || 
+            (tile && parseInt(tile.dataset.value) === index + 1)
+        );
+        
+        if(isWin) {
             clearInterval(timerInterval);
-            document.getElementById('moves').textContent = '0';
-            document.getElementById('timer').textContent = '0';
-            timerInterval = setInterval(() => {
-                timer++;
-                document.getElementById('timer').textContent = timer;
-            }, 1000);
+            setTimeout(() => {
+                const popup = document.getElementById('win-popup');
+                const overlay = document.getElementById('overlay');
+                const stats = document.getElementById('win-stats');
+                
+                stats.innerHTML = `
+                    <strong>${currentLevel}x${currentLevel} ${translations[currentLanguage]["puzzle-size"]}</strong><br>
+                    ⏱ ${timer}${translations[currentLanguage]["seconds"]}<br>
+                    🔢 ${moves}${translations[currentLanguage]["moves"]}
+                `;
+                
+                popup.style.display = 'block';
+                overlay.style.display = 'block';
+            }, 200);
         }
+    }
 
-        // 이벤트 리스너
-        function addEventListeners() {
-            document.getElementById('level-select').addEventListener('change', (e) => {
-                initGame(parseInt(e.target.value));
-            });
+    // 게임 리셋
+    function resetGame() {
+        moves = 0;
+        timer = 0;
+        clearInterval(timerInterval);
+        document.getElementById('moves').textContent = '0';
+        document.getElementById('timer').textContent = '0';
+        timerInterval = setInterval(() => {
+            timer++;
+            document.getElementById('timer').textContent = timer;
+        }, 1000);
+    }
 
-            let touchStartX = 0;
-            let touchStartY = 0;
-            let touchStartTime = 0;
+    // 이벤트 리스너
+    function addEventListeners() {
+        document.getElementById('level-select').addEventListener('change', (e) => {
+            initGame(parseInt(e.target.value));
+        });
 
-            // 터치 이벤트 처리
-            board.addEventListener('touchstart', e => {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-                touchStartTime = Date.now();
-                e.preventDefault();
-            }, {passive: false});
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
 
-            board.addEventListener('touchend', e => {
-                const touchEndX = e.changedTouches[0].clientX;
-                const touchEndY = e.changedTouches[0].clientY;
-                const touchEndTime = Date.now();
-                
-                const dx = touchEndX - touchStartX;
-                const dy = touchEndY - touchStartY;
-                const duration = touchEndTime - touchStartTime;
-                
-                // 빠른 탭 동작 처리 (200ms 미만)
-                if (duration < 200 && Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-                    const target = document.elementFromPoint(touchEndX, touchEndY);
-                    if(target?.classList.contains('tile') && !target.classList.contains('empty')) {
-                        handleMove(target);
-                    }
-                    e.preventDefault();
-                    return;
-                }
+        // 터치 이벤트 처리
+        board.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            e.preventDefault();
+        }, {passive: false});
 
-                // 슬라이드 동작 처리
-                const minSwipeDistance = 30; // 최소 슬라이드 거리
-                if (Math.abs(dx) > minSwipeDistance || Math.abs(dy) > minSwipeDistance) {
-                    const emptyTile = tiles.find(t => t.classList.contains('empty'));
-                    const emptyIndex = tiles.indexOf(emptyTile);
-                    const emptyRow = Math.floor(emptyIndex / currentLevel);
-                    const emptyCol = emptyIndex % currentLevel;
-                    
-                    // 슬라이드 방향 결정
-                    let targetIndex = -1;
-                    if (Math.abs(dx) > Math.abs(dy)) {
-                        // 수평 슬라이드
-                        if (dx > 0 && emptyCol > 0) { // 오른쪽으로 슬라이드
-                            targetIndex = emptyIndex - 1;
-                        } else if (dx < 0 && emptyCol < currentLevel - 1) { // 왼쪽으로 슬라이드
-                            targetIndex = emptyIndex + 1;
-                        }
-                    } else {
-                        // 수직 슬라이드
-                        if (dy > 0 && emptyRow > 0) { // 아래로 슬라이드
-                            targetIndex = emptyIndex - currentLevel;
-                        } else if (dy < 0 && emptyRow < currentLevel - 1) { // 위로 슬라이드
-                            targetIndex = emptyIndex + currentLevel;
-                        }
-                    }
-                    
-                    // 유효한 이동이면 처리
-                    if (targetIndex >= 0 && targetIndex < tiles.length) {
-                        handleMove(tiles[targetIndex]);
-                    }
-                }
-                e.preventDefault();
-            }, {passive: false});
-
-            // 마우스 이벤트 처리
-            board.addEventListener('click', e => {
-                const target = e.target;
-                if(target.classList.contains('tile') && !target.classList.contains('empty')) {
+        board.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchEndTime = Date.now();
+            
+            const dx = touchEndX - touchStartX;
+            const dy = touchEndY - touchStartY;
+            const duration = touchEndTime - touchStartTime;
+            
+            // 빠른 탭 동작 처리 (200ms 미만)
+            if (duration < 200 && Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+                const target = document.elementFromPoint(touchEndX, touchEndY);
+                if(target?.classList.contains('tile') && !target.classList.contains('empty')) {
                     handleMove(target);
                 }
-            });
-        }
+                e.preventDefault();
+                return;
+            }
 
-        // 새 게임 시작
-        function startNewGame() {
-            initGame(currentLevel);
-        }
+            // 슬라이드 동작 처리
+            const minSwipeDistance = 30; // 최소 슬라이드 거리
+            if (Math.abs(dx) > minSwipeDistance || Math.abs(dy) > minSwipeDistance) {
+                const emptyTile = tiles.find(t => t.classList.contains('empty'));
+                const emptyIndex = tiles.indexOf(emptyTile);
+                const emptyRow = Math.floor(emptyIndex / currentLevel);
+                const emptyCol = emptyIndex % currentLevel;
+                
+                // 슬라이드 방향 결정
+                let targetIndex = -1;
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    // 수평 슬라이드
+                    if (dx > 0 && emptyCol > 0) { // 오른쪽으로 슬라이드
+                        targetIndex = emptyIndex - 1;
+                    } else if (dx < 0 && emptyCol < currentLevel - 1) { // 왼쪽으로 슬라이드
+                        targetIndex = emptyIndex + 1;
+                    }
+                } else {
+                    // 수직 슬라이드
+                    if (dy > 0 && emptyRow > 0) { // 아래로 슬라이드
+                        targetIndex = emptyIndex - currentLevel;
+                    } else if (dy < 0 && emptyRow < currentLevel - 1) { // 위로 슬라이드
+                        targetIndex = emptyIndex + currentLevel;
+                    }
+                }
+                
+                // 유효한 이동이면 처리
+                if (targetIndex >= 0 && targetIndex < tiles.length) {
+                    handleMove(tiles[targetIndex]);
+                }
+            }
+            e.preventDefault();
+        }, {passive: false});
 
-        // 초기 실행
-        initGame(3);
+        // 마우스 이벤트 처리
+        board.addEventListener('click', e => {
+            const target = e.target;
+            if(target.classList.contains('tile') && !target.classList.contains('empty')) {
+                handleMove(target);
+            }
+        });
+    }
 
-        // PWA 서비스 워커 등록
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker 등록 성공:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker 등록 실패:', error);
-                    });
-            });
-        }
+    // 새 게임 시작
+    function startNewGame() {
+        const popup = document.getElementById('win-popup');
+        const overlay = document.getElementById('overlay');
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+        initGame(currentLevel);
+    }
+
+    // 초기 실행
+    initGame(3);
+
+    // PWA 서비스 워커 등록
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('ServiceWorker 등록 성공:', registration.scope);
+                })
+                .catch(error => {
+                    console.log('ServiceWorker 등록 실패:', error);
+                });
+        });
+    }
+
+    // 초기 실행 시 언어 설정
+    document.addEventListener('DOMContentLoaded', () => {
+        // 브라우저 언어 감지
+        const browserLang = navigator.language.split('-')[0];
+        const supportedLang = ['ko', 'en', 'zh'].includes(browserLang) ? browserLang : 'ko';
+        
+        document.getElementById('language-select').value = supportedLang;
+        changeLanguage(supportedLang);
+    });
     </script>
 </body>
 </html>
