@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sandbox 프로젝트</title>
+    <script>
+        // 서브도메인이 game.cocy.io인 경우 리다이렉트
+        if (window.location.hostname === 'game.cocy.io') {
+            window.location.href = '/blockpuzzle/index.html';
+        }
+    </script>
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6634731722045607"
