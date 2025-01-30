@@ -312,6 +312,7 @@
     const board = document.getElementById('puzzle-board');
     let isAnimating = false;
     let isGameStarted = false;
+    let isGameWon = false;  // 승리 상태를 저장할 플래그 추가
 
     // 언어 변경 함수
     function changeLanguage(lang) {
@@ -434,7 +435,7 @@
 
     // 타일 이동 처리
     async function handleMove(clickedTile) {
-        if(isAnimating) return;
+        if(isAnimating || isGameWon) return;  // 승리 상태일 때는 이동 불가
         if(!isGameStarted) isGameStarted = true;
         
         const emptyTile = tiles.find(t => t.classList.contains('empty'));
@@ -570,6 +571,7 @@
         );
         
         if(isWin) {
+            isGameWon = true;  // 승리 시 플래그 설정
             clearInterval(timerInterval);
             saveScore();
             updateHighScores();
@@ -595,6 +597,7 @@
         moves = 0;
         timer = 0;
         isGameStarted = false;
+        isGameWon = false;  // 게임 리셋 시 승리 플래그 초기화
         clearInterval(timerInterval);
         document.getElementById('moves').textContent = '0';
         document.getElementById('timer').textContent = '0';
