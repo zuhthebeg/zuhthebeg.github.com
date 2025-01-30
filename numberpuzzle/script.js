@@ -15,7 +15,8 @@ const translations = {
         "no-scores": "기록이 없습니다",
         "reset-scores": "기록 초기화",
         "confirm-reset": "정말로 최고 기록을 초기화하시겠습니까?",
-        "image": "이미지"
+        "image": "업로드",
+        "random": "랜덤"
     },
     en: {
         "3x3": "3x3",
@@ -32,7 +33,8 @@ const translations = {
         "no-scores": "No scores yet",
         "reset-scores": "Reset Scores",
         "confirm-reset": "Are you sure you want to reset the high scores?",
-        "image": "Image"
+        "image": "Upload",
+        "random": "Random"
     },
     zh: {
         "3x3": "3x3",
@@ -49,7 +51,8 @@ const translations = {
         "no-scores": "暫無紀錄",
         "reset-scores": "重置紀錄",
         "confirm-reset": "您確定要重置最高紀錄嗎？",
-        "image": "圖片"
+        "image": "上傳",
+        "random": "隨機"
     }
 };
 
@@ -81,6 +84,12 @@ function updateTexts() {
             element.textContent = translations[currentLanguage][key];
         }
     });
+    
+    // 버튼 텍스트 강제 업데이트
+    const uploadBtn = document.querySelector('button[data-i18n="image"]');
+    const randomBtn = document.querySelector('button[data-i18n="random"]');
+    if(uploadBtn) uploadBtn.textContent = translations[currentLanguage]['image'];
+    if(randomBtn) randomBtn.textContent = translations[currentLanguage]['random'];
 }
 
 // 게임 초기화
@@ -502,24 +511,47 @@ function addEventListeners() {
     board.setAttribute('tabindex', '0');
     board.focus();
 
-    // 이미지 업로드 버튼 추가 (기존 버튼과 분리, 중복 추가 방지)
-    if (!document.getElementById('image-upload')) {
-        const imageUpload = document.createElement('input');
-        imageUpload.id = 'image-upload';
-        imageUpload.type = 'file';
-        imageUpload.accept = 'image/*';
-        imageUpload.style.display = 'none';
-        imageUpload.addEventListener('change', handleImageUpload);
+    // 컨트롤 요소 선택
+    const controls = document.getElementById('controls');
+    
+    // 기존 버튼 제거
+    const existingUpload = document.querySelector('#controls button[data-i18n="image"]');
+    const existingRandom = document.querySelector('#controls button[data-i18n="random"]');
+    if (existingUpload) existingUpload.remove();
+    if (existingRandom) existingRandom.remove();
 
-        const uploadButton = document.createElement('button');
-        uploadButton.setAttribute('data-i18n', 'image');  // 다국어 처리 추가
-        uploadButton.onclick = () => imageUpload.click();
-        uploadButton.style.marginLeft = '10px'; // 새 게임 버튼과 간격 추가
+    // 새 버튼 생성 (다국어 처리 보강)
+    const uploadButton = document.createElement('button');
+    uploadButton.setAttribute('data-i18n', 'image');
+    uploadButton.textContent = translations[currentLanguage]['image']; // 텍스트 강제 설정
+    uploadButton.style.marginLeft = '10px';
+    
+    const randomButton = document.createElement('button');
+    randomButton.setAttribute('data-i18n', 'random');
+    randomButton.textContent = translations[currentLanguage]['random']; // 텍스트 강제 설정
+    randomButton.style.marginLeft = '10px';
+    randomButton.onclick = () => {
+        backgroundImage = `https://picsum.photos/250/250?random=${Date.now()}`;
+        startNewGame();
+    };
 
-        const controls = document.getElementById('controls');
-        controls.appendChild(imageUpload);
-        controls.appendChild(uploadButton);
-    }
+    // 버튼 추가
+    controls.appendChild(uploadButton);
+    controls.appendChild(randomButton);
+
+    // 파일 업로드 인풋 재생성
+    const existingInput = document.getElementById('image-upload');
+    if (existingInput) existingInput.remove();
+    
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'image-upload';
+    fileInput.style.display = 'none';
+    fileInput.accept = 'image/*';
+    fileInput.addEventListener('change', handleImageUpload);
+    document.body.appendChild(fileInput);
+    
+    uploadButton.onclick = () => fileInput.click();
 }
 
 // 새 게임 시작
