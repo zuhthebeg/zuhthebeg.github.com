@@ -1,0 +1,261 @@
+:root {
+    --main-color: #2c3e50;
+    --correct-color: #27ae60;
+    --empty-color: #34495e;
+    --text-color: #ecf0f1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Malgun Gothic', sans-serif;
+    background: var(--main-color);
+    touch-action: manipulation;
+    padding: 10px;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 10px auto;
+}
+
+#controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+select, button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+    flex: 1;
+}
+
+button {
+    max-width: 100px;
+}
+
+#stats {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+/* 점수판 스타일 추가 */
+#score-board {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 15px;
+    color: var(--text-color);
+}
+
+#score-board h3 {
+    margin-bottom: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.reset-scores {
+    cursor: pointer;
+    font-size: 18px;
+    color: #e74c3c;
+    transition: color 0.2s;
+}
+
+.reset-scores:hover {
+    color: #c0392b;
+}
+
+#high-scores {
+    list-style: none;
+}
+
+#high-scores li {
+    padding: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+}
+
+#puzzle-board {
+    display: grid;
+    background: var(--main-color);
+    gap: 2px;
+    border-radius: 6px;
+    overflow: hidden;
+    touch-action: none;
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+}
+
+.tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ecf0f1;
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: var(--main-color);
+    transition: transform 0.3s ease;
+    user-select: none;
+    position: absolute;
+    will-change: transform;
+}
+
+.tile.correct {
+    background: var(--correct-color);
+    color: var(--text-color);
+}
+
+.tile.empty {
+    background: var(--empty-color);
+    border: 2px dashed #95a5a6;
+    opacity: 0.8;
+}
+
+@media (max-width: 480px) {
+    .tile {
+        font-size: 3rem;
+    }
+}
+
+/* 승리 팝업 스타일 추가 */
+.win-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    text-align: center;
+    z-index: 1000;
+    min-width: 280px;
+    display: none;
+    color: var(--main-color);
+}
+
+.win-popup h2 {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: var(--correct-color);
+}
+
+.win-popup p {
+    margin: 10px 0;
+    font-size: 32px;
+}
+
+.win-popup button {
+    margin-top: 15px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+}
+
+#language-select {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background: #3498db;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#language-select option {
+    background: white;
+    color: #2c3e50;
+}
+
+/* 팝업 닫기 버튼 스타일 수정 */
+.popup-content {
+    position: relative;
+    padding: 30px;
+}
+#close-popup {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 28px;
+    padding: 0 8px;
+    line-height: 1;
+}
+
+/* 최고 기록 애니메이션 추가 */
+@keyframes scoreRise {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes confetti {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.high-score-entry {
+    animation: scoreRise 0.5s ease-out;
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #ffd700;
+    opacity: 0;
+    z-index: 1000;
+    animation: confetti 2s ease-out;
+}
