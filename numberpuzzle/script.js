@@ -94,11 +94,14 @@ function initGame(level) {
         const tileSize = 100 / level;
         tiles.forEach((tile, index) => {
             if (!tile.classList.contains('empty')) {
-                const row = Math.floor(index / level);
-                const col = index % level;
+                const originalValue = parseInt(tile.dataset.value) - 1;
+                const row = Math.floor(originalValue / level);
+                const col = originalValue % level;
+                
                 tile.style.backgroundImage = `url(${backgroundImage})`;
-                tile.style.backgroundSize = `${level * 100}% ${level * 100}%`;
-                tile.style.backgroundPosition = `-${col * tileSize}% -${row * tileSize}%`;
+                tile.style.backgroundSize = `${level * 100}%`;
+                tile.style.backgroundPosition = 
+                    `${(col * 100) / (level - 1)}% ${(row * 100) / (level - 1)}%`;
             } else {
                 tile.style.backgroundImage = '';
             }
@@ -145,7 +148,7 @@ function generateBoard(size) {
     
     // 타일 섞기 전에 잠시 대기
     setTimeout(() => {
-        shuffleTiles();
+       shuffleTiles();
     }, 100);
 }
 
@@ -649,8 +652,27 @@ function handleImageUpload(event) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            backgroundImage = e.target.result;
-            startNewGame();
+            // 이미지 전처리 (1:1 비율, 중앙 크롭)
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const size = Math.min(img.width, img.height);
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(
+                    img,
+                    (img.width - size)/2,  // 중앙 X
+                    (img.height - size)/2, // 중앙 Y
+                    size, size,            // 크롭 영역
+                    0, 0, size, size        // 캔버스에 그리기
+                );
+                
+                backgroundImage = canvas.toDataURL();
+                startNewGame();
+            };
+            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
