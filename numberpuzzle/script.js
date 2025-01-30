@@ -531,7 +531,7 @@ function addEventListeners() {
     randomButton.textContent = translations[currentLanguage]['random']; // 텍스트 강제 설정
     randomButton.style.marginLeft = '10px';
     randomButton.onclick = () => {
-        backgroundImage = `https://picsum.photos/460/460?random=${Date.now()}`;
+        backgroundImage = `https://picsum.photos/460?random=${Date.now()}`;
         startNewGame();
     };
 
