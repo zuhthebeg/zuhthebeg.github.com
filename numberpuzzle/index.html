@@ -46,6 +46,23 @@
         <option value="zh">繁體中文</option>
     </select>
 
+    <script>
+      const langMap = {
+        'ko': 'manifest.json',
+        'zh-Hant': 'manifest-zh-Hant.json',
+        'zh-TW': 'manifest-zh-Hant.json',
+        'default': 'manifest-en.json'
+      };
+
+      const userLang = navigator.language || navigator.userLanguage;
+      const manifestFile = langMap[userLang] || langMap[userLang.split('-')[0]] || langMap['default'];
+      
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = manifestFile;
+      document.head.appendChild(link);
+    </script>
+
     <script src="script.js"></script>
 </body>
 </html>

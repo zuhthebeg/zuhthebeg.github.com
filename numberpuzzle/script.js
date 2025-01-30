@@ -14,7 +14,8 @@ const translations = {
         "high-scores": "🏆 최고 기록",
         "no-scores": "기록이 없습니다",
         "reset-scores": "기록 초기화",
-        "confirm-reset": "정말로 최고 기록을 초기화하시겠습니까?"
+        "confirm-reset": "정말로 최고 기록을 초기화하시겠습니까?",
+        "image": "이미지"
     },
     en: {
         "3x3": "3x3",
@@ -30,7 +31,8 @@ const translations = {
         "high-scores": "🏆 High Scores",
         "no-scores": "No scores yet",
         "reset-scores": "Reset Scores",
-        "confirm-reset": "Are you sure you want to reset the high scores?"
+        "confirm-reset": "Are you sure you want to reset the high scores?",
+        "image": "Image"
     },
     zh: {
         "3x3": "3x3",
@@ -46,7 +48,8 @@ const translations = {
         "high-scores": "🏆 最高紀錄",
         "no-scores": "暫無紀錄",
         "reset-scores": "重置紀錄",
-        "confirm-reset": "您確定要重置最高紀錄嗎？"
+        "confirm-reset": "您確定要重置最高紀錄嗎？",
+        "image": "圖片"
     }
 };
 
@@ -60,6 +63,7 @@ const board = document.getElementById('puzzle-board');
 let isAnimating = false;
 let isGameStarted = false;
 let isGameWon = false;  // 승리 상태를 저장할 플래그 추가
+let backgroundImage = null;
 
 // 언어 변경 함수
 function changeLanguage(lang) {
@@ -80,11 +84,33 @@ function updateTexts() {
 }
 
 // 게임 초기화
-function initGame(size) {
-    currentLevel = size;
+function initGame(level) {
+    currentLevel = level;
     resetGame();
-    generateBoard(size);
+    generateBoard(level);
     addEventListeners();
+
+    if (backgroundImage) {
+        const tileSize = 100 / level;
+        tiles.forEach((tile, index) => {
+            if (!tile.classList.contains('empty')) {
+                const row = Math.floor(index / level);
+                const col = index % level;
+                tile.style.backgroundImage = `url(${backgroundImage})`;
+                tile.style.backgroundSize = `${level * 100}% ${level * 100}%`;
+                tile.style.backgroundPosition = `-${col * tileSize}% -${row * tileSize}%`;
+            } else {
+                tile.style.backgroundImage = '';
+            }
+        });
+
+        // 타일을 정답 상태로 초기화
+        updateBoardPositions();
+    } else {
+        tiles.forEach(tile => {
+            tile.style.backgroundImage = '';
+        });
+    }
 }
 
 // 보드 생성
@@ -123,7 +149,7 @@ function generateBoard(size) {
     }, 100);
 }
 
-async function shuffleTiles() {
+function shuffleTiles() {
     const size = currentLevel;
     const lastIndex = size * size - 1;
 
@@ -138,25 +164,18 @@ async function shuffleTiles() {
             [indices[i], indices[j]] = [indices[j], indices[i]];
         }
 
-        // 빈 칸의 위치 찾기 (실제로 마지막에 배치되기 전 상태에서)
-        let emptyIndex = lastIndex; // 기본적으로 마지막 위치
-        let inversions = 0;
-
         // 전환 수(inversions) 계산
+        let inversions = 0;
         for (let i = 0; i < indices.length - 1; i++) {
             for (let j = i + 1; j < indices.length; j++) {
                 if (indices[i] > indices[j]) inversions++;
             }
         }
 
-        // 빈 칸의 행 위치를 올바르게 찾기
-        const emptyRow = Math.floor(emptyIndex / size);
-        const emptyRowFromBottom = size - emptyRow;
-
         // 퍼즐 해결 가능 여부 판단
         solvable = size % 2 === 1
             ? inversions % 2 === 0
-            : (emptyRowFromBottom % 2) !== (inversions % 2);
+            : (inversions % 2) === 0;
     }
 
     // 섞인 인덱스에 따라 타일 재배치
@@ -318,7 +337,7 @@ function checkWin() {
     );
     
     if(isWin) {
-        isGameWon = true;  // 승리 시 플래그 설정
+        isGameWon = true;
         clearInterval(timerInterval);
         saveScore();
         updateHighScores();
@@ -335,6 +354,7 @@ function checkWin() {
             
             popup.style.display = 'block';
             overlay.style.display = 'block';
+            popup.style.backgroundImage = '';  // 팝업 배경 제거
         }, 200);
     }
 }
@@ -478,6 +498,25 @@ function addEventListeners() {
     // 게임 보드에 tabindex 추가하여 포커스 가능하게 설정
     board.setAttribute('tabindex', '0');
     board.focus();
+
+    // 이미지 업로드 버튼 추가 (기존 버튼과 분리, 중복 추가 방지)
+    if (!document.getElementById('image-upload')) {
+        const imageUpload = document.createElement('input');
+        imageUpload.id = 'image-upload';
+        imageUpload.type = 'file';
+        imageUpload.accept = 'image/*';
+        imageUpload.style.display = 'none';
+        imageUpload.addEventListener('change', handleImageUpload);
+
+        const uploadButton = document.createElement('button');
+        uploadButton.setAttribute('data-i18n', 'image');  // 다국어 처리 추가
+        uploadButton.onclick = () => imageUpload.click();
+        uploadButton.style.marginLeft = '10px'; // 새 게임 버튼과 간격 추가
+
+        const controls = document.getElementById('controls');
+        controls.appendChild(imageUpload);
+        controls.appendChild(uploadButton);
+    }
 }
 
 // 새 게임 시작
@@ -582,14 +621,7 @@ function closeWinPopup() {
     }, 100); // 100ms 지연 추가
 }
 
-// 오버레이 클릭 시 팝업 닫기
 document.getElementById('overlay').addEventListener('click', closeWinPopup);
-
-// 팝업 내용 클릭 시 이벤트 전파 방지
-document.querySelector('.win-popup').addEventListener('click', function(e) {
-    e.stopPropagation();
-});
-
 // 초기화 버튼 추가
 function addResetButton() {
     const title = document.querySelector('#score-board h3');
@@ -609,6 +641,18 @@ function resetHighScores() {
         const storageKey = `puzzleScores-level${currentLevel}`;
         localStorage.removeItem(storageKey);
         updateHighScores();
+    }
+}
+
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            backgroundImage = e.target.result;
+            startNewGame();
+        };
+        reader.readAsDataURL(file);
     }
 }
 
