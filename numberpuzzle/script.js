@@ -610,28 +610,34 @@ document.getElementById('image-upload-btn').onclick = function() {
     fileInput.click();
 };
 
-// 이미지 업로드 핸들러 수정
-async function handleImageUpload(e) {
-    const loading = showLoading();
-    try {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        // 이미지 로드 타임아웃 설정 (5초)
-        const img = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            setTimeout(() => reject(new Error('이미지 로드 시간 초과')), 5000);
-            reader.readAsDataURL(file);
-        });
-        
-        backgroundImage = img;
-        startNewGame();
-    } catch (error) {
-        showErrorToast('⚠️ 이미지 로드 실패: ' + error.message);
-    } finally {
-        loading.remove();
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // 이미지 전처리 (1:1 비율, 중앙 크롭)
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const size = Math.min(img.width, img.height);
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(
+                    img,
+                    (img.width - size)/2,  // 중앙 X
+                    (img.height - size)/2, // 중앙 Y
+                    size, size,            // 크롭 영역
+                    0, 0, size, size        // 캔버스에 그리기
+                );
+                
+                backgroundImage = canvas.toDataURL();
+                startNewGame();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
 }
 

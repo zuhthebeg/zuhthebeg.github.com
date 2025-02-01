@@ -351,12 +351,15 @@ button {
     animation: 
         textPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
         neonGlow 1.2s ease-in-out infinite alternate;
-    /* 모바일 대응 추가 */
+    /* 모바일 대응 개선 */
     @media (max-width: 480px) {
-        font-size: 80px;
+        font-size: 60px;  /* 크기 축소 */
         text-shadow: 
-            0 0 15px #ff9f43,
-            0 0 30px #ff9f43;
+            0 0 10px #ff9f43,
+            0 0 20px #ff9f43;
+        max-width: 100%;  /* 화면 벗어남 방지 */
+        transform: scale(0.9);  /* 비율 조정 */
+        word-wrap: break-word;  /* 긴 텍스트 대비 */
     }
 }
 
@@ -376,6 +379,12 @@ button {
     }
     100% { 
         transform: scale(1) rotate(0);
+    }
+    /* 모바일 애니메이션 최적화 */
+    @media (max-width: 480px) {
+        80% { 
+            transform: scale(1.05) rotate(3deg);  /* 회전량 감소 */
+        }
     }
 }
 
