@@ -621,7 +621,7 @@ function updateHighScores() {
         return;
     }
 
-    scores.slice(0, 5).forEach((entry, index) => {
+    scores.slice(0, 3).forEach((entry, index) => {
         const li = document.createElement('li');
         if (index === 0) {
             li.classList.add('high-score-entry');
