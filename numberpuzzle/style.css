@@ -41,28 +41,34 @@ body {
 select, button {
     padding: 8px 12px;
     font-size: 14px;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
-    background: #3498db;
-    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
     cursor: pointer;
     flex: 1;
+    backdrop-filter: blur(5px);
 }
 
 button {
     max-width: 100px;
+    background: rgba(255,255,255,0.1);
+    color: var(--text-color);
+}
+
+button:hover {
+    background: rgba(255,255,255,0.2);
 }
 
 #stats {
     display: flex;
     justify-content: space-between;
     background: rgba(255,255,255,0.1);
-    padding: 10px;
+    padding: 1rem;
     border-radius: 4px;
     margin-bottom: 15px;
     color: var(--text-color);
     gap: 1rem;
-    padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
 }
@@ -85,17 +91,11 @@ button {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    font-size: 32px;
 }
 
 .reset-scores {
-    cursor: pointer;
-    font-size: 18px;
-    color: #e74c3c;
-    transition: color 0.2s;
-}
-
-.reset-scores:hover {
-    color: #c0392b;
+    display: none !important;
 }
 
 #high-scores {
@@ -127,7 +127,7 @@ button {
     justify-content: center;
     align-items: center;
     background: #ecf0f1;
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-weight: bold;
     color: var(--main-color);
     transition: transform 0.3s ease;
@@ -155,36 +155,39 @@ button {
 
 /* 승리 팝업 스타일 추가 */
 .win-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.95);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    text-align: center;
-    z-index: 1000;
-    min-width: 280px;
-    display: none;
-    color: var(--main-color);
+    background: rgba(245, 245, 245, 0.98);
+    border: 2px solid #2c3e50;
+    box-shadow: 0 0 25px rgba(44, 62, 80, 0.2);
+    color: #2c3e50;
+}
+
+#win-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-size: 24px;
+    margin: 20px 0;
 }
 
 .win-popup h2 {
-    font-size: 48px;
-    margin-bottom: 15px;
-    color: var(--correct-color);
+    color: #e74c3c;
+    text-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
 }
 
-.win-popup p {
-    margin: 10px 0;
-    font-size: 32px;
+.win-popup-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
 }
 
 .win-popup button {
-    margin-top: 15px;
-    width: 100%;
-    max-width: 200px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+}
+
+.win-popup button:hover {
+    background: #34495e;
 }
 
 .overlay {
@@ -196,25 +199,6 @@ button {
     background: rgba(0,0,0,0.5);
     z-index: 999;
     display: none;
-}
-
-#language-select {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 12px;
-    background: #3498db;
-    border: none;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-#language-select option {
-    background: white;
-    color: #2c3e50;
 }
 
 /* 팝업 닫기 버튼 스타일 수정 */
@@ -267,3 +251,202 @@ button {
     z-index: 1000;
     animation: confetti 2s ease-out;
 }
+
+/* 언어 선택기 관련 CSS 제거 */
+#language-select {
+    display: none !important;
+}
+
+/* 기호 기본 크기 조정 */
+#stats div {
+    font-size: 24px;
+}
+
+/* 타일 내부 기호 크기 */
+.tile {
+    font-size: 4rem;
+}
+
+/* 승리 팝업 기호 */
+.win-popup p::before {
+    font-size: 48px;
+}
+
+#win-stats {
+    font-size: 32px;
+}
+
+/* 컨트롤 버튼 기호 */
+button {
+    font-size: 24px;
+    padding: 15px;
+}
+
+#level-select {
+    padding: 7px 15px;
+    font-size: 32px;
+    height: auto;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: rgba(255,255,255,0.1) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") no-repeat right 10px center;
+    background-size: 12px;
+    color: var(--text-color);
+}
+
+/* 드롭다운 옵션 스타일 */
+#level-select option {
+    background: var(--space-black); /* 어두운 배경색 사용 */
+    color: var(--text-color);
+    padding: 8px 12px;
+}
+
+/* 포커스 시 아웃라인 제거 */
+#level-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+}
+
+/* 인터넷 익스플로러 대응 */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    #level-select {
+        color: #000; /* IE에서 텍스트 색상 강제 설정 */
+    }
+}
+
+button {
+    padding: 5px 15px;
+    font-size: 32px;
+}
+
+#overlay {
+    display: none; /* 초기 상태 숨김 */
+}
+
+#win-stats span {
+    padding: 8px 15px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 5px;
+}
+
+/* 클리어 효과 애니메이션 */
+.clear-effect {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.clear-text {
+    font-size: 120px;
+    font-family: 'Impact', sans-serif;
+    color: #ffdd40;
+    text-shadow: 
+        0 0 20px #ff9f43,
+        0 0 40px #ff9f43,
+        0 0 60px #ff9f43,
+        0 0 80px #ff9f43;
+    animation: 
+        textPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+        neonGlow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from { text-shadow: 0 0 20px #ff9f43; }
+    to { text-shadow: 0 0 50px #ff9f43, 0 0 70px #ff9f43; }
+}
+
+@keyframes textPop {
+    0% { 
+        transform: scale(0) rotate(-15deg);
+        opacity: 0;
+    }
+    80% { 
+        transform: scale(1.1) rotate(5deg);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(1) rotate(0);
+    }
+}
+
+.particles {
+    background: radial-gradient(circle, 
+        rgba(255,221,64,0.8) 0%, 
+        rgba(255,159,67,0.6) 50%, 
+        transparent 100%);
+    animation: particles 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.error-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e74c3c;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { bottom: -50px; }
+    to { bottom: 20px; }
+}
+
+.image-loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    padding: 20px 30px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.loader-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader-text {
+    font-size: 16px;
+}
+
+.loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 9999;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+

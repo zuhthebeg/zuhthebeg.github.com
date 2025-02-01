@@ -8,69 +8,42 @@
     <link rel="apple-touch-icon" href="icons/icon.svg">
     <meta name="theme-color" content="#2c3e50">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="../common.css">
 
 </head>
 <body>
     <div id="game-container">
         <div id="controls">
             <select id="level-select">
-                <option value="3" selected data-i18n="3x3">3x3</option>
-                <option value="4" data-i18n="4x4">4x4</option>
-                <option value="5" data-8n="5x5">5x5</option>
+                <option value="3" selected>3⨉3</option>
+                <option value="4">4⨉4</option>
+                <option value="5">5⨉5</option>
             </select>
-            <button onclick="startNewGame()" data-i18n="new-game">새게임</button>
+            <button onclick="startNewGameWithBlank()">🔄</button>
+            <button id="image-upload-btn" title="이미지 업로드">🖼</button>
+            <button id="random-image-btn" title="랜덤 이미지">🎲</button>
         </div>
         <div id="stats">
-            <div>⏱ <span id="timer">0</span><span data-i18n="seconds">초</span></div>
-            <div>🔢 <span id="moves">0</span><span data-i18n="moves">회</span></div>
+            <div>⏱ <span id="timer"> 0</span></div>
+            <div>↔️ <span id="moves">0</span></div>
         </div>
         <div id="puzzle-board"></div>
     </div>
-    <button id="home-btn" onclick="window.location.href='/'">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-    </button>
 
     <!-- 승리 팝업 추가 -->
     <div class="overlay" id="overlay"></div>
-    <div class="win-popup" id="win-popup">
-        <h2 data-i18n="congratulations">🎉 축하!</h2>
-        <p data-i18n="puzzle-completed">클리어!</p>
-        <p id="win-stats"></p>
-        <button onclick="startNewGame()" data-i18n="start-new-game">새 게임 시작</button>
+    <div class="win-popup" id="win-popup" style="display: none;">
+        <div id="win-stats"></div>
+        <div class="win-popup-buttons">
+            <button onclick="startNewGameWithBlank()">🔄</button>
+            <button onclick="closeWinPopup()">⬅️</button>
+        </div>
     </div>
 
     <div id="score-board">
-        <h3 data-i18n="high-scores">🏆 최고 기록</h3>
+        <h3 data-i18n="high-scores">🏆</h3>
         <ul id="high-scores"></ul>
     </div>
 
-    <select id="language-select" onchange="changeLanguage(this.value)">
-        <option value="ko">한국어</option>
-        <option value="en">English</option>
-        <option value="zh">繁體中文</option>
-    </select>
-
-    <script>
-      const langMap = {
-        'ko': 'manifest.json',
-        'zh-Hant': 'manifest-zh-TW.json',
-        'zh-TW': 'manifest-zh-TW.json',
-        'default': 'manifest-en.json'
-      };
-
-      const userLang = navigator.language || navigator.userLanguage;
-      const manifestFile = langMap[userLang] || langMap[userLang.split('-')[0]] || langMap['default'];
-      
-      const link = document.createElement('link');
-      link.rel = 'manifest';
-      link.href = manifestFile;
-      document.head.appendChild(link);
-    </script>
-
-    <script src="script.js?v=1.0.5"></script>
+    <script src="script.js?v=1.0.6"></script>
 </body>
 </html>
