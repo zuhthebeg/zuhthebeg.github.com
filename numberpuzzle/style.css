@@ -3,6 +3,9 @@
     --correct-color: #27ae60;
     --empty-color: #34495e;
     --text-color: #ecf0f1;
+    --neon-blue: #00f3ff;
+    --neon-pink: #ff00ff;
+    --space-black: #0a0a16;
 }
 
 * {
@@ -58,6 +61,10 @@ button {
     border-radius: 4px;
     margin-bottom: 15px;
     color: var(--text-color);
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
 }
 
 /* 점수판 스타일 추가 */
@@ -112,6 +119,7 @@ button {
     width: 100%;
     aspect-ratio: 1;
     position: relative;
+    margin: 1rem 0;
 }
 
 .tile {

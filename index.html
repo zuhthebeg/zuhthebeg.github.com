@@ -41,6 +41,8 @@
                 var(--neon-blue) 0%, 
                 var(--neon-pink) 100%
             );
+            --numberpuzzle-blue: #4A90E2;
+            --numberpuzzle-yellow: #FFD700;
         }
 
         body {
@@ -236,6 +238,62 @@
             color: var(--neon-pink);
             text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
         }
+
+        .game-card[data-game="numberpuzzle"] {
+            border-color: var(--numberpuzzle-blue);
+        }
+
+        .game-card[data-game="numberpuzzle"] .card-title {
+            color: var(--numberpuzzle-yellow);
+        }
+
+        .game-card[data-game="numberpuzzle"]::after {
+            background: linear-gradient(45deg, var(--numberpuzzle-blue), var(--numberpuzzle-yellow));
+        }
+
+        .game-card[data-game="numberpuzzle"]:hover {
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.4);
+        }
+
+        #home-btn {
+            position: fixed;
+            left: 2rem;
+            bottom: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        #home-btn:hover {
+            background: var(--neon-blue);
+            color: var(--space-black);
+            transform: translateY(-3px);
+        }
+
+        #home-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* SVG 아이콘에 애니메이션 추가 */
+        .game-card[data-game="numberpuzzle"] .game-icon {
+            filter: drop-shadow(0 0 5px var(--numberpuzzle-blue));
+            animation: pulseNumber 2s infinite;
+        }
+
+        @keyframes pulseNumber {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -350,6 +408,7 @@
             games.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
+                card.dataset.game = game.title.toLowerCase().replace(/\s+/g, '');
                 card.innerHTML = `
                     <div class="card-header">
                         ${game.badge ? `<span class="badge">${game.badge}</span>` : ''}
