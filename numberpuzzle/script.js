@@ -10,6 +10,7 @@ let isGameWon = false;
 let backgroundImage = null;
 let resetClickCount = 0;
 let lastClickTime = 0;
+let fileInput = null;
 
 // 게임 초기화
 function initGame(level) {
@@ -328,24 +329,8 @@ function addEventListeners() {
         startNewGame();
     });
 
-    // 파일 업로드 인풋 단일 생성
-    const existingFileInput = document.getElementById('image-upload');
-    if (!existingFileInput) {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.id = 'image-upload';
-        fileInput.style.display = 'none';
-        fileInput.accept = 'image/*';
-        fileInput.addEventListener('change', handleImageUpload);
-        document.body.appendChild(fileInput);
-    }
-
-    document.getElementById('image-upload-btn').addEventListener('click', () => {
-        const fileInput = document.getElementById('image-upload');
-        if (fileInput) {
-            fileInput.click();
-        }
-    });
+    // 파일 입력 초기화 함수
+    initFileUpload();
 
     let touchStartX = 0;
     let touchStartY = 0;
@@ -576,7 +561,6 @@ function addResetButton() {
     if (!title.querySelector('.reset-scores')) {
         const resetBtn = document.createElement('span');
         resetBtn.className = 'reset-scores';
-        resetBtn.innerHTML = '×';
         resetBtn.title = '기록 초기화';
         resetBtn.addEventListener('click', resetHighScores);
         title.appendChild(resetBtn);
@@ -599,6 +583,26 @@ function showLoading() {
     document.body.appendChild(loading);
     return loading;
 }
+
+// 파일 입력 초기화 함수
+function initFileUpload() {
+    if (!fileInput) {
+        fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.id = 'global-file-input';
+        fileInput.style.display = 'none';
+        fileInput.accept = 'image/*';
+        fileInput.onchange = handleImageUpload; // onclick → onchange로 변경
+        document.body.appendChild(fileInput);
+    }
+}
+
+// 이미지 업로드 버튼 이벤트
+document.getElementById('image-upload-btn').onclick = function() {
+    initFileUpload();
+    fileInput.value = ''; // 이전 선택 초기화
+    fileInput.click();
+};
 
 // 이미지 업로드 핸들러 수정
 async function handleImageUpload(e) {
@@ -650,6 +654,7 @@ function handleTrophyClick() {
 window.addEventListener('load', () => {
     initGame(3);
     initializeScoreBoard();
+    initFileUpload();
 });
 
 // PWA 서비스 워커 등록
