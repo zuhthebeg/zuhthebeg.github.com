@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sandbox 프로젝트</title>
+    <title>SANDBOX 포털</title>
     <script>
         // 서브도메인이 game.cocy.io인 경우 리다이렉트
         if (window.location.hostname === 'game.cocy.io') {
@@ -17,119 +17,364 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6634731722045607"
     crossorigin="anonymous"></script>
     
+    <!-- Three.js CDN importmap -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.132.2/build/three.module.js",
+            "three/examples/jsm/controls/": "https://unpkg.com/three@0.132.2/examples/jsm/controls/"
+        }
+    }
+    </script>
+    
+    <!-- Google Fonts 추가 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    
     <!-- 기본 스타일 -->
     <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --space-black: #0a0a16;
+            --neon-pink: #ff00ff;
+            --cyber-gradient: linear-gradient(
+                135deg, 
+                var(--neon-blue) 0%, 
+                var(--neon-pink) 100%
+            );
+        }
+
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            line-height: 1.6;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            overflow-x: hidden;
+            background: linear-gradient(45deg, var(--space-black) 30%, #1a1a2e);
+            color: white;
+            font-family: 'Noto Sans KR', sans-serif;
         }
-        
-        .container {
-            max-width: 800px;
+
+        #scene-container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .portal-container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 2rem;
         }
-        
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            perspective: 1000px;
         }
-        
-        .project-list {
-            list-style: none;
-            padding: 0;
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
         }
-        
-        .project-item {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            transition: transform 0.2s;
-            display: flex;
-            align-items: start;
-            gap: 15px;
+
+        .game-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--cyber-gradient);
+            opacity: 0.1;
+            z-index: -1;
+            transition: opacity 0.3s;
         }
-        
-        .project-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+        .game-card:hover {
+            transform: translateY(-8px) rotateX(8deg) rotateY(-8deg);
+            box-shadow: 0 25px 50px rgba(0, 243, 255, 0.3);
         }
-        
-        .project-icon {
-            width: 48px;
-            height: 48px;
+
+        .game-card:hover::after {
+            opacity: 0.2;
         }
-        
-        .project-content {
-            flex: 1;
+
+        @media (max-width: 768px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
         }
-        
-        .project-link {
-            color: #2196F3;
-            text-decoration: none;
+
+        .card-header {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .game-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .game-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4757;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: bold;
-            font-size: 1.1em;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-        
-        .project-description {
-            color: #666;
-            margin-top: 5px;
+
+        .game-card:hover .badge {
+            transform: translateY(-5px) rotate(5deg);
+        }
+
+        .game-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 8px 20px;
+            background: linear-gradient(45deg, var(--neon-blue), #00ff88);
+            border-radius: 25px;
+            text-decoration: none;
+            color: var(--space-black);
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .game-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .portal-title {
+            font-size: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .game-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .game-card p {
+            min-height: 4em;
+            line-height: 1.5;
+        }
+
+        .meta-info {
+            margin-top: 1.5rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .platform-tag, .lang-tag {
+            margin-bottom: 0.3rem;
+        }
+
+        .platform-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 4px;
+        }
+
+        .lang-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px solid var(--neon-pink);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 4px;
+        }
+
+        .game-link {
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .card-title:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Sandbox 프로젝트</h1>
-        
-        <ul class="project-list">
-            <li class="project-item">
-                <img src="https://zuhthebeg.github.io/pikmin/favicon.svg" alt="피크민 아이콘" class="project-icon">
-                <div class="project-content">
-                    <a href="/pikmin/" class="project-link">피크민 블룸 트래커</a>
-                    <p class="project-description">
-                        피크민 블룸의 디코레이션 수집 현황을 체크하고 관리할 수 있는 체크리스트입니다.
-                        다국어(한국어, 영어, 일본어, 중국어 간체/번체) 지원
-                    </p>
-                </div>
-            </li>
-            <li class="project-item">
-                <img src="/numberpuzzle/icons/icon.svg" alt="숫자퍼즐 아이콘" class="project-icon">
-                <div class="project-content">
-                    <a href="numberpuzzle/" class="project-link">숫자 퍼즐</a>
-                    <p class="project-description">
-                        웹 숫자 퍼즐
-                    </p>
-                </div>
-            </li>
-            <li class="project-item">
-                <img src="/blockpuzzle/icons/icon.svg" alt="블럭퍼즐 아이콘" class="project-icon">
-                <div class="project-content">
-                    <a href="blockpuzzle/" class="project-link">블럭 퍼즐</a>
-                    <p class="project-description">
-                        블럭 퍼즐
-                    </p>
-                </div>
-            </li>
-            <!--
-            <li class="project-item">
-                <img src="/tetris/icons/icon.svg" alt="테트리스 아이콘" class="project-icon">
-                <div class="project-content">
-                    <a href="tetris/" class="project-link">테트리스</a>
-                    <p class="project-description">
-                        클래식 테트리스 게임
-                    </p>
-                </div>
-            </li>
-        -->
-        </ul>
+    <div id="scene-container"></div>
+    
+    <div class="portal-container">
+        <h1 class="portal-title">SANDBOX</h1>
+        <div class="game-grid">
+            <!-- 동적으로 게임 카드 추가 -->
+        </div>
     </div>
+
+    <div class="footer">
+        <p>© 2025 COCY.IO All rights reserved.</p>
+    </div>
+
+    <script type="module">
+        // CDN에서 모듈 임포트
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+        // three.js 초기화 함수
+        const initScene = () => {
+            const scene = new THREE.Scene();
+            const container = document.getElementById('scene-container');
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ 
+                alpha: true, 
+                antialias: true 
+            });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // 파티클 생성
+            const particles = new THREE.BufferGeometry();
+            const particleCount = 1000;
+            const posArray = new Float32Array(particleCount * 3);
+
+            for(let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const material = new THREE.PointsMaterial({
+                size: 0.005,
+                color: new THREE.Color(
+                    getComputedStyle(document.documentElement)
+                        .getPropertyValue('--neon-blue').trim()
+                )
+            });
+
+            const particleMesh = new THREE.Points(particles, material);
+            scene.add(particleMesh);
+
+            camera.position.z = 3;
+
+            // OrbitControls 초기화
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableZoom = false;
+
+            // 애니메이션 루프
+            function animate() {
+                requestAnimationFrame(animate);
+                particleMesh.rotation.y += 0.001;
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // 리사이즈 핸들러
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // 게임 카드 생성 함수
+        const createGameCards = () => {
+            const games = [
+                { 
+                    title: '숫자 퍼즐', 
+                    icon: '/numberpuzzle/icons/icon.svg',
+                    url: 'numberpuzzle/',
+                    desc: '슬라이딩 숫자 퍼즐',
+                    badge: 'NEW',
+                    platforms: ['PWA', 'TWA'],
+                    languages: ['한국어', 'English', '中文(繁體)']
+                },
+                { 
+                    title: '블럭 퍼즐', 
+                    icon: '/blockpuzzle/icons/icon.svg',
+                    url: 'blockpuzzle/',
+                    desc: '블럭 조합 퍼즐',
+                    badge: 'DEV',
+                    platforms: ['PWA'],
+                    languages: ['한국어', 'English', '中文(繁體)']
+                },
+                { 
+                    title: '피크민 트래커', 
+                    icon: '/pikmin/favicon.svg',
+                    url: 'pikmin/',
+                    desc: '피크민 수집 관리',
+                    badge: 'HOT',
+                    platforms: ['PWA'],
+                    languages: ['한국어', '日本語', '中文(简体)', 'English']
+                }
+            ];
+
+            const grid = document.querySelector('.game-grid');
+            games.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        ${game.badge ? `<span class="badge">${game.badge}</span>` : ''}
+                        <img src="${game.icon}" alt="${game.title} 아이콘" class="game-icon">
+                    </div>
+                    <a href="${game.url}" class="card-title">${game.title}</a>
+                    <p>${game.desc}</p>
+                    <div class="meta-info">
+                        <div class="platforms">
+                            ${game.platforms.map(p => `<span class="platform-tag">${p}</span>`).join('')}
+                        </div>
+                        <div class="languages">
+                            ${game.languages.map(l => `<span class="lang-tag">${l}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        // 초기화 실행
+        window.addEventListener('DOMContentLoaded', () => {
+            initScene();
+            createGameCards();
+        });
+    </script>
 </body>
 </html>
