@@ -331,11 +331,11 @@ button {
 
 /* 클리어 효과 애니메이션 */
 .clear-effect {
+    z-index: 10000; /* 최상위 레이어 설정 */
+    transform: translateZ(0); /* 하드웨어 가속 활성화 */
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
     pointer-events: none;
 }
 
@@ -351,6 +351,13 @@ button {
     animation: 
         textPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
         neonGlow 1.2s ease-in-out infinite alternate;
+    /* 모바일 대응 추가 */
+    @media (max-width: 480px) {
+        font-size: 80px;
+        text-shadow: 
+            0 0 15px #ff9f43,
+            0 0 30px #ff9f43;
+    }
 }
 
 @keyframes neonGlow {
@@ -378,6 +385,7 @@ button {
         rgba(255,159,67,0.6) 50%, 
         transparent 100%);
     animation: particles 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 9999; /* 텍스트 아래 레이어 설정 */
 }
 
 .error-toast {

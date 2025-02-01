@@ -288,11 +288,17 @@ function checkWin() {
         `;
         document.body.appendChild(clearEffect);
         
-        // 1초 후 효과 제거
+        // 모바일 감지
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+        
+        // 모바일 환경별 애니메이션 조정
+        clearEffect.style.transform = isMobile 
+            ? 'translate(-50%, -50%) scale(1.2)' 
+            : 'translate(-50%, -50%)';
+        
         setTimeout(() => {
             clearEffect.remove();
-            showHighScoreAnimation();
-        }, 1000);
+        }, isMobile ? 1500 : 1000);
     }
 }
 
