@@ -151,6 +151,12 @@ button:hover {
     will-change: transform;
 }
 
+/* 이미지 모드에서 숫자 숨기기 */
+.tile.image-mode {
+    color: transparent !important;
+    text-shadow: none !important;
+}
+
 .tile.correct {
     background: var(--correct-color);
     color: var(--text-color);
@@ -502,5 +508,19 @@ button:active {
         font-size: 24px;
         padding: 12px;
     }
+}
+
+#random-image-btn {
+    background-color: #BA68C8;  /* 연한 라벤더 색상 */
+    color: white;
+    border: 2px solid #AB47BC;  /* 중간 보라색 테두리 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+#random-image-btn:hover {
+    background-color: #AB47BC;  /* 호버 시 중간 보라색 */
+    filter: none;  /* 밝기 효과 제거 */
+    cursor: pointer;
 }
 

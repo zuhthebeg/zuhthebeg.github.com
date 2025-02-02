@@ -24,6 +24,9 @@ function initGame(level) {
     document.getElementById('win-popup').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 
+    // 이미지 모드 클래스 토글
+    board.classList.toggle('image-mode', !!backgroundImage);
+
     if (backgroundImage) {
         const tileSize = 100 / level;
         tiles.forEach((tile, index) => {
@@ -36,8 +39,10 @@ function initGame(level) {
                 tile.style.backgroundSize = `${level * 100}%`;
                 tile.style.backgroundPosition = 
                     `${(col * 100) / (level - 1)}% ${(row * 100) / (level - 1)}%`;
+                tile.classList.add('image-mode');  // 이미지 모드 클래스 추가
             } else {
                 tile.style.backgroundImage = '';
+                tile.classList.remove('image-mode');  // 이미지 모드 클래스 제거
             }
         });
 
@@ -46,6 +51,7 @@ function initGame(level) {
     } else {
         tiles.forEach(tile => {
             tile.style.backgroundImage = '';
+            tile.classList.remove('image-mode');  // 이미지 모드 클래스 제거
         });
     }
 }
@@ -456,13 +462,16 @@ function addEventListeners() {
     board.focus();
 }
 
+// 빈 이미지로 새 게임 시작
 function startNewGameWithBlank(){
-    backgroundImage = null; // 배경 이미지 변수 초기화
+    backgroundImage = null;
     document.querySelectorAll('.tile').forEach(tile => {
         tile.style.backgroundImage = '';
+        tile.classList.remove('image-mode');  // 이미지 모드 클래스 제거
     });
-    startNewGame()
+    startNewGame();
 }
+
 // 새 게임 시작
 function startNewGame() {
     initGame(currentLevel);
