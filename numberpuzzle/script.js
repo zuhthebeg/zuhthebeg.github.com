@@ -94,25 +94,28 @@ function shuffleTiles() {
     let indices;
     
     while (!solvable) {
-        // 빈 칸을 제외한 타일들의 인덱스만 섞기
         indices = Array.from({ length: lastIndex }, (_, i) => i);
+        // Fisher-Yates 셔플 알고리즘
         for (let i = indices.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [indices[i], indices[j]] = [indices[j], indices[i]];
         }
 
-        // 전환 수(inversions) 계산
+        // 전환 수 계산
         let inversions = 0;
-        for (let i = 0; i < indices.length - 1; i++) {
+        for (let i = 0; i < indices.length; i++) {
             for (let j = i + 1; j < indices.length; j++) {
                 if (indices[i] > indices[j]) inversions++;
             }
         }
 
-        // 퍼즐 해결 가능 여부 판단
-        solvable = size % 2 === 1
-            ? inversions % 2 === 0
-            : (inversions % 2) === 0;
+        // 패리티 문제 해결을 위한 조건 개선
+        if (size % 2 === 1) { // 홀수 크기 보드
+            solvable = inversions % 2 === 0;
+        } else { // 짝수 크기 보드
+            const emptyRow = Math.floor(lastIndex / size);
+            solvable = (inversions + emptyRow) % 2 === 1;
+        }
     }
 
     // 섞인 인덱스에 따라 타일 재배치
