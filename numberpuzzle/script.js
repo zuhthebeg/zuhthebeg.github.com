@@ -286,7 +286,13 @@ function checkWin() {
         const clearEffect = document.createElement('div');
         clearEffect.className = 'clear-effect';
         clearEffect.innerHTML = `
-            <div class="clear-text">CLEAR!</div>
+            <div class="clear-text">
+                CLEAR!
+                <div class="clear-stats">
+                    <span>⏱${timer}</span>
+                    <span>↔️${moves}</span>
+                </div>
+            </div>
             <div class="particles"></div>
         `;
         document.body.appendChild(clearEffect);
@@ -294,14 +300,10 @@ function checkWin() {
         // 모바일 감지
         const isMobile = /Mobi|Android/i.test(navigator.userAgent);
         
-        // 모바일 환경별 애니메이션 조정
-        clearEffect.style.transform = isMobile 
-            ? 'translate(-50%, -50%) scale(1.2)' 
-            : 'translate(-50%, -50%)';
-        
+        // 애니메이션 지속 시간 3초로 통일
         setTimeout(() => {
             clearEffect.remove();
-        }, isMobile ? 1500 : 1000);
+        }, 3000);  // 1초 → 3초로 변경
     }
 }
 
