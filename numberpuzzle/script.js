@@ -67,6 +67,7 @@ function generateBoard(size) {
         const tile = document.createElement('div');
         tile.style.width = `calc(${100/size}% - 2px)`;
         tile.style.height = `calc(${100/size}% - 2px)`;
+        tile.dataset.gridSize = size;  // data-grid-size 속성 추가
         
         if(i === size * size - 1) {
             // 마지막 위치에 빈 칸 생성

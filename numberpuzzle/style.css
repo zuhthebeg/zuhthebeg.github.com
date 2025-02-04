@@ -149,6 +149,13 @@ button:hover {
     user-select: none;
     position: absolute;
     will-change: transform;
+    /* 6x6 이상 그리드 대응 추가 */
+    @media (min-width: 481px) {
+        &[data-grid-size="6"] { font-size: 2.8rem; }
+        &[data-grid-size="7"] { font-size: 2.4rem; }
+        &[data-grid-size="8"] { font-size: 2.0rem; }
+        &[data-grid-size="9"] { font-size: 1.6rem; }
+    }
 }
 
 /* 이미지 모드에서 숫자 숨기기 */
@@ -170,7 +177,12 @@ button:hover {
 
 @media (max-width: 480px) {
     .tile {
-        font-size: 3rem;
+        font-size: 4rem;
+        /* 모바일에서 6x6 이상 대응 */
+        &[data-grid-size="6"] { font-size: 2.0rem; }
+        &[data-grid-size="7"] { font-size: 1.8rem; }
+        &[data-grid-size="8"] { font-size: 1.6rem; }
+        &[data-grid-size="9"] { font-size: 1.4rem; }
     }
 }
 
@@ -281,11 +293,6 @@ button:hover {
 /* 기호 기본 크기 조정 */
 #stats div {
     font-size: 24px;
-}
-
-/* 타일 내부 기호 크기 */
-.tile {
-    font-size: 4rem;
 }
 
 /* 승리 팝업 기호 */
