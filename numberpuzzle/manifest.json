@@ -1,7 +1,7 @@
 {
-  "name": "Number Puzzle",
-  "short_name": "NumberPuzzle",
-  "description": "Sliding number puzzle game",
+  "name": "Tile Slider",
+  "short_name": "Slider Puzzle",
+  "description": "Sliding Number & Image puzzle game",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#2c3e50",
