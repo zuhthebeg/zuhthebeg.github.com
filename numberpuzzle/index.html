@@ -27,8 +27,11 @@
             <button onclick="startNewGameWithBlank()">🔄</button>
         </div>
         <div id="stats">
-            <div>⏱ <span id="timer"> 0</span></div>
+            <div>⏱ <span id="timer">0</span></div>
             <div>↔️ <span id="moves">0</span></div>
+            <div id="hint-container">
+                💡<span id="hint-count">0</span>
+            </div>
         </div>
         <div id="puzzle-board"></div>
     </div>
@@ -41,6 +44,11 @@
             <button onclick="startNewGameWithBlank()">🔄</button>
             <button onclick="closeWinPopup()">⬅️</button>
         </div>
+    </div>
+
+    <!-- 기존 승리 팝업 아래에 추가 -->
+    <div class="ad-popup" style="display: none;">
+        🎲 Loading Random Image... 
     </div>
 
     <div id="score-board">

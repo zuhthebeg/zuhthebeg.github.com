@@ -11,6 +11,27 @@ let backgroundImage = null;
 let resetClickCount = 0;
 let lastClickTime = 0;
 let fileInput = null;
+let revealedTiles = new Set();
+let hintCount = 0;
+
+// 전역 변수로 핸들러 참조 저장
+let hintClickHandler = function() {
+    if (!backgroundImage) return;
+    
+    const availableTiles = tiles.filter(tile => 
+        !tile.classList.contains('empty') && 
+        !revealedTiles.has(tile)
+    );
+
+    if (availableTiles.length === 0) return;
+
+    const randomIndex = Math.floor(Math.random() * availableTiles.length);
+    const targetTile = availableTiles[randomIndex];
+    targetTile.classList.add('hint-visible');
+    revealedTiles.add(targetTile);
+    
+    document.getElementById('hint-count').textContent = revealedTiles.size;
+};
 
 // 게임 초기화
 function initGame(level) {
@@ -28,6 +49,7 @@ function initGame(level) {
     board.classList.toggle('image-mode', !!backgroundImage);
 
     if (backgroundImage) {
+        document.body.classList.add('image-mode-active');
         const tileSize = 100 / level;
         tiles.forEach((tile, index) => {
             if (!tile.classList.contains('empty')) {
@@ -49,10 +71,21 @@ function initGame(level) {
         // 타일을 정답 상태로 초기화
         updateBoardPositions();
     } else {
+        document.body.classList.remove('image-mode-active');
         tiles.forEach(tile => {
             tile.style.backgroundImage = '';
             tile.classList.remove('image-mode');  // 이미지 모드 클래스 제거
         });
+    }
+    revealedTiles.clear();
+    tiles.forEach(tile => tile.classList.remove('hint-visible'));
+    hintCount = 0;
+    document.getElementById('hint-count').textContent = '0';
+
+    const hintContainer = document.getElementById('hint-container');
+    if (hintContainer) {
+        hintContainer.removeEventListener('click', hintClickHandler);
+        hintContainer.addEventListener('click', hintClickHandler);
     }
 }
 
@@ -341,10 +374,37 @@ function addEventListeners() {
         document.getElementById('puzzle-board').focus();
     });
 
-    // 랜덤 이미지 버튼 이벤트
+    // 수정된 랜덤 이미지 버튼 이벤트
     document.getElementById('random-image-btn').addEventListener('click', () => {
         backgroundImage = `https://picsum.photos/460?random=${Date.now()}`;
         startNewGame();
+        
+        // 기존 팝업 제거
+        const existingPopup = document.querySelector('.ad-popup');
+        if (existingPopup) {
+            existingPopup.remove();
+        }
+
+        // 새 팝업 생성
+        const adPopup = document.createElement('div');
+        adPopup.className = 'ad-popup';
+        adPopup.innerHTML = `
+            <button class="ad-popup-close" onclick="this.parentElement.remove()">×</button>
+            <div class="ad-popup-content">
+                <span class="dice-spin">🎲</span>
+                <div class="loading-text">Random Image Loading...</div>
+            </div>
+        `;
+        document.body.appendChild(adPopup);
+        
+        // 팝업 표시
+        setTimeout(() => adPopup.style.display = 'flex', 100);
+        
+        // 5초 후 자동 숨김
+        setTimeout(() => {
+            adPopup.classList.add('hide');
+            setTimeout(() => adPopup.remove(),3000);
+        }, 5000);
     });
 
     // 파일 입력 초기화 함수
@@ -461,6 +521,13 @@ function addEventListeners() {
     // 게임 보드에 tabindex 추가하여 포커스 가능하게 설정
     board.setAttribute('tabindex', '0');
     board.focus();
+
+    // 힌트 버튼 이벤트 리스너 추가
+    const hintContainer = document.getElementById('hint-container');
+    if (hintContainer) {
+        hintContainer.removeEventListener('click', hintClickHandler);
+        hintContainer.addEventListener('click', hintClickHandler);
+    }
 }
 
 // 빈 이미지로 새 게임 시작
@@ -476,6 +543,8 @@ function startNewGameWithBlank(){
 // 새 게임 시작
 function startNewGame() {
     initGame(currentLevel);
+    revealedTiles.clear();
+    document.getElementById('hint-count').textContent = '0';
 }
 
 // 점수 저장 함수

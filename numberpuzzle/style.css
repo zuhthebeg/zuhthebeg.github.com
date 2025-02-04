@@ -160,8 +160,8 @@ button:hover {
 
 /* 이미지 모드에서 숫자 숨기기 */
 .tile.image-mode {
-    color: transparent !important;
-    text-shadow: none !important;
+    color: transparent;
+    text-shadow: none;
 }
 
 .tile.correct {
@@ -518,16 +518,152 @@ button:active {
 }
 
 #random-image-btn {
-    background-color: #BA68C8;  /* 연한 라벤더 색상 */
+    background-color: #BA68C8;
     color: white;
-    border: 2px solid #AB47BC;  /* 중간 보라색 테두리 */
+    border: 2px solid #AB47BC;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
+    position: relative; /* 상대 위치 추가 */
 }
 
-#random-image-btn:hover {
-    background-color: #AB47BC;  /* 호버 시 중간 보라색 */
-    filter: none;  /* 밝기 효과 제거 */
+/* 수정된 전체 화면 광고 팝업 스타일 */
+.ad-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+    display: none;
+    z-index: 1001;
+    animation: popupFadeIn 0.3s ease-out;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+@keyframes popupFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.ad-popup.hide {
+    animation: popupFadeOut 0.3s ease-in forwards;
+}
+
+@keyframes popupFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.ad-popup-content {
+    max-width: 600px;
+    font-size: 1.5em;
+    line-height: 1.5;
+    text-align: center;
+    width: 100%;
+}
+
+.ad-popup-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
     cursor: pointer;
+}
+
+/* 주사위 회전 애니메이션 추가 */
+@keyframes diceSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.dice-spin {
+    display: inline-block;
+    animation: diceSpin 1.5s ease-in-out infinite;
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.loading-text {
+    font-size: 1.2em;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.loading-subtext {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-top: 8px;
+}
+
+/* 힌트 버튼 스타일 변경 */
+#hint-btn {
+    background: none;
+    border: none;
+    color: #4CAF50;
+    padding: 0 8px;
+    font-size: 24px;
+    cursor: pointer;
+    align-items: center;
+    gap: 4px;
+    margin-left: 10px;
+}
+
+#hint-btn::before {
+    content: "💡";
+    font-size: 16px;
+}
+
+.image-mode-active #hint-btn {
+    display: flex;
+}
+
+/* 힌트 표시 스타일 단순화 */
+.tile.hint-visible {
+    color: white !important; /* 숫자 투명화 */
+}
+
+.tile.hint-visible::after {
+    content: attr(data-value);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white; /* 흰색 텍스트 */
+    font-size: 1.2em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 불필요한 애니메이션 및 효과 제거 */
+
+#hint-container {
+    display: none;
+    margin-left: 15px;
+    color: #ffffff; /* 기본 텍스트 색상 */
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background-color: rgba(0,0,0,0.05);
+}
+
+#hint-container:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.image-mode-active #hint-container {
+    display: block;
+}
+
+#hint-count {
+    margin-left: 3px;
 }
 
