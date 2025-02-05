@@ -330,7 +330,7 @@ function checkWin() {
                 CLEAR!
                 <div class="clear-stats">
                     <span>⏳${timer}</span>
-                    <span>🚶‍${moves}</span>
+                    <span>🏃‍‍${moves}</span>
                 </div>
             </div>
             <div class="particles"></div>
@@ -614,7 +614,7 @@ function updateHighScores() {
         }
         li.innerHTML = `
             <span>${entry.date} ${entry.time}</span>
-            <span>🚶‍${entry.moves}  ⏳${entry.seconds}</span>
+            <span>🏃‍‍ ${entry.moves}  ⏳ ${entry.seconds}</span>
         `;
         list.appendChild(li);
     });
