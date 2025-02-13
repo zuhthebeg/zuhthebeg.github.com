@@ -3,132 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>블럭 퍼즐 게임</title>
+    <title>Block Puzzle</title>
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+            background: #1a1a1a;
+            color: #ffffff;
+            min-height: 100vh;
             touch-action: none;
+        }
+
+        .game-header {
+            margin-bottom: 10px;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #00ff88;
         }
 
         .game-container {
             width: 100%;
             max-width: 400px;
             margin: 0 auto;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .level-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .level-progress {
+            flex-grow: 1;
+            height: 10px;
+            background: #3d3d3d;
+            border-radius: 5px;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .level-progress-bar {
+            height: 100%;
+            background: #00ff88;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .level-text {
+            font-size: 1rem;
+            color: #00ff88;
+        }
+
+        .level-up-animation {
+            animation: levelUp 0.5s ease-out;
+        }
+
+        @keyframes levelUp {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); color: #f1c40f; }
+            100% { transform: scale(1); color: #00ff88; }
         }
 
         .score {
             text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #00ff88;
         }
 
         .board {
             display: grid;
             grid-template-columns: repeat(9, 1fr);
-            gap: 2px;
-            background-color: #ccc;
-            padding: 2px;
+            gap: 1px;
+            background-color: #3d3d3d;
+            padding: 1px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .game-button {
+            padding: 8px;
+            background-color: transparent;
+            color: #00ff88;
+            border: 1px solid #00ff88;
             border-radius: 4px;
-            margin-bottom: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .game-button:hover {
+            background-color: rgba(0, 255, 136, 0.1);
         }
 
         .cell {
             aspect-ratio: 1;
-            background-color: #fff;
-            border-radius: 2px;
+            background-color: #3d3d3d;
+            border: 1px solid #2d2d2d;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .cell.filled {
+            background-color: #00ff88;
+            border-color: #00cc6a;
         }
 
         .block-container {
             display: flex;
-            align-items: center;
-            justify-content: space-around;
-            margin-top: 20px;
-            min-height: 100px;
-            padding: 0;
-            gap: 1px;
-        }
-
-        .block-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-            cursor: move;
-            user-select: none;
-            touch-action: none;
-            border: none;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px;
+            background: #3d3d3d;
+            border-radius: 5px;
         }
 
         .block-grid {
             display: grid;
             gap: 1px;
+            background-color: #2d2d2d;
             padding: 1px;
-            background-color: #eee;
-            font-size: 0;
-            line-height: 0;
+            border-radius: 3px;
         }
 
         .block-cell {
-            width: 40px !important;
-            height: 40px !important;
-            background-color: #3498db;
-            margin: 0;
-            padding: 0;
-            display: block;
-        }
-
-        .block {
-            width: 40px;
-            height: 40px;
-            background-color: #3498db;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .block.selected {
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
-
-        .block.preview {
-            opacity: 0.5;
-        }
-
-        .cell.valid-target {
-            background-color: rgba(52, 152, 219, 0.2);
-        }
-
-        .cell.filled {
-            background-color: #3498db;
+            background-color: #00ff88;
+            border: 1px solid #00cc6a;
         }
 
         @media (max-width: 480px) {
             .game-container {
-                max-width: 100%;
+                padding: 10px;
             }
-            
+
+            .board {
+                gap: 0.5px;
+            }
+
+            .button-container {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .game-button {
+                padding: 6px;
+                font-size: 0.9rem;
+            }
+
             .block-container {
-                min-height: 80px;
-                padding: 8px;
-            }
-            
-            .block-wrapper {
-                margin: 0 8px;
-            }
-            
-            .block-cell, .preview-cell {
-                width: 35px !important;
-                height: 35px !important;
+                flex-direction: column;
+                align-items: center;
             }
         }
 
@@ -163,7 +207,7 @@
         }
 
         .cell.filled {
-            background-color: #3498db;
+            background-color: #00ff88;
             transition: all 0.3s ease;
         }
 
@@ -188,27 +232,63 @@
             }
         }
 
-        #restart {
-            padding: 10px 20px;
-            background-color: #2ecc71;
-            color: white;
-            border: none;
+        .combo-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(45, 45, 45, 0.9);
+            padding: 10px;
             border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 15px;
-            font-size: 16px;
+            display: none;
         }
 
-        #restart:hover {
-            background-color: #27ae60;
+        .combo-text {
+            color: #00ff88;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .combo-count {
+            color: #f1c40f;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .combo-animation {
+            animation: comboPop 0.3s ease-out;
+        }
+
+        @keyframes comboPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
+    <div class="game-header">
+        <h1 class="game-title">🧩</h1>
+    </div>
+    <div class="combo-container" id="combo-container">
+        <div class="combo-text">콤보</div>
+        <div class="combo-count" id="combo-count">0</div>
+    </div>
     <div class="game-container">
-        <div class="score">점수: <span id="score">0</span></div>
-        <button id="restart" style="display: none;">다시 시작</button>
+        <div class="level-container">
+            <div class="level-text">Lv. <span id="level">1</span></div>
+            <div class="level-progress">
+                <div class="level-progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="level-text"><span id="next-level-score">1000</span> ⭐</div>
+        </div>
+        <div class="score">⭐ <span id="score">0</span></div>
         <div id="board" class="board"></div>
+        <div class="button-container">
+            <button id="restart" class="game-button" style="display: none;">🔄</button>
+            <button id="new-game" class="game-button">🆕</button>
+            <button id="how-to-play" class="game-button">❓</button>
+        </div>
         <div id="block-container" class="block-container"></div>
     </div>
 
@@ -288,6 +368,31 @@
         let dragOffset = { x: 0, y: 0 };
         let preview = null;
 
+        // 레벨 시스템 관련 상수
+        const LEVELS = [
+            { score: 1000, blockSize: 3 },  // Lv.1
+            { score: 3000, blockSize: 4 },  // Lv.2
+            { score: 6000, blockSize: 4 },  // Lv.3
+            { score: 10000, blockSize: 5 }, // Lv.4
+            { score: 15000, blockSize: 5 }, // Lv.5
+            { score: 21000, blockSize: 6 }, // Lv.6
+            { score: 28000, blockSize: 6 }, // Lv.7
+            { score: 36000, blockSize: 7 }, // Lv.8
+            { score: 45000, blockSize: 7 }, // Lv.9
+            { score: 55000, blockSize: 8 }  // Lv.10
+        ];
+
+        let currentLevel = 0;
+        let nextLevelScore = LEVELS[0].score;
+
+        // 콤보 관련 변수
+        let comboCount = 0;
+        let comboTimeout = null;
+
+        // 데모 모드 관련 변수 추가
+        let isDemoMode = false;
+        let originalBlocks = [];
+
         function initGame() {
             createBoard();
             generateNewBlocks();
@@ -320,13 +425,14 @@
             const container = document.getElementById('block-container');
             container.innerHTML = '';
             
-            const cellSize = document.querySelector('.cell').offsetWidth; // 보드 셀 크기 가져오기
+            const cellSize = document.querySelector('.cell').offsetWidth;
+            const patterns = getBlockPatternsForCurrentLevel();
             
             for (let i = 0; i < 3; i++) {
                 const blockWrapper = document.createElement('div');
                 blockWrapper.className = 'block-wrapper';
                 
-                const pattern = BLOCK_PATTERNS[Math.floor(Math.random() * BLOCK_PATTERNS.length)];
+                const pattern = patterns[Math.floor(Math.random() * patterns.length)];
                 blockWrapper.dataset.pattern = JSON.stringify(pattern);
                 
                 const blockGrid = document.createElement('div');
@@ -383,18 +489,20 @@
             return true;
         }
 
-        function handleCellClick(row, col) {
-            if (!draggedBlock) return;
+        function handleCellClick(row, col, manualBlock = null) {
+            const targetBlock = manualBlock || draggedBlock;
+            if (!targetBlock) return;
             
-            const pattern = JSON.parse(draggedBlock.dataset.pattern);
+            const pattern = JSON.parse(targetBlock.dataset.pattern);
             if (!canPlaceBlock(row, col, pattern)) return;
             
-            // 블록 배치
+            // 패턴 배치 로직 수정
             pattern.forEach((patternRow, i) => {
                 patternRow.forEach((cell, j) => {
                     if (cell === 1) {
                         const newRow = row + i;
                         const newCol = col + j;
+                        if(newRow >= BOARD_SIZE || newCol >= BOARD_SIZE) return; // 경계 검사 추가
                         board[newRow][newCol] = true;
                         const cellElement = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`);
                         cellElement.classList.add('filled');
@@ -402,15 +510,16 @@
                 });
             });
             
-            draggedBlock.remove();
-            draggedBlock = null;
+            if (!isDemoMode) {
+                targetBlock.remove();
+            }
             
             checkLines();
             
-            // 블록 생성 체크 및 실행
+            // 블록 생성 로직 안정화
             const container = document.getElementById('block-container');
             if (container.children.length === 0) {
-                setTimeout(generateNewBlocks, 100);  // 약간의 지연을 주어 안정적으로 생성
+                generateNewBlocks(); // setTimeout 제거
             }
             
             updateValidCells();
@@ -439,29 +548,44 @@
         }
 
         function checkLines() {
-            let linesCleared = false;
-            
+            let linesCleared = 0;
+            const clearedRows = new Set();
+            const clearedCols = new Set();
+
             // 가로줄 체크
             for (let row = 0; row < BOARD_SIZE; row++) {
                 if (board[row].every(cell => cell)) {
-                    clearLine(row, 'row');
-                    score += 100;
-                    linesCleared = true;
+                    clearedRows.add(row);
+                    linesCleared++;
                 }
             }
             
             // 세로줄 체크
             for (let col = 0; col < BOARD_SIZE; col++) {
-                if (board.every(row => row[col])) {
-                    clearLine(col, 'col');
-                    score += 100;
-                    linesCleared = true;
+                const column = [];
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    column.push(board[row][col]);
+                }
+                if (column.every(cell => cell)) {
+                    clearedCols.add(col);
+                    linesCleared++;
                 }
             }
-            
-            if (linesCleared) {
-                updateScore();
+
+            // 클리어 애니메이션 동기화 개선
+            clearedRows.forEach(row => clearLine(row, 'row'));
+            clearedCols.forEach(col => clearLine(col, 'col'));
+
+            if (linesCleared > 0) {
+                comboCount++;
+                const comboBonus = Math.min(comboCount * 100, 1000);
+                score += linesCleared * 100 + comboBonus;
+                showCombo();
+            } else {
+                comboCount = 0;
             }
+
+            updateScore();
         }
 
         function clearLine(index, type) {
@@ -501,6 +625,8 @@
 
         function updateScore() {
             document.getElementById('score').textContent = score;
+            updateLevelDisplay();
+            checkLevelUp();
         }
 
         function checkGameOver() {
@@ -529,6 +655,8 @@
         function resetGame() {
             board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(false));
             score = 0;
+            currentLevel = 0;
+            nextLevelScore = LEVELS[0].score;
             selectedBlock = null;
             document.getElementById('restart').style.display = 'none';
             initGame();
@@ -554,13 +682,13 @@
             const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
             const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
             
-            // 변경: 터치 지점을 블록의 중심점으로 계산
+            // 변경: 터치/클릭 지점을 블럭의 우측하단으로 설정
             const pattern = JSON.parse(blockWrapper.dataset.pattern);
             const rows = pattern.length;
             const cols = pattern[0].length;
-            dragOffset.x = clientX - (rect.left + (cols * rect.width / (cols * 2)));
-            dragOffset.y = clientY - (rect.top + (rows * rect.height / (rows * 2)));
-            
+            dragOffset.x = clientX - (rect.left + (cols * rect.width / cols / 4.5));  // 중심 X
+            dragOffset.y = clientY - (rect.top + (rows * rect.height / rows / 4.5)); // 중심 Y
+
             blockWrapper.classList.add('dragging');
             
             // 미리보기 생성 및 위치 조정
@@ -570,7 +698,7 @@
             preview.style.margin = '0';
             preview.style.padding = '0';
             
-            // 드래그 시작 위치 설정
+            // 드래그 시작 위치 설정 (우측하단 기준)
             blockWrapper.style.left = `${clientX - dragOffset.x}px`;
             blockWrapper.style.top = `${clientY - dragOffset.y}px`;
             
@@ -688,8 +816,147 @@
             }
         }
 
-        // 다시 시작 버튼 이벤트 연결
-        document.getElementById('restart').addEventListener('click', resetGame);
+        function updateLevelDisplay() {
+            const levelText = document.getElementById('level');
+            const nextLevelScoreText = document.getElementById('next-level-score');
+            const progressBar = document.querySelector('.level-progress-bar');
+            
+            levelText.textContent = currentLevel + 1;
+            nextLevelScoreText.textContent = nextLevelScore;
+            
+            const progress = (score / nextLevelScore) * 100;
+            progressBar.style.width = `${Math.min(progress, 100)}%`;
+            
+            if (progress >= 100) {
+                levelText.classList.add('level-up-animation');
+                setTimeout(() => {
+                    levelText.classList.remove('level-up-animation');
+                }, 500);
+            }
+        }
+
+        function checkLevelUp() {
+            if (score >= nextLevelScore) {
+                if (currentLevel < LEVELS.length - 1) {
+                    currentLevel++;
+                    nextLevelScore = LEVELS[currentLevel].score;
+                    updateLevelDisplay();
+                    generateNewBlocks();
+                }
+            }
+        }
+
+        function getBlockPatternsForCurrentLevel() {
+            const maxSize = LEVELS[currentLevel].blockSize;
+            return BLOCK_PATTERNS.filter(pattern => 
+                pattern.length <= maxSize && pattern[0].length <= maxSize
+            );
+        }
+
+        function showCombo() {
+            const comboContainer = document.getElementById('combo-container');
+            const comboCountElement = document.getElementById('combo-count');
+            
+            comboContainer.style.display = 'block';
+            comboCountElement.textContent = comboCount;
+            comboCountElement.classList.add('combo-animation');
+            
+            setTimeout(() => {
+                comboCountElement.classList.remove('combo-animation');
+            }, 300);
+            
+            if (comboTimeout) {
+                clearTimeout(comboTimeout);
+            }
+            comboTimeout = setTimeout(() => {
+                comboContainer.style.display = 'none';
+                comboCount = 0;
+            }, 2000);
+        }
+
+        function startTutorial() {
+            isDemoMode = true;
+            originalBlocks = [...document.getElementById('block-container').children];
+            
+            // 초기화
+            resetGame();
+            document.getElementById('game-over-layer').style.display = 'none';
+            
+            // 데모용 블럭 생성
+            const demoPatterns = [
+                [[1,1,1]],
+                [[1],[1],[1]],
+                [[1,1],[1,1]]
+            ];
+            
+            const container = document.getElementById('block-container');
+            container.innerHTML = '';
+            
+            demoPatterns.forEach(pattern => {
+                const blockWrapper = document.createElement('div');
+                blockWrapper.className = 'block-wrapper';
+                blockWrapper.dataset.pattern = JSON.stringify(pattern);
+                
+                const blockGrid = document.createElement('div');
+                blockGrid.className = 'block-grid';
+                blockGrid.style.gridTemplateColumns = `repeat(${pattern[0].length}, 1fr)`;
+                
+                pattern.forEach(row => {
+                    row.forEach(cell => {
+                        const blockCell = document.createElement('div');
+                        if (cell === 1) {
+                            blockCell.className = 'block-cell';
+                        }
+                        blockGrid.appendChild(blockCell);
+                    });
+                });
+                
+                blockWrapper.appendChild(blockGrid);
+                container.appendChild(blockWrapper);
+            });
+
+            // 자동 배치 시퀀스 시작
+            setTimeout(() => autoPlaceBlock(0), 1000);
+        }
+
+        async function autoPlaceBlock(step) {
+            if (!isDemoMode) return;
+            
+            const blocks = document.querySelectorAll('.block-wrapper');
+            if (step >= blocks.length) {
+                // 모든 블럭 배치 완료 후 리셋
+                setTimeout(() => {
+                    isDemoMode = false;
+                    resetGame();
+                    document.getElementById('block-container').replaceChildren(...originalBlocks);
+                }, 2000);
+                return;
+            }
+
+            const block = blocks[step];
+            const pattern = JSON.parse(block.dataset.pattern);
+            
+            // 데모용 배치 위치 계산
+            const row = step * 2;
+            const col = step * 2;
+            
+            // 배치 애니메이션
+            block.style.transition = 'transform 0.5s ease';
+            block.style.transform = `translate(${col * 40}px, ${row * 40}px)`;
+            
+            // 실제 배치
+            setTimeout(() => {
+                handleCellClick(row, col, block);
+                checkLines();
+                autoPlaceBlock(step + 1);
+            }, 1000);
+        }
+
+        // 새 게임 버튼 이벤트
+        document.getElementById('new-game').addEventListener('click', resetGame);
+
+        // 게임 방법 버튼 이벤트
+        document.getElementById('how-to-play').addEventListener('click', startTutorial);
 
         // 게임 시작
         initGame();
