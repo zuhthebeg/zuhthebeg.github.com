@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANDBOX 포털</title>
+    <title>SANDBOX</title>
     <script>
         // 서브도메인이 game.cocy.io인 경우 리다이렉트
         if (window.location.hostname === 'game.cocy.io') {
@@ -16,7 +16,14 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6634731722045607"
     crossorigin="anonymous"></script>
-    
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TVZ5GGHC');</script>
+    <!-- End Google Tag Manager -->    
     <!-- Three.js CDN importmap -->
     <script type="importmap">
     {
@@ -294,6 +301,29 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+
+        /* Base64 인코더 전용 스타일 추가 */
+        .game-card[data-game="base64encoder"] {
+            border-color: #4CAF50;
+        }
+        .game-card[data-game="base64encoder"] .card-title {
+            color: #8BC34A;
+        }
+        .game-card[data-game="base64encoder"]::after {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+        }
+        .game-card[data-game="base64encoder"]:hover {
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.4);
+        }
+        .game-card[data-game="base64encoder"] .game-icon {
+            animation: pulseGreen 2s infinite;
+        }
+
+        @keyframes pulseGreen {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -402,6 +432,15 @@
                     badge: 'HOT',
                     platforms: ['PWA'],
                     languages: ['한국어', '日本語', '中文(简体)','中文(繁體)', 'English']
+                },
+                {
+                    title: 'Base64 인코더',
+                    icon: '/tools/base64.svg',
+                    url: 'tools/base64.html',
+                    desc: '텍스트 인코딩/디코딩 도구',
+                    badge: 'TOOL',
+                    platforms: ['PWA'],
+                    languages: ['🌍']
                 }
             ];
 
