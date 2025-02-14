@@ -1,3 +1,3 @@
-https://jsonformatter.cocy.io/*  https://cocy.io/tools/jsonformatter.html 301
-https://tools.cocy.io/* https://cocy.io/tools/:splat 301
-https://game.cocy.io/*  https://cocy.io/game/:splat 301
+/tools/jsonformatter/*  /tools/jsonformatter.html 301
+/tools/*  /tools/:splat 301
+/game/*  /game/:splat 301
