@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Online Converter | Encode/Decode Text & Strings</title>
+    <meta name="description" content="Free online Base64 encoder/decoder tool with charset support. Instantly convert text to Base64 and vice versa with UTF-8, ISO-8859-1, Windows-1252 encoding support.">
+    <meta name="keywords" content="Base64 converter, Base64 encode, Base64 decode, online tool, text encoding, charset converter">
+    <meta name="author" content="cocy.io">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Online Base64 Converter with Charset Support">
+    <meta property="og:description" content="Free instant Base64 encoding/decoding tool with multiple charset support. Works on any device!">
+    <meta property="og:image" content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDYzMCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIxOTZGMiIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjQ4IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiPkJhc2U2NCBDb252ZXJ0ZXI8L3RleHQ+CiAgPHJlY3QgeD0iMjAwIiB5PSIyMDAiIHdpZHRoPSI4MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPgogIDxwYXRoIGQ9Ik00MDAgNDAwIEw4MDAgNDAwIEw2MDAgNTAwIEw0MDAgNTAwIFoiIGZpbGw9IiNmZmYiLz4KPC9zdmc+">
+    <meta name="theme-color" content="#2196F3">
+    
+    <style>
+        :root {
+            --primary: #2196F3;
+            --background: #121212;
+            --surface: #1E1E1E;
+            --text: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            padding: 1rem;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui;
+            background: var(--background);
+            color: var(--text);
+            display: grid;
+            place-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        select, button {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--primary);
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0.5rem;
+            color: var(--text);
+            resize: vertical;
+        }
+
+        .result-group {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        h1 {
+            margin: 0 0 2rem;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        select option {
+            background: var(--surface);
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="grid">
+            <h1>Base64 Converter</h1>
+            <div class="input-group">
+                <select id="charset">
+                    <option value="utf-8">UTF-8</option>
+                    <option value="iso-8859-1">ISO-8859-1</option>
+                    <option value="windows-1252">Windows-1252</option>
+                </select>
+                <button onclick="convert()">Convert</button>
+            </div>
+            
+            <textarea id="input" placeholder="Enter text or Base64 here..."></textarea>
+            
+            <div class="result-group">
+                <textarea id="output" readonly></textarea>
+                <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCharset() {
+            return document.getElementById('charset').value;
+        }
+
+        function convert() {
+            const input = document.getElementById('input').value.trim();
+            const charset = getCharset();
+            
+            try {
+                // 먼저 디코딩 시도
+                const decoded = atob(input);
+                const bytes = new Uint8Array([...decoded].map(c => c.charCodeAt(0)));
+                const decoder = new TextDecoder(charset);
+                document.getElementById('output').value = decoder.decode(bytes);
+            } catch (e) {
+                // 디코딩 실패 시 인코딩 수행
+                try {
+                    const encoder = new TextEncoder(charset);
+                    const data = encoder.encode(input);
+                    document.getElementById('output').value = btoa(String.fromCharCode(...data));
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                }
+            }
+        }
+
+        function copyResult() {
+            const output = document.getElementById('output');
+            output.select();
+            navigator.clipboard.writeText(output.value)
+                .then(() => alert('Copied to clipboard!'))
+                .catch(err => alert('Failed to copy: ' + err));
+        }
+    </script>
+</body>
+</html>
