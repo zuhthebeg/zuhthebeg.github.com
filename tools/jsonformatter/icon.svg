@@ -1,0 +1,34 @@
+<svg width="64" height="64" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="jsonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8A2BE2"/>
+            <stop offset="100%" stop-color="#6A1B9A"/>
+        </linearGradient>
+        <filter id="shadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(138,43,226,0.3)"/>
+        </filter>
+    </defs>
+
+    <!-- 배경 원형으로 변경 -->
+    <circle cx="12" cy="12" r="12" fill="url(#jsonGrad)" filter="url(#shadow)"/>
+    
+    <!-- 개선된 중괄호 디자인 -->
+    <g transform="translate(5 4)" stroke="#fff" stroke-width="1.2" fill="none" stroke-linecap="round">
+        <!-- 왼쪽 중괄호 -->
+        <path d="M3 2V12" opacity="0.9">
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+        </path>
+        <path d="M2 2h1M2 12h1"/>
+        
+        <!-- 오른쪽 중괄호 -->
+        <path d="M9 2V12" opacity="0.9">
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite" begin="0.3s"/>
+        </path>
+        <path d="M9 2h1M9 12h1"/>
+    </g>
+
+    <!-- JSON 텍스트 개선 -->
+    <text x="50%" y="19" font-size="4" fill="#fff" text-anchor="middle" font-family="monospace" font-weight="600">
+        <tspan x="50%" dy="-2">JSON</tspan>
+    </text>
+</svg> 

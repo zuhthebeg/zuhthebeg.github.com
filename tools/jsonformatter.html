@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter & Validator | Online Tool</title>
+    <meta name="description" content="Free online JSON formatter and validator. Beautify, minify, and validate JSON data instantly with real-time syntax checking. Easy copy/paste functionality.">
+    <meta name="keywords" content="JSON,formatter,validator,beautifier,minifier,online tool,web tool,JSON lint">
+    
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Free Online JSON Formatter & Validator">
+    <meta property="og:description" content="Instant JSON formatting and validation tool for developers">
+    <meta property="og:image" content="/tools/jsonformatter/og-image-en.png">
+    <meta property="og:url" content="https://yourdomain.com/tools/jsonformatter/">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "JSON Formatter & Validator",
+        "applicationCategory": "DeveloperTools",
+        "operatingSystem": "Web",
+        "description": "Web-based JSON formatting and validation tool",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "Your Company"
+        }
+    }
+    </script>
+
+    <style>
+        /* Keep existing styles, only translate text-related properties */
+        h1 {
+            /* Original Korean font stack */
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JSON Formatter</h1>
+        <div class="grid">
+            <h2 class="sr-only">JSON Processing Tool</h2>
+            <div class="input-group">
+                <button onclick="formatJSON()">Pretty Print</button>
+                <button onclick="minifyJSON()">Minify</button>
+                <button onclick="validateJSON()">Validate</button>
+            </div>
+            
+            <textarea id="input" placeholder="Paste your JSON here..."></textarea>
+            
+            <div class="result-group">
+                <textarea id="output" readonly></textarea>
+                <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
+                <div class="json-error" id="error"></div>
+            </div>
+        </div>
+        
+        <footer style="margin-top: 2rem; text-align: center; color: #aaa;">
+            <p>© 2024 JSON Formatter. All rights reserved. 
+               <a href="/privacy" style="color: var(--json-accent);">Privacy Policy</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function formatJSON() {
+            try {
+                const input = document.getElementById('input').value.trim();
+                const parsed = JSON.parse(input);
+                document.getElementById('output').value = JSON.stringify(parsed, null, 4);
+                clearError();
+            } catch (e) {
+                showError(e);
+            }
+        }
+
+        function minifyJSON() {
+            try {
+                const input = document.getElementById('input').value.trim();
+                const parsed = JSON.parse(input);
+                document.getElementById('output').value = JSON.stringify(parsed);
+                clearError();
+            } catch (e) {
+                showError(e);
+            }
+        }
+
+        function validateJSON() {
+            try {
+                JSON.parse(document.getElementById('input').value.trim());
+                document.getElementById('error').textContent = "✓ Valid JSON";
+                document.getElementById('error').style.color = "#4CAF50";
+            } catch (e) {
+                showError(e);
+            }
+        }
+
+        function showError(e) {
+            const errorElem = document.getElementById('error');
+            errorElem.textContent = `Error: ${e.message.split('\n')[0]}`;
+            errorElem.style.color = "#FF5252";
+        }
+
+        function clearError() {
+            document.getElementById('error').textContent = '';
+        }
+
+        function copyResult() {
+            const output = document.getElementById('output');
+            output.select();
+            navigator.clipboard.writeText(output.value)
+                .then(() => alert('Copied!'))
+                .catch(err => alert('Copy failed: ' + err));
+        }
+    </script>
+</body>
+</html> 
