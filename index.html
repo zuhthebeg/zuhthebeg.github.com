@@ -4,14 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SANDBOX</title>
-    <script>
-        // 서브도메인이 game.cocy.io인 경우 리다이렉트
-        if (window.location.hostname === 'game.cocy.io') {
-            window.location.href = '/numberpuzzle/';
-        } else if (window.location.hostname === 'pikmin.cocy.io') {
-            window.location.href = '/pikmin/';
-        }
-    </script>
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6634731722045607"
@@ -411,8 +403,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             const games = [
                 { 
                     title: '타일 슬라이더', 
-                    icon: '/tileslider/icons/icon.svg',
-                    url: 'game.cocy.io/tileslider/',
+                    icon: 'https://game.cocy.io/tileslider/icons/icon.svg',
+                    url: 'https://game.cocy.io/tileslider/',
                     desc: '슬라이딩 숫자/이미지 퍼즐',
                     badge: 'NEW',
                     platforms: ['PWA', 'TWA'],
@@ -420,8 +412,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 },                
                 { 
                     title: '블럭 퍼즐', 
-                    icon: '/blockpuzzle/icons/icon.svg',
-                    url: 'game.cocy.io/blockpuzzle/',
+                    icon: 'https://game.cocy.io/blockpuzzle/icons/icon.svg',
+                    url: 'https://game.cocy.io/blockpuzzle/',
                     desc: '블럭 조합 퍼즐',
                     badge: 'SOON',
                     platforms: ['PWA'],
@@ -429,16 +421,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 },
                 { 
                     title: '피크민 트래커', 
-                    icon: '/pikmin/favicon.svg',
-                    url: 'game.cocy.io/pikmin/',
+                    icon: 'https://game.cocy.io/pikmin/favicon.svg',
+                    url: 'https://game.cocy.io/pikmin/',
                     desc: '피크민 수집 관리',
                     badge: 'HOT',
                     platforms: ['PWA'],
                     languages: ['한국어', '日本語', '中文(简体)','中文(繁體)', 'English']
                 },{
                     title: 'Base64 인코더',
-                    icon: '/base64/icon.svg',
-                    url: 'tool.cocy.io//base64/',
+                    icon: 'https://tool.cocy.io/base64/icon.svg',
+                    url: 'https://tool.cocy.io/base64/',
                     desc: '텍스트 인코딩/디코딩 도구',
                     badge: 'TOOL',
                     platforms: ['PWA'],
@@ -446,8 +438,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 },
                 {
                     title: 'JSON 포맷터',
-                    icon: '/json/icon.svg',
-                    url: 'tool.cocy.io//json/',
+                    icon: 'https://tool.cocy.io/json/icon.svg',
+                    url: 'https://tool.cocy.io/json/',
                     desc: 'JSON 정렬 및 검증 도구',
                     badge: 'TOOL',
                     platforms: ['PWA'],
@@ -455,8 +447,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 },
                 {
                     title: 'LLM 토크나이저',
-                    icon: '/llm/icon.svg',
-                    url: 'tool.cocy.io//llm/',
+                    icon: 'https://tool.cocy.io/llm/icon.svg',
+                    url: 'https://tool.cocy.io/llm/',
                     desc: 'AI 모델 토큰 계산기',
                     badge: 'TOOL',
                     platforms: ['PWA'],
@@ -464,8 +456,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 },
                 {
                     title: 'QR 코드 생성기',
-                    icon: '/qr/icon.svg',
-                    url: 'tool.cocy.io//qr/',
+                    icon: 'https://tool.cocy.io/qr/icon.svg',
+                    url: 'https://tool.cocy.io/qr/',
                     desc: 'QR 코드 생성 및 스캐너',
                     badge: 'TOOL',
                     platforms: ['PWA'],
@@ -473,8 +465,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 },
                 {
                     title: 'URL 인코더',
-                    icon: '/url/icon.svg',
-                    url: 'tool.cocy.io//url/',
+                    icon: 'https://tool.cocy.io/url/icon.svg',
+                    url: 'https://tool.cocy.io/url/',
                     desc: 'URL 인코딩/디코딩 도구',
                     badge: 'TOOL',
                     platforms: ['PWA'],
