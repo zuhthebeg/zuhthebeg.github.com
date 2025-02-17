@@ -1,0 +1,10 @@
+io.cocy.twa.app-androidbrowserhelper-2.5.0-0 C:\Users\zuhth\.gradle\caches\8.8-rc-2\transforms\1eb5aec4c0598689dcb542c34e159017\transformed\androidbrowserhelper-2.5.0\res
+io.cocy.twa.app-browser-1.4.0-1 C:\Users\zuhth\.gradle\caches\8.8-rc-2\transforms\9cc824b54d57f251658a8f6d51e7a93e\transformed\browser-1.4.0\res
+io.cocy.twa.app-core-1.1.0-2 C:\Users\zuhth\.gradle\caches\8.8-rc-2\transforms\b1d9786f1c21442e374d5082344c8ae7\transformed\core-1.1.0\res
+io.cocy.twa.app-pngs-3 D:\workspace\zuhthebeg.github.com\numberpuzzle\apps\app\build\generated\res\pngs\release
+io.cocy.twa.app-resValues-4 D:\workspace\zuhthebeg.github.com\numberpuzzle\apps\app\build\generated\res\resValues\release
+io.cocy.twa.app-packageReleaseResources-5 D:\workspace\zuhthebeg.github.com\numberpuzzle\apps\app\build\intermediates\incremental\release\packageReleaseResources\merged.dir
+io.cocy.twa.app-packageReleaseResources-6 D:\workspace\zuhthebeg.github.com\numberpuzzle\apps\app\build\intermediates\incremental\release\packageReleaseResources\stripped.dir
+io.cocy.twa.app-release-7 D:\workspace\zuhthebeg.github.com\numberpuzzle\apps\app\build\intermediates\merged_res\release\mergeReleaseResources
+io.cocy.twa.app-main-8 D:\workspace\zuhthebeg.github.com\numberpuzzle\apps\app\src\main\res
+io.cocy.twa.app-release-9 D:\workspace\zuhthebeg.github.com\numberpuzzle\apps\app\src\release\res

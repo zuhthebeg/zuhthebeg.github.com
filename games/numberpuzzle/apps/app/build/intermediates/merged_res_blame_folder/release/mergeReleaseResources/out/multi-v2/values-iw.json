@@ -1,0 +1,36 @@
+{
+    "logs": [
+        {
+            "outputFile": "io.cocy.twa.app-mergeReleaseResources-5:/values-iw/values-iw.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\zuhth\\.gradle\\caches\\8.8-rc-2\\transforms\\9cc824b54d57f251658a8f6d51e7a93e\\transformed\\browser-1.4.0\\res\\values-iw\\values-iw.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,146,246,352",
+                        "endColumns": "90,99,105,101",
+                        "endOffsets": "141,241,347,449"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\zuhth\\.gradle\\caches\\8.8-rc-2\\transforms\\b1d9786f1c21442e374d5082344c8ae7\\transformed\\core-1.1.0\\res\\values-iw\\values-iw.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "6",
+                        "startColumns": "4",
+                        "startOffsets": "454",
+                        "endColumns": "100",
+                        "endOffsets": "550"
+                    }
+                }
+            ]
+        }
+    ]
+}
