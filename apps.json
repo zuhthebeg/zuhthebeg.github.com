@@ -1,0 +1,90 @@
+[
+    { 
+        "title": "타일 슬라이더", 
+        "icon": "https://game.cocy.io/tileslider/icons/icon.svg",
+        "url": "https://game.cocy.io/tileslider/",
+        "desc": "슬라이딩 숫자/이미지 퍼즐",
+        "badge": "NEW",
+        "platforms": ["PWA", "TWA"],
+        "languages": ["🌍"],
+        "category": "game"
+    },                
+    { 
+        "title": "블럭 퍼즐", 
+        "icon": "https://game.cocy.io/blockpuzzle/icons/icon.svg",
+        "url": "https://game.cocy.io/blockpuzzle/",
+        "desc": "블럭 조합 퍼즐",
+        "badge": "SOON",
+        "platforms": ["PWA"],
+        "languages": ["🌍"],
+        "category": "game"
+    },
+    { 
+        "title": "피크민 트래커", 
+        "icon": "https://game.cocy.io/pikmin/favicon.svg",
+        "url": "https://game.cocy.io/pikmin/",
+        "desc": "피크민 수집 관리",
+        "badge": "HOT",
+        "platforms": ["PWA"],
+        "languages": ["한국어", "日本語", "中文(简体)","中文(繁體)", "English"],
+        "category": "game"
+    },{
+        "title": "Base64 인코더",
+        "icon": "https://tool.cocy.io/base64/icon.svg",
+        "url": "https://tool.cocy.io/base64/",
+        "desc": "텍스트 인코딩/디코딩 도구",
+        "badge": "TOOL",
+        "platforms": ["WEB"],
+        "languages": ["🌍"],
+        "category": "tool"
+    },
+    {
+        "title": "JSON 포맷터",
+        "icon": "https://tool.cocy.io/json/icon.svg",
+        "url": "https://tool.cocy.io/json/",
+        "desc": "JSON 정렬 및 검증 도구",
+        "badge": "TOOL",
+        "platforms": ["WEB"],
+        "languages": ["🌍"],
+        "category": "tool"
+    },
+    {
+        "title": "LLM 토크나이저",
+        "icon": "https://tool.cocy.io/llm/icon.svg",
+        "url": "https://tool.cocy.io/llm/",
+        "desc": "AI 모델 토큰 계산기",
+        "badge": "TOOL",
+        "platforms": ["WEB"],
+        "languages": ["🌍"],
+        "category": "tool"
+    },
+    {
+        "title": "QR 코드 생성기",
+        "icon": "https://tool.cocy.io/qr/icon.svg",
+        "url": "https://tool.cocy.io/qr/",
+        "desc": "QR 코드 생성 및 스캐너",
+        "badge": "TOOL",
+        "platforms": ["WEB"],
+        "languages": ["🌍"],
+        "category": "tool"
+    },
+    {
+        "title": "URL 인코더",
+        "icon": "https://tool.cocy.io/url/icon.svg",
+        "url": "https://tool.cocy.io/url/",
+        "desc": "URL 인코딩/디코딩 도구",
+        "badge": "TOOL",
+        "platforms": ["WEB"],
+        "languages": ["🌍"],
+        "category": "tool"
+    }, {
+        "title": "IP/DNS Lookup",
+        "icon": "https://tool.cocy.io/net/icon.svg",
+        "url": "https://tool.cocy.io/net/",
+        "desc": "IP/DNS Lookup",
+        "badge": "TOOL",
+        "platforms": ["WEB"],
+        "languages": ["🌍"],
+        "category": "tool"
+    }
+]
