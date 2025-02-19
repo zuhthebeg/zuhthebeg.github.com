@@ -86,5 +86,14 @@
         "platforms": ["WEB"],
         "languages": ["🌍"],
         "category": "tool"
+    },{
+        "title": "snake game",
+        "icon": "https://game.cocy.io/snake/icon.svg",
+        "url": "https://game.cocy.io/snake/",
+        "desc": "snake game",
+        "badge": "NEW",
+        "platforms": ["PWA"],
+        "languages": ["🌍"],
+        "category": "game"
     }
 ]
