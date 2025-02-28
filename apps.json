@@ -91,7 +91,16 @@
         "icon": "https://game.cocy.io/snake/icon.svg",
         "url": "https://game.cocy.io/snake/",
         "desc": "snake game",
-        "badge": "SOON",
+        "badge": "Dev",
+        "platforms": ["PWA"],
+        "languages": ["🌍"],
+        "category": "game"
+    },{
+        "title": "mine sweeper",
+        "icon": "https://game.cocy.io/mine/icon.svg",
+        "url": "https://game.cocy.io/mine/",
+        "desc": "mine game",
+        "badge": "Dev",
         "platforms": ["PWA"],
         "languages": ["🌍"],
         "category": "game"
