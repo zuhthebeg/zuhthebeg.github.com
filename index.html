@@ -33,7 +33,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     
     <link href="common.css" rel="stylesheet">
-
+    <link rel="manifest" href="/manifest.json">
 </head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MHYFCQ35XR"></script>
@@ -181,6 +181,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             initScene();
             await createGameCards();
         });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
