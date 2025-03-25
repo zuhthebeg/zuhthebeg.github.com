@@ -4,7 +4,7 @@
         "icon": "https://game.cocy.io/tileslider/icons/icon.svg",
         "url": "https://game.cocy.io/tileslider/",
         "desc": "슬라이딩 숫자/이미지 퍼즐",
-        "badge": "NEW",
+        "badge": "HOT",
         "platforms": ["PWA", "TWA"],
         "languages": ["🌍"],
         "category": "game"
@@ -14,7 +14,7 @@
         "icon": "https://game.cocy.io/blockpuzzle/icons/icon.svg",
         "url": "https://game.cocy.io/blockpuzzle/",
         "desc": "블럭 조합 퍼즐",
-        "badge": "SOON",
+        "badge": "NEW",
         "platforms": ["PWA"],
         "languages": ["🌍"],
         "category": "game"
@@ -100,7 +100,16 @@
         "icon": "https://game.cocy.io/snake/icon.svg",
         "url": "https://game.cocy.io/snake/",
         "desc": "snake game",
-        "badge": "NEW",
+        "badge": "Dev",
+        "platforms": ["PWA"],
+        "languages": ["🌍"],
+        "category": "game"
+    },{
+        "title": "mine sweeper",
+        "icon": "https://game.cocy.io/mine/icon.svg",
+        "url": "https://game.cocy.io/mine/",
+        "desc": "mine game",
+        "badge": "Dev",
         "platforms": ["PWA"],
         "languages": ["🌍"],
         "category": "game"

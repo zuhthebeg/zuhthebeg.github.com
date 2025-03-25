@@ -1,0 +1,14 @@
+{
+    "name": "SANDBOX",
+    "short_name": "SANDBOX",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a16",
+    "theme_color": "#00f3ff",
+    "icons": [
+        {
+            "src": "/icon.svg",
+            "type": "image/svg+xml"
+        }
+    ]
+}
