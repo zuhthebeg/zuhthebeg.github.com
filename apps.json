@@ -87,6 +87,15 @@
         "languages": ["🌍"],
         "category": "tool"
     },{
+        "title": "궁금증 츄크",
+        "icon": "https://tool.cocy.io/chu/icon.png",
+        "url": "https://tool.cocy.io/chu/",
+        "desc": "츄 궁금증 체크",
+        "badge": "TOOL",
+        "platforms": ["WEB"],
+        "languages": ["🌍"],
+        "category": "tool"
+    },{
         "title": "snake game",
         "icon": "https://game.cocy.io/snake/icon.svg",
         "url": "https://game.cocy.io/snake/",
