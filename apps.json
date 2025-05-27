@@ -113,5 +113,32 @@
         "platforms": ["PWA"],
         "languages": ["🌍"],
         "category": "game"
+    },{
+        "title": "D-Day Counter",
+        "icon": "https://tool.cocy.io/dday/icon.svg",
+        "url": "https://tool.cocy.io/dday/",
+        "desc": "D-Day Counter",
+        "badge": "TOOL",
+        "platforms": ["PWA"],
+        "languages": ["🌍"],
+        "category": "tool"
+    },{
+        "title": "Neon Sign",
+        "icon": "https://tool.cocy.io/neon/icon.svg",
+        "url": "https://tool.cocy.io/neon/",
+        "desc": "Web Neon Sign",
+        "badge": "TOOL",
+        "platforms": ["PWA"],
+        "languages": ["🌍"],
+        "category": "tool"
+    },{
+        "title": "Word Counter",
+        "icon": "https://tool.cocy.io/count/icon.svg",
+        "url": "https://tool.cocy.io/count/",
+        "desc": "Word Counter",
+        "badge": "TOOL",
+        "platforms": ["PWA"],
+        "languages": ["🌍"],
+        "category": "tool"
     }
 ]
