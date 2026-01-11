@@ -3,100 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANDBOX</title>
-    <!-- 파비콘 추가 -->
+    <title>COCY.IO - 당신의 디지털 플레이그라운드</title>
+
+    <!-- 파비콘 -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6634731722045607"
     crossorigin="anonymous"></script>
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-MV8KQGJF');</script>
-<!-- End Google Tag Manager -->
-        <!-- Three.js CDN importmap -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MV8KQGJF');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Three.js CDN importmap -->
     <script type="importmap">
     {
         "imports": {
-            "three": "https://unpkg.com/three@0.132.2/build/three.module.js",
-            "three/examples/jsm/controls/": "https://unpkg.com/three@0.132.2/examples/jsm/controls/"
+            "three": "https://unpkg.com/three@0.132.2/build/three.module.js"
         }
     }
     </script>
-    
-    <!-- Google Fonts 추가 -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-    
-    <link href="common.css" rel="stylesheet">
-    <link rel="manifest" href="/manifest.json">
-</head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MHYFCQ35XR"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'G-32T99D4F1P');
-    </script>
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-light: #ffffff;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --accent-1: #667eea;
+            --accent-2: #764ba2;
+            --accent-3: #f093fb;
+            --accent-4: #4facfe;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Gradient Background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(45deg,
+                #0a0a0f 0%,
+                #1a0a2e 25%,
+                #16213e 50%,
+                #0f3460 75%,
+                #0a0a0f 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Three.js Particle Container */
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Services Grid */
+        .services-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Glassmorphism Cards */
+        .service-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                rgba(102, 126, 234, 0.1) 0%,
+                rgba(118, 75, 162, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) rotateY(5deg) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow:
+                0 20px 60px rgba(102, 126, 234, 0.3),
+                0 0 100px rgba(118, 75, 162, 0.2);
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transition: transform 0.5s;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .service-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            transition: color 0.3s;
+        }
+
+        .service-url {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .service-desc {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .tag {
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s;
+        }
+
+        .service-card:hover .tag {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .footer-link:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .service-card {
+                padding: 2rem;
+            }
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Particle Canvas */
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MV8KQGJF"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MV8KQGJF"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Animated Gradient Background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Three.js Particle Background -->
     <div id="scene-container"></div>
-    
-    <div class="portal-container">
-        <h1 class="portal-title">SANDBOX</h1>
-        <div class="game-grid">
-            <!-- 동적으로 게임 카드 추가 -->
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">COCY.IO</h1>
+        <p class="hero-subtitle">당신의 디지털 플레이그라운드</p>
+    </section>
+
+    <!-- Services Section -->
+    <div class="services-container">
+        <div class="services-grid">
+            <!-- Game Portal -->
+            <a href="https://game.cocy.io" class="service-card reveal">
+                <span class="service-icon">🎮</span>
+                <h2 class="service-name">Games</h2>
+                <p class="service-url">game.cocy.io</p>
+                <p class="service-desc">퍼즐, 클래식, 캐주얼 게임을 즐겨보세요. 타일 슬라이더, 블럭 퍼즐, 피크민 트래커 등 다양한 게임을 제공합니다.</p>
+                <div class="service-tags">
+                    <span class="tag">PWA</span>
+                    <span class="tag">무료</span>
+                    <span class="tag">다국어</span>
+                </div>
+            </a>
+
+            <!-- Tool Portal -->
+            <a href="https://tool.cocy.io" class="service-card reveal">
+                <span class="service-icon">🛠️</span>
+                <h2 class="service-name">Tools</h2>
+                <p class="service-url">tool.cocy.io</p>
+                <p class="service-desc">개발자와 디자이너를 위한 유틸리티 도구 모음. Base64, JSON 포맷터, QR 코드 생성기, URL 인코더 등을 제공합니다.</p>
+                <div class="service-tags">
+                    <span class="tag">웹 도구</span>
+                    <span class="tag">무료</span>
+                    <span class="tag">오프라인</span>
+                </div>
+            </a>
+
+            <!-- Glovely -->
+            <a href="https://glovely.cocy.io" class="service-card reveal">
+                <span class="service-icon">💝</span>
+                <h2 class="service-name">Glovely</h2>
+                <p class="service-url">glovely.cocy.io</p>
+                <p class="service-desc">따뜻한 글로벌 만남. AI 기반 매칭 시스템으로 전 세계 사람들과 의미 있는 연결을 만들어보세요.</p>
+                <div class="service-tags">
+                    <span class="tag">AI 매칭</span>
+                    <span class="tag">글로벌</span>
+                    <span class="tag">소셜</span>
+                </div>
+            </a>
+
+            <!-- Travly -->
+            <a href="https://travly.cocy.io" class="service-card reveal">
+                <span class="service-icon">✈️</span>
+                <h2 class="service-name">Travly</h2>
+                <p class="service-url">travly.cocy.io</p>
+                <p class="service-desc">AI 여행 계획 어시스턴트. 당신의 완벽한 여행을 AI가 설계하고 관리합니다. 일정, 예산, 추천까지 한 번에.</p>
+                <div class="service-tags">
+                    <span class="tag">AI 어시스트</span>
+                    <span class="tag">여행</span>
+                    <span class="tag">일정 관리</span>
+                </div>
+            </a>
+
+            <!-- Vocal Class -->
+            <a href="https://class.cocy.io" class="service-card reveal">
+                <span class="service-icon">📚</span>
+                <h2 class="service-name">Vocal Class</h2>
+                <p class="service-url">class.cocy.io</p>
+                <p class="service-desc">수업 관리 웹앱. 강사와 수강생을 위한 출석 체크, 수업 관리, AI 챗봇 지원으로 효율적인 교육 환경을 제공합니다.</p>
+                <div class="service-tags">
+                    <span class="tag">교육</span>
+                    <span class="tag">관리</span>
+                    <span class="tag">AI 챗봇</span>
+                </div>
+            </a>
         </div>
     </div>
 
-    <div class="footer">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/list.html" class="footer-link">전체 앱 목록</a>
+            <a href="mailto:contact@cocy.io" class="footer-link">Contact</a>
+            <a href="https://github.com/zuhthebeg" class="footer-link" target="_blank">GitHub</a>
+        </div>
         <p>© 2025 COCY.IO All rights reserved.</p>
-    </div>
+    </footer>
 
+    <!-- Scripts -->
     <script type="module">
-        // CDN에서 모듈 임포트
         import * as THREE from 'three';
-        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-        // three.js 초기화 함수
-        const initScene = () => {
+        // Three.js Particle Background
+        const initParticles = () => {
             const scene = new THREE.Scene();
             const container = document.getElementById('scene-container');
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ 
-                alpha: true, 
-                antialias: true 
+            const renderer = new THREE.WebGLRenderer({
+                alpha: true,
+                antialias: true
             });
-            
+
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
 
-            // 파티클 생성
+            // Create Particles
+            const particleCount = 1500;
             const particles = new THREE.BufferGeometry();
-            const particleCount = 1000;
             const posArray = new Float32Array(particleCount * 3);
+            const colorArray = new Float32Array(particleCount * 3);
 
-            for(let i = 0; i < particleCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 10;
+            for(let i = 0; i < particleCount * 3; i += 3) {
+                posArray[i] = (Math.random() - 0.5) * 15;
+                posArray[i + 1] = (Math.random() - 0.5) * 15;
+                posArray[i + 2] = (Math.random() - 0.5) * 15;
+
+                // Gradient colors
+                const t = i / (particleCount * 3);
+                colorArray[i] = 0.4 + t * 0.6;     // R
+                colorArray[i + 1] = 0.5 + t * 0.3; // G
+                colorArray[i + 2] = 0.9;           // B
             }
 
             particles.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
             const material = new THREE.PointsMaterial({
-                size: 0.005,
-                color: new THREE.Color(
-                    getComputedStyle(document.documentElement)
-                        .getPropertyValue('--neon-blue').trim()
-                )
+                size: 0.008,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
             });
 
             const particleMesh = new THREE.Points(particles, material);
@@ -104,20 +462,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             camera.position.z = 3;
 
-            // OrbitControls 초기화
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableZoom = false;
+            // Mouse Interaction
+            let mouseX = 0;
+            let mouseY = 0;
 
-            // 애니메이션 루프
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            // Animation Loop
             function animate() {
                 requestAnimationFrame(animate);
-                particleMesh.rotation.y += 0.001;
-                controls.update();
+
+                particleMesh.rotation.y += 0.0005;
+                particleMesh.rotation.x += 0.0002;
+
+                // Mouse parallax
+                camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+                camera.position.y += (mouseY * 0.5 - camera.position.y) * 0.05;
+
                 renderer.render(scene, camera);
             }
             animate();
 
-            // 리사이즈 핸들러
+            // Resize Handler
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
@@ -125,75 +494,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             });
         };
 
-        // 게임 데이터 로드 함수
-        const loadGameData = async () => {
-            try {
-                const response = await fetch('apps.json');
-                return await response.json();
-            } catch (error) {
-                console.error('게임 데이터 로딩 실패:', error);
-                return [];
-            }
-        };
+        // Scroll Reveal Animation
+        const revealElements = () => {
+            const reveals = document.querySelectorAll('.reveal');
 
-        // 게임 카드 생성 함수 (수정된 비동기 버전)
-        const createGameCards = async () => {
-            const grid = document.querySelector('.game-grid');
-            const games = await loadGameData();
-
-            // 기존 카드 초기화
-            grid.innerHTML = '';
-
-            games.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.dataset.game = game.title.toLowerCase().replace(/\s+/g, '');
-                
-                card.innerHTML = `
-                    <div class="card-header">
-                        ${game.badge ? `<span class="badge">${game.badge}</span>` : ''}
-                        <img src="${game.icon}" alt="${game.title} 아이콘" class="game-icon">
-                    </div>
-                    <h3 class="card-title">${game.title}</h3>
-                    <p>${game.desc}</p>
-                    <div class="meta-info">
-                        <div class="platforms">
-                            ${game.platforms.map(p => `<span class="platform-tag">${p}</span>`).join('')}
-                        </div>
-                        <div class="languages">
-                            ${game.languages.map(l => `<span class="lang-tag">${l}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-
-                card.addEventListener('click', (e) => {
-                    if(!e.target.closest('.badge, .game-icon')) {
-                        window.location.href = game.url;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
                     }
                 });
-
-                grid.appendChild(card);
+            }, {
+                threshold: 0.1
             });
+
+            reveals.forEach(reveal => observer.observe(reveal));
         };
 
-        // 초기화 실행 (비동기 처리 추가)
-        window.addEventListener('DOMContentLoaded', async () => {
-            initScene();
-            await createGameCards();
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            revealElements();
         });
     </script>
+
+    <!-- Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        console.log('ServiceWorker registration successful');
                     })
                     .catch(error => {
-                        console.log('ServiceWorker registration failed: ', error);
+                        console.log('ServiceWorker registration failed:', error);
                     });
             });
         }
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MHYFCQ35XR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-32T99D4F1P');
     </script>
 </body>
 </html>
