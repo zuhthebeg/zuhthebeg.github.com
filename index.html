@@ -311,6 +311,243 @@
         canvas {
             display: block;
         }
+
+        /* Auth UI */
+        .auth-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .auth-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Auth Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 32px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .modal-tab {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .form-success {
+            color: #22c55e;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                top: 10px;
+                right: 10px;
+            }
+            .modal {
+                padding: 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -318,6 +555,57 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MV8KQGJF"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Auth Container -->
+    <div class="auth-container" id="authContainer">
+        <!-- Will be populated by JS -->
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 class="modal-title">COCY 계정</h2>
+            
+            <div class="modal-tabs">
+                <button class="modal-tab active" onclick="switchTab('login')">로그인</button>
+                <button class="modal-tab" onclick="switchTab('register')">회원가입</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>이메일</label>
+                    <input type="email" id="loginEmail" required placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>비밀번호</label>
+                    <input type="password" id="loginPassword" required placeholder="8자 이상">
+                </div>
+                <div id="loginError" class="form-error"></div>
+                <button type="submit" class="submit-btn">로그인</button>
+            </form>
+            
+            <!-- Register Form -->
+            <form id="registerForm" style="display:none" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>이메일</label>
+                    <input type="email" id="registerEmail" required placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>닉네임 (선택)</label>
+                    <input type="text" id="registerNickname" placeholder="닉네임">
+                </div>
+                <div class="form-group">
+                    <label>비밀번호</label>
+                    <input type="password" id="registerPassword" required placeholder="8자 이상" minlength="8">
+                </div>
+                <div id="registerError" class="form-error"></div>
+                <div id="registerSuccess" class="form-success"></div>
+                <button type="submit" class="submit-btn">가입하기</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Animated Gradient Background -->
     <div class="gradient-bg"></div>
@@ -516,6 +804,229 @@
             initParticles();
             revealElements();
         });
+    </script>
+
+    <!-- Auth Script -->
+    <script>
+        const API_BASE = 'https://relay.cocy.io/api/auth';
+        
+        // Token management
+        function getTokens() {
+            return {
+                accessToken: localStorage.getItem('accessToken'),
+                refreshToken: localStorage.getItem('refreshToken')
+            };
+        }
+        
+        function setTokens(access, refresh) {
+            localStorage.setItem('accessToken', access);
+            localStorage.setItem('refreshToken', refresh);
+        }
+        
+        function clearTokens() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+        }
+        
+        function getUser() {
+            const user = localStorage.getItem('user');
+            return user ? JSON.parse(user) : null;
+        }
+        
+        function setUser(user) {
+            localStorage.setItem('user', JSON.stringify(user));
+        }
+        
+        // Render auth UI
+        function renderAuthUI() {
+            const container = document.getElementById('authContainer');
+            const user = getUser();
+            
+            if (user) {
+                const initial = (user.nickname || user.email)[0].toUpperCase();
+                container.innerHTML = `
+                    <div class="user-menu">
+                        <div class="user-avatar">${initial}</div>
+                        <span class="user-name">${user.nickname || user.email.split('@')[0]}</span>
+                        <button class="logout-btn" onclick="logout()">로그아웃</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button class="auth-btn" onclick="openModal()">로그인</button>
+                `;
+            }
+        }
+        
+        // Modal
+        function openModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('registerError').textContent = '';
+            document.getElementById('registerSuccess').textContent = '';
+        }
+        
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.modal-tab');
+            tabs.forEach((t, i) => {
+                t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
+            });
+            document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+        }
+        
+        // API calls
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+            const btn = e.target.querySelector('button');
+            
+            btn.disabled = true;
+            btn.textContent = '로그인 중...';
+            errorEl.textContent = '';
+            
+            try {
+                const res = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await res.json();
+                
+                if (!res.ok) {
+                    throw new Error(data.error || '로그인 실패');
+                }
+                
+                setTokens(data.accessToken, data.refreshToken);
+                setUser(data.user);
+                closeModal();
+                renderAuthUI();
+                
+            } catch (err) {
+                errorEl.textContent = err.message;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '로그인';
+            }
+        }
+        
+        async function handleRegister(e) {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const nickname = document.getElementById('registerNickname').value;
+            const errorEl = document.getElementById('registerError');
+            const successEl = document.getElementById('registerSuccess');
+            const btn = e.target.querySelector('button');
+            
+            btn.disabled = true;
+            btn.textContent = '가입 중...';
+            errorEl.textContent = '';
+            successEl.textContent = '';
+            
+            try {
+                const res = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, nickname: nickname || undefined })
+                });
+                
+                const data = await res.json();
+                
+                if (!res.ok) {
+                    throw new Error(data.error || '가입 실패');
+                }
+                
+                // Auto-login after register
+                setTokens(data.accessToken, data.refreshToken);
+                setUser(data.user);
+                closeModal();
+                renderAuthUI();
+                
+            } catch (err) {
+                errorEl.textContent = err.message;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '가입하기';
+            }
+        }
+        
+        function logout() {
+            clearTokens();
+            renderAuthUI();
+        }
+        
+        // Token refresh
+        async function refreshAccessToken() {
+            const { refreshToken } = getTokens();
+            if (!refreshToken) return false;
+            
+            try {
+                const res = await fetch(`${API_BASE}/refresh`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refreshToken })
+                });
+                
+                if (!res.ok) {
+                    clearTokens();
+                    renderAuthUI();
+                    return false;
+                }
+                
+                const data = await res.json();
+                setTokens(data.accessToken, data.refreshToken);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+        
+        // Check auth on load
+        async function checkAuth() {
+            const { accessToken } = getTokens();
+            if (!accessToken) {
+                renderAuthUI();
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/me`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                
+                if (res.ok) {
+                    const user = await res.json();
+                    setUser(user);
+                } else if (res.status === 401) {
+                    // Try refresh
+                    const refreshed = await refreshAccessToken();
+                    if (!refreshed) {
+                        clearTokens();
+                    }
+                }
+            } catch {
+                // Offline or error, keep current state
+            }
+            
+            renderAuthUI();
+        }
+        
+        // Close modal on overlay click
+        document.getElementById('authModal').addEventListener('click', (e) => {
+            if (e.target.id === 'authModal') closeModal();
+        });
+        
+        // Init auth
+        checkAuth();
     </script>
 
     <!-- Service Worker -->
