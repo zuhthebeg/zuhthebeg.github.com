@@ -23,9 +23,9 @@ window.addEventListener('message', (event) => {
     }
     
     if (event.data.type === 'GET_AUTH_TOKEN') {
-        // cocy.io의 토큰 가져오기
-        const accessToken = localStorage.getItem('accessToken');
-        const refreshToken = localStorage.getItem('refreshToken');
+        // cocy.io의 토큰 가져오기 (두 가지 키 이름 모두 확인)
+        const accessToken = localStorage.getItem('accessToken') || localStorage.getItem('cocy_auth_token');
+        const refreshToken = localStorage.getItem('refreshToken') || localStorage.getItem('cocy_refresh_token');
         
         event.source.postMessage({
             type: 'AUTH_TOKEN_RESPONSE',

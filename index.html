@@ -817,19 +817,24 @@
         // Token management
         function getTokens() {
             return {
-                accessToken: localStorage.getItem('accessToken'),
-                refreshToken: localStorage.getItem('refreshToken')
+                accessToken: localStorage.getItem('accessToken') || localStorage.getItem('cocy_auth_token'),
+                refreshToken: localStorage.getItem('refreshToken') || localStorage.getItem('cocy_refresh_token')
             };
         }
         
         function setTokens(access, refresh) {
+            // 두 가지 키 이름 모두 저장 (하위 호환성)
             localStorage.setItem('accessToken', access);
             localStorage.setItem('refreshToken', refresh);
+            localStorage.setItem('cocy_auth_token', access);
+            localStorage.setItem('cocy_refresh_token', refresh);
         }
         
         function clearTokens() {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
+            localStorage.removeItem('cocy_auth_token');
+            localStorage.removeItem('cocy_refresh_token');
             localStorage.removeItem('user');
         }
         
