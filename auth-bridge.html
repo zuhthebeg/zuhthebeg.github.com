@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Bridge</title>
+</head>
+<body>
+<script>
+// Auth Bridge - 서브도메인에서 토큰 요청 시 응답
+const ALLOWED_ORIGINS = [
+    'https://game.cocy.io',
+    'https://tool.cocy.io',
+    'https://relay.cocy.io',
+    'https://travly.cocy.io',
+    'https://glovely.cocy.io',
+    'https://class.cocy.io'
+];
+
+window.addEventListener('message', (event) => {
+    // 허용된 도메인인지 확인
+    if (!ALLOWED_ORIGINS.some(o => event.origin.startsWith(o.replace('https://', 'https://').split('/')[0]) || event.origin.includes('.cocy.io'))) {
+        console.log('Rejected origin:', event.origin);
+        return;
+    }
+    
+    if (event.data.type === 'GET_AUTH_TOKEN') {
+        // cocy.io의 토큰 가져오기
+        const accessToken = localStorage.getItem('accessToken');
+        const refreshToken = localStorage.getItem('refreshToken');
+        
+        event.source.postMessage({
+            type: 'AUTH_TOKEN_RESPONSE',
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        }, event.origin);
+    }
+    
+    if (event.data.type === 'SET_AUTH_TOKEN') {
+        // 토큰 저장 (로그아웃 동기화 등)
+        if (event.data.accessToken) {
+            localStorage.setItem('accessToken', event.data.accessToken);
+        }
+        if (event.data.refreshToken) {
+            localStorage.setItem('refreshToken', event.data.refreshToken);
+        }
+        if (event.data.clear) {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        }
+    }
+});
+
+// 로드 완료 알림
+if (window.parent !== window) {
+    window.parent.postMessage({ type: 'AUTH_BRIDGE_READY' }, '*');
+}
+</script>
+</body>
+</html>
