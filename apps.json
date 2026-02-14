@@ -2,7 +2,7 @@
     {
         "title": "레시피 노트",
         "icon": "https://tool.cocy.io/recipe/icon.svg",
-        "url": "https://tool.cocy.io/recipe/",
+        "url": "https://recipe.cocy.io/",
         "desc": "나만의 레시피 저장 & 검색",
         "badge": "NEW",
         "platforms": ["WEB"],
@@ -105,24 +105,6 @@
         "platforms": ["WEB"],
         "languages": ["🌍"],
         "category": "tool"
-    },{
-        "title": "snake game",
-        "icon": "https://game.cocy.io/snake/icon.svg",
-        "url": "https://game.cocy.io/snake/",
-        "desc": "snake game",
-        "badge": "Dev",
-        "platforms": ["PWA"],
-        "languages": ["🌍"],
-        "category": "game"
-    },{
-        "title": "mine sweeper",
-        "icon": "https://game.cocy.io/mine/icon.svg",
-        "url": "https://game.cocy.io/mine/",
-        "desc": "mine game",
-        "badge": "Dev",
-        "platforms": ["PWA"],
-        "languages": ["🌍"],
-        "category": "game"
     },{
         "title": "D-Day Counter",
         "icon": "https://tool.cocy.io/dday/icon.svg",
