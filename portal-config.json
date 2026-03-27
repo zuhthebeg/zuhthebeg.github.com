@@ -8,10 +8,12 @@
       "color": "#ff6b6b",
       "position": [12, 0, -40],
       "services": [
-        { "id": "blackjack", "name": "Blackjack", "url": "https://game.cocy.io/blackjack/", "desc": "클래식 블랙잭 카드 게임", "featured": true },
-        { "id": "weapon-upgrade", "name": "Weapon Upgrade", "url": "https://game.cocy.io/weapon-upgrade/", "desc": "무기 강화 시뮬레이터", "featured": true },
-        { "id": "linerush", "name": "Line Rush", "url": "https://game.cocy.io/linerush/", "desc": "영역 점령 액션 게임", "featured": false },
-        { "id": "relay", "name": "Multiplayer", "url": "https://relay.cocy.io", "desc": "멀티플레이어 릴레이", "featured": false }
+        { "id": "blackjack", "name": "블랙잭", "url": "https://game.cocy.io/blackjack/", "desc": "딜러와 1:1 블랙잭! 골드 베팅, 3:2 배당, 연승 보너스", "featured": true },
+        { "id": "enhance", "name": "무기 강화 & 배틀", "url": "https://game.cocy.io/enhance/", "desc": "디아블로 스타일 등급 시스템! 강화하고 배틀해서 돈을 벌어라", "featured": true },
+        { "id": "catan", "name": "카탄", "url": "https://game.cocy.io/catan/", "desc": "AI와 카탄 보드게임. 자원 교환, 건설, 최장도로", "featured": false },
+        { "id": "linerush", "name": "라인러시", "url": "https://game.cocy.io/linerush/", "desc": "영역 점령 액션 게임", "featured": false },
+        { "id": "jokerrun", "name": "조커런", "url": "https://game.cocy.io/jokerrun/", "desc": "포커 로그라이크! 핸드 조합하고 조커로 점수 폭발", "featured": false },
+        { "id": "relay", "name": "멀티플레이어", "url": "https://relay.cocy.io", "desc": "실시간 멀티플레이어 릴레이 서버", "featured": false }
       ]
     },
     {
@@ -22,10 +24,10 @@
       "color": "#4ecdc4",
       "position": [-10, 2, -90],
       "services": [
-        { "id": "travly", "name": "Travly", "url": "https://travly.cocy.io", "desc": "AI 여행 계획 어시스턴트", "featured": true },
+        { "id": "travly", "name": "Travly", "url": "https://travly.cocy.io", "desc": "AI 여행 계획 어시스턴트. 일정, 예산, 추천까지 한 번에", "featured": true },
         { "id": "slide", "name": "Slide", "url": "https://slide.cocy.io", "desc": "AI 프레젠테이션 빌더", "featured": true },
         { "id": "glovely", "name": "Glovely", "url": "https://glovely.cocy.io", "desc": "AI 기반 글로벌 매칭", "featured": false },
-        { "id": "log", "name": "Log", "url": "https://log.cocy.io", "desc": "AI 라이프로그 기록", "featured": false }
+        { "id": "log", "name": "Log", "url": "https://log.cocy.io", "desc": "AI 라이프로그. 자연어로 기록하고 패턴 분석", "featured": false }
       ]
     },
     {
@@ -36,7 +38,7 @@
       "color": "#ffe66d",
       "position": [15, -3, -140],
       "services": [
-        { "id": "tools", "name": "Tools", "url": "https://tool.cocy.io", "desc": "개발자 유틸리티 모음", "featured": true },
+        { "id": "tools", "name": "Tools", "url": "https://tool.cocy.io", "desc": "Base64, JSON, QR, URL 인코더 등 개발자 유틸리티", "featured": true },
         { "id": "recipe", "name": "Recipe", "url": "https://recipe.cocy.io", "desc": "나만의 레시피 노트", "featured": false }
       ]
     },
@@ -48,8 +50,8 @@
       "color": "#a29bfe",
       "position": [-8, 0, -190],
       "services": [
-        { "id": "news", "name": "News", "url": "https://news.cocy.io", "desc": "AI가 요약한 주요 뉴스", "featured": true },
-        { "id": "blog", "name": "Blog", "url": "https://blog.cocy.io", "desc": "AI Ops 개발 로그", "featured": false }
+        { "id": "news", "name": "News", "url": "https://news.cocy.io", "desc": "AI가 매일 수집·요약한 주요 뉴스", "featured": true },
+        { "id": "blog", "name": "Blog", "url": "https://blog.cocy.io", "desc": "AI Ops 개발 로그, 자동화 실전 기록", "featured": false }
       ]
     }
   ]
