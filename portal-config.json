@@ -13,7 +13,7 @@
         { "id": "catan", "name": "카탄", "url": "https://game.cocy.io/catan/", "desc": "AI와 카탄 보드게임. 자원 교환, 건설, 최장도로", "featured": false },
         { "id": "linerush", "name": "라인러시", "url": "https://game.cocy.io/linerush/", "desc": "영역 점령 액션 게임", "featured": false },
         { "id": "jokerrun", "name": "조커런", "url": "https://game.cocy.io/jokerrun/", "desc": "포커 로그라이크! 핸드 조합하고 조커로 점수 폭발", "featured": false },
-        { "id": "relay", "name": "멀티플레이어", "url": "https://relay.cocy.io", "desc": "실시간 멀티플레이어 릴레이 서버", "featured": false }
+        { "id": "poker", "name": "포커", "url": "https://game.cocy.io/poker/", "desc": "텍사스 홀덤 포커", "featured": false }
       ]
     },
     {
