@@ -6,7 +6,7 @@
       "emoji": "🎮",
       "order": 1,
       "color": "#ff6b6b",
-      "position": [15, 5, 0],
+      "position": [12, 0, -40],
       "services": [
         { "id": "blackjack", "name": "Blackjack", "url": "https://game.cocy.io/blackjack/", "desc": "클래식 블랙잭 카드 게임", "featured": true },
         { "id": "weapon-upgrade", "name": "Weapon Upgrade", "url": "https://game.cocy.io/weapon-upgrade/", "desc": "무기 강화 시뮬레이터", "featured": true },
@@ -20,7 +20,7 @@
       "emoji": "🤖",
       "order": 2,
       "color": "#4ecdc4",
-      "position": [-10, -8, -25],
+      "position": [-10, 2, -90],
       "services": [
         { "id": "travly", "name": "Travly", "url": "https://travly.cocy.io", "desc": "AI 여행 계획 어시스턴트", "featured": true },
         { "id": "slide", "name": "Slide", "url": "https://slide.cocy.io", "desc": "AI 프레젠테이션 빌더", "featured": true },
@@ -34,7 +34,7 @@
       "emoji": "🛠️",
       "order": 3,
       "color": "#ffe66d",
-      "position": [20, 3, -50],
+      "position": [15, -3, -140],
       "services": [
         { "id": "tools", "name": "Tools", "url": "https://tool.cocy.io", "desc": "개발자 유틸리티 모음", "featured": true },
         { "id": "recipe", "name": "Recipe", "url": "https://recipe.cocy.io", "desc": "나만의 레시피 노트", "featured": false }
@@ -46,7 +46,7 @@
       "emoji": "📡",
       "order": 4,
       "color": "#a29bfe",
-      "position": [0, -5, -70],
+      "position": [-8, 0, -190],
       "services": [
         { "id": "news", "name": "News", "url": "https://news.cocy.io", "desc": "AI가 요약한 주요 뉴스", "featured": true },
         { "id": "blog", "name": "Blog", "url": "https://blog.cocy.io", "desc": "AI Ops 개발 로그", "featured": false }
