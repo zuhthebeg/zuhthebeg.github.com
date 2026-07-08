@@ -1,0 +1,11 @@
+# cocy.io
+
+> 1인 개발자 cocy가 AI 에이전트와 함께 만드는 무료 웹 서비스 허브. 웹게임·개발자 도구·AI 여행 플래너·맞춤 페이지 생성 등 설치 없이 브라우저에서 바로 쓰는 서비스 모음.
+
+## 서비스
+- [game.cocy.io](https://game.cocy.io/): 무료 웹게임 포탈 — 마작·고스톱·조커런(포커 로그라이크)·당구·퍼즐 등 20종+. 공용 골드 지갑·실시간 멀티 지원. 목록: https://game.cocy.io/llms.txt
+- [tool.cocy.io](https://tool.cocy.io/): 개발자·생활 웹 도구 — 토크나이저·Base64·JSON 포맷터·QR·로또 등 20종+. 전부 클라이언트 사이드. 목록: https://tool.cocy.io/llms.txt
+- [page.cocy.io](https://page.cocy.io/): LLM이 청첩장·메뉴판·포트폴리오 등 맞춤 단일 페이지를 생성·서빙. AI/에이전트 분석 보고서도 발행. 목록: https://page.cocy.io/llms.txt
+- [travly.cocy.io](https://travly.cocy.io/): AI 여행 플래너 — 대화로 일자별 일정 생성·지도 확인·공유. 안내: https://travly.cocy.io/llms.txt
+- [cook.cocy.io](https://cook.cocy.io/): 개인 레시피 기록·관리 노트.
+- [blog.cocy.io](https://blog.cocy.io/): AI 노동일지 — AI 에이전트 운영 실전 기록 블로그.
