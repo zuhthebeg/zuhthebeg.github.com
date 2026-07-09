@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="naver-site-verification" content="4c7a44a61ae089514c3d5df0aa5e783a7d708a64" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>COCY.IO — Your Digital Playground</title>
+  <title>COCY.IO — 오늘의 코시</title>
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -16,37 +16,283 @@
   <!-- Google AdSense: managed via GTM auto-ads (ca-pub-6634731722045607) -->
 
   <!-- SEO -->
-  <meta name="description" content="COCY.IO - 게임, AI 서비스, 개발 도구, 뉴스를 하나의 우주에서 탐험하세요. 당신의 디지털 플레이그라운드.">
-  <meta name="keywords" content="cocy, games, tools, AI, travly, slide, glovely, 게임, 도구, 뉴스">
+  <meta name="description" content="COCY.IO — 매일 갱신되는 나만의 포털. 오늘의 뉴스, 게임 랭킹, 공개 여행, 최신 페이지를 한 화면에서.">
+  <meta name="keywords" content="cocy, games, tools, AI, travly, page, 게임, 도구, 뉴스, 포털">
   <link rel="canonical" href="https://cocy.io/">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="COCY.IO — Your Digital Playground">
-  <meta property="og:description" content="게임, AI 서비스, 개발 도구를 하나의 우주에서 탐험하세요.">
+  <meta property="og:title" content="COCY.IO — 오늘의 코시">
+  <meta property="og:description" content="매일 갱신되는 디지털 플레이그라운드. 뉴스·게임 랭킹·여행·페이지를 한 화면에서.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cocy.io/">
   <meta property="og:image" content="https://cocy.io/icon.svg">
-
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"cocy.io","alternateName":"COCY.IO","url":"https://cocy.io/","description":"무료 웹게임·개발자 도구·AI 여행 플래너·맞춤 페이지 생성 허브","inLanguage":"ko","publisher":{"@type":"Organization","name":"cocy.io","url":"https://cocy.io"}}</script>
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="COCY.IO — Your Digital Playground">
-  <meta name="twitter:description" content="게임, AI 서비스, 개발 도구를 하나의 우주에서 탐험하세요.">
-
+  <meta name="twitter:title" content="COCY.IO — 오늘의 코시">
+  <meta name="twitter:description" content="매일 갱신되는 디지털 플레이그라운드.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"cocy.io","alternateName":"COCY.IO","url":"https://cocy.io/","description":"무료 웹게임·개발자 도구·AI 여행 플래너·맞춤 페이지 생성 허브","inLanguage":"ko","publisher":{"@type":"Organization","name":"cocy.io","url":"https://cocy.io"}}</script>
   <link rel="manifest" href="/manifest.json">
 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body, #root { width: 100%; height: 100%; overflow-x: hidden; background: #000; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #fff; }
+:root{--paper:#f6f2e9;--card:#fffdf7;--ink:#191713;--mut:#847d6f;--hair:#d9d2c2;--acc:#bf3b21;--serif:'Noto Serif KR',serif;--sans:'Noto Sans KR',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:400;overflow:hidden}
+a{color:inherit;text-decoration:none}
+.mast{height:76px;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 28px 8px;gap:16px}
+.mast .ed{font-size:11.5px;color:var(--mut);letter-spacing:.04em;line-height:1.5}
+.mast .ed b{color:var(--ink);font-weight:500}
+.logo{font-family:var(--serif);font-weight:900;font-size:44px;letter-spacing:.06em;line-height:1}
+.logo span{color:var(--acc)}
+.mast .right{font-size:11.5px;color:var(--mut);text-align:right;line-height:1.5}
+.mast .right .clock{font-weight:700;color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums}
+.rule{border:0;border-top:2px solid var(--ink);margin:0 28px;position:relative}
+.rule::after{content:'';display:block;border-top:1px solid var(--ink);margin-top:2px}
+.sheet{height:calc(100vh - 76px - 30px);display:grid;grid-template-columns:24fr 43fr 33fr;gap:0;padding:14px 28px 0}
+.col{padding:0 18px;display:flex;flex-direction:column;min-height:0}
+.col+.col{border-left:1px solid var(--hair)}
+.col:first-child{padding-left:0}.col:last-child{padding-right:0}
+h2{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin:2px 0 10px}
+h2::before{content:'';width:8px;height:8px;background:var(--acc);flex:none}
+h2 .more{margin-left:auto;font-weight:400;letter-spacing:.05em;color:var(--mut);font-size:10.5px}
+section{padding:6px 0 10px;min-height:0}
+section+section{border-top:1px solid var(--hair)}
+.skel{color:var(--mut);font-size:12px;padding:8px 0}
+.news{list-style:none;overflow:hidden}
+.news li{display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted var(--hair);align-items:baseline}
+.news li:last-child{border-bottom:0}
+.news .no{font-family:var(--serif);font-weight:900;font-size:15px;color:var(--acc);min-width:14px}
+.news .t{font-size:13.5px;font-weight:500;line-height:1.45;display:block}
+.news .t:hover{color:var(--acc)}
+.news .s{display:block;font-size:10.5px;color:var(--mut);margin-top:2px;letter-spacing:.03em}
+.svc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.svc a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border:1px solid var(--hair);background:var(--card);font-size:10.5px;transition:border-color .15s}
+.svc a:hover{border-color:var(--acc)}
+.svc a em{font-style:normal;font-size:17px}
+.hero{padding-top:0}
+.hero .kick{font-size:11px;letter-spacing:.2em;color:var(--acc);font-weight:700;margin-bottom:6px}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(22px,2.4vw,34px);line-height:1.25;letter-spacing:-.01em}
+.hero p{margin-top:8px;font-size:13.5px;color:#4c463b;line-height:1.6;font-weight:300}
+.hero .cta{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.06em}
+.trip{list-style:none}
+.trip li{display:flex;align-items:baseline;gap:10px;padding:6.5px 0;border-bottom:1px dotted var(--hair);font-size:13px}
+.trip li:last-child{border-bottom:0}
+.trip .rg{font-family:var(--serif);font-weight:600;min-width:52px;color:var(--acc);white-space:nowrap}
+.trip .tt{font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.trip .tt:hover{color:var(--acc)}
+.trip .dt{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pgs{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.pgs a{display:block;min-width:0}
+.pgs .cv{aspect-ratio:16/10;background:#e7e0d2 center/cover no-repeat;border:1px solid var(--hair);filter:saturate(.92)}
+.pgs a:hover .cv{border-color:var(--acc)}
+.pgs .t{font-size:11.5px;font-weight:500;margin-top:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pgs .v{font-size:10px;color:var(--mut)}
+.game{list-style:none}
+.game li{display:grid;grid-template-columns:26px 1fr auto;gap:4px 10px;padding:9px 0;border-bottom:1px solid var(--hair);align-items:center}
+.game li:last-child{border-bottom:0}
+.game .rk{font-family:var(--serif);font-weight:900;font-size:19px}
+.game .nm{font-family:var(--serif);font-weight:600;font-size:16px}
+.game .nm:hover{color:var(--acc)}
+.game .nm small{font-family:var(--sans);font-weight:300;font-size:11px;color:var(--mut);margin-left:7px}
+.game .champ{grid-column:2;font-size:11.5px;color:var(--mut)}
+.game .champ b{color:var(--ink);font-weight:500}
+.game .champ .sc{color:var(--acc);font-weight:700;font-variant-numeric:tabular-nums}
+.game .go{grid-row:1/3;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--acc);border:1px solid var(--acc);padding:5px 9px;transition:all .15s}
+.game .go:hover{background:var(--acc);color:var(--card)}
+.hall{background:var(--card);border:1px solid var(--hair);padding:10px 12px;font-size:12px;line-height:1.7}
+.hall b{font-family:var(--serif)}
+.hall .sc{color:var(--acc);font-weight:700}
+.foot{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font-size:10.5px;color:var(--mut);border-top:1px solid var(--hair);letter-spacing:.05em}
+.foot a:hover{color:var(--acc)}
+@media(max-width:860px){
+ body{overflow:auto}
+ .mast{height:auto;flex-wrap:wrap;align-items:baseline;padding:12px 16px 8px}
+ .logo{font-size:30px;order:-1;width:100%;text-align:center;margin-bottom:6px}
+ .mast .ed,.mast .right{font-size:10px}
+ .rule{margin:0 16px}
+ .sheet{height:auto;display:block;padding:8px 16px 0}
+ .col{padding:0;border:0!important}
+ section{padding:14px 0}
+ .pgs{grid-template-columns:repeat(2,1fr)}
+ .pgs a:nth-child(5){display:none}
+ .foot{height:auto;padding:10px 16px;flex-wrap:wrap;gap:4px}
+}
   </style>
-  <script type="module" crossorigin src="/assets/index-C_iTsLy6.js"></script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MV8KQGJF"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <div id="root"></div>
+
+  <header class="mast">
+    <div class="ed" id="edition">오늘판<br><b>—</b></div>
+    <a class="logo" href="https://cocy.io/">COCY<span>.</span>IO</a>
+    <div class="right"><span class="clock" id="clock">--:--:--</span><br><span id="stats">게임 · 도구 · AI 서비스</span></div>
+  </header>
+  <hr class="rule">
+
+  <main class="sheet">
+    <div class="col">
+      <section style="flex:1;min-height:0">
+        <h2>오늘의 뉴스 <a class="more" href="https://news.cocy.io" target="_blank" rel="noopener">news.cocy.io →</a></h2>
+        <ul class="news" id="news"><li class="skel">불러오는 중…</li></ul>
+      </section>
+      <section>
+        <h2>서비스</h2>
+        <div class="svc">
+          <a href="https://game.cocy.io"><em>🎮</em>게임</a>
+          <a href="https://tool.cocy.io"><em>🛠️</em>도구</a>
+          <a href="https://travly.cocy.io"><em>✈️</em>Travly</a>
+          <a href="https://page.cocy.io"><em>📄</em>Page</a>
+          <a href="https://slide.cocy.io"><em>📊</em>Slide</a>
+          <a href="https://log.cocy.io"><em>📝</em>Log</a>
+          <a href="https://cook.cocy.io"><em>🍳</em>레시피</a>
+          <a href="/list.html"><em>＋</em>전체</a>
+        </div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="hero" id="hero">
+        <div class="kick" id="heroKick">오늘의 픽</div>
+        <h1 id="heroTitle">무기 강화, 오늘 새 옷을 입다<br>— 12무기 × 15단계 아트 전면 교체</h1>
+        <p id="heroDesc">낡은 무쇠에서 신성한 황금까지. 강화할수록 무기가 실제로 진화하는 모습을 눈으로 확인하세요.</p>
+        <a class="cta" id="heroCta" href="https://game.cocy.io/enhance/">지금 강화하러 가기 →</a>
+      </section>
+      <section>
+        <h2>Travly 공개 여행 <a class="more" href="https://travly.cocy.io" target="_blank" rel="noopener">travly.cocy.io →</a></h2>
+        <ul class="trip" id="trip"><li class="skel">불러오는 중…</li></ul>
+      </section>
+      <section>
+        <h2>Page 최신 공개 페이지 <a class="more" href="https://page.cocy.io" target="_blank" rel="noopener">page.cocy.io →</a></h2>
+        <div class="pgs" id="pgs"><div class="skel">불러오는 중…</div></div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section style="flex:1">
+        <h2>게임 랭킹 <a class="more" href="https://game.cocy.io" target="_blank" rel="noopener">game.cocy.io →</a></h2>
+        <ul class="game" id="game"><li class="skel">불러오는 중…</li></ul>
+      </section>
+      <section>
+        <h2>명예의 전당</h2>
+        <div class="hall" id="hall"><span class="skel">불러오는 중…</span></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <span>COCY.IO — 1인과 AI가 만드는 디지털 플레이그라운드</span>
+    <span>매일 자동 갱신 · <a href="/space.html">🌌 우주 버전</a> · © 2026 cocy.io</span>
+  </footer>
+
+<script>
+(function(){
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+var esc = function(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+var fmt = function(n){ n=+n||0; return n>=1e12?(n/1e12).toFixed(1)+'조':n>=1e8?(n/1e8).toFixed(1)+'억':n>=1e4?Math.round(n/1e4)+'만':n.toLocaleString('ko-KR'); };
+
+// masthead: date/edition/clock (KST)
+function kstNow(){ return new Date(Date.now() + (9*60 + new Date().getTimezoneOffset())*60000); }
+function kstDateStr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+var now = kstNow();
+var days = ['일','월','화','수','목','금','토'];
+var h = now.getHours();
+var ed = h<6?'심야판':h<11?'아침판':h<17?'낮판':h<21?'저녁판':'밤판';
+$('edition').innerHTML = esc(ed)+'<br><b>'+now.getFullYear()+'년 '+(now.getMonth()+1)+'월 '+now.getDate()+'일 '+days[now.getDay()]+'요일</b>';
+setInterval(function(){ $('clock').textContent = kstNow().toTimeString().slice(0,8); }, 1000);
+$('clock').textContent = now.toTimeString().slice(0,8);
+
+function getJSON(url){ return fetch(url).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+
+// NEWS: today -> fallback up to 3 days back
+(function loadNews(){
+  var tries = [];
+  for (var i=0;i<4;i++){ var d=kstNow(); d.setDate(d.getDate()-i); tries.push(kstDateStr(d)); }
+  (function attempt(idx){
+    if (idx>=tries.length){ $('news').innerHTML='<li class="skel">뉴스를 불러오지 못했습니다. <a href="https://news.cocy.io" style="text-decoration:underline">news.cocy.io</a></li>'; return; }
+    getJSON('https://news.cocy.io/articles/'+tries[idx]+'.json').then(function(d){
+      var arts = (Array.isArray(d)?d:(d.articles||[])).slice(0,5);
+      if(!arts.length) return attempt(idx+1);
+      var cat = {domestic:'국내',world:'세계',tech:'테크',economy:'경제',science:'과학'};
+      $('news').innerHTML = arts.map(function(a,i){
+        return '<li><span class="no">'+(i+1)+'</span><div><a class="t" href="'+esc(a.sourceUrl||'https://news.cocy.io')+'" target="_blank" rel="noopener">'+esc(a.title)+'</a><span class="s">'+esc(a.source||'')+' · '+esc(cat[a.category]||a.category||'')+'</span></div></li>';
+      }).join('');
+    }).catch(function(){ attempt(idx+1); });
+  })(0);
+})();
+
+// GAMES top5 + champions
+var GAMES = [
+  {id:'jokerrun', name:'조커런', desc:'포커 로그라이크', url:'https://game.cocy.io/jokerrun/'},
+  {id:'mahjong', name:'마작', desc:'리치 마작', url:'https://game.cocy.io/mahjong/'},
+  {id:'gostop', name:'고스톱', desc:'맞고', url:'https://game.cocy.io/gostop/'},
+  {id:'linerush', name:'라인러시', desc:'영역 점령', url:'https://game.cocy.io/linerush/'},
+  {id:'minesweeper', name:'지뢰찾기', desc:'클래식', url:'https://game.cocy.io/minesweeper/'}
+];
+Promise.all(GAMES.map(function(g){
+  return getJSON('https://relay.cocy.io/api/rankings/'+g.id+'?limit=1').then(function(d){ g.top=(d.rankings||[])[0]||null; return g; }).catch(function(){ g.top=null; return g; });
+})).then(function(gs){
+  $('game').innerHTML = gs.map(function(g,i){
+    var champ = g.top ? '👑 <b>'+esc(g.top.nickname)+'</b> <span class="sc">'+fmt(g.top.best_score)+'</span>' : '아직 기록 없음 — 1위에 도전!';
+    return '<li><span class="rk">'+(i+1)+'</span><a class="nm" href="'+g.url+'">'+esc(g.name)+'<small>'+esc(g.desc)+'</small></a><a class="go" href="'+g.url+'">PLAY</a><span class="champ">'+champ+'</span></li>';
+  }).join('');
+});
+
+// HALL OF FAME
+Promise.all(['weapon','hunt','pvp'].map(function(t){
+  return getJSON('https://relay.cocy.io/api/rankings/hall?type='+t).then(function(d){ return {t:t, top:(d.hall||[])[0]||null}; }).catch(function(){ return {t:t, top:null}; });
+})).then(function(rs){
+  var label = {weapon:'⚔️ 무기강화', hunt:'🏹 사냥', pvp:'🗡️ PVP'};
+  var parts = rs.filter(function(r){ return r.top; }).map(function(r){
+    var sc = r.t==='weapon' ? '+'+r.top.best_score+'강' : fmt(r.top.best_score);
+    return label[r.t]+' <b>'+esc(r.top.nickname)+'</b> <span class="sc">'+sc+'</span>';
+  });
+  $('hall').innerHTML = parts.length ? parts.join(' &nbsp;·&nbsp; ') : '명예의 전당 준비 중';
+});
+
+// TRAVLY public trips
+getJSON('https://travly.cocy.io/api/plans?is_public=1&limit=5').then(function(d){
+  var ps = (d.plans||[]).slice(0,5);
+  if(!ps.length){ $('trip').innerHTML='<li class="skel">공개된 여행이 아직 없습니다.</li>'; return; }
+  $('trip').innerHTML = ps.map(function(p){
+    var dt = (p.start_date&&p.end_date) ? p.start_date.slice(5).replace('-','.')+'–'+p.end_date.slice(5).replace('-','.') : '';
+    return '<li><span class="rg">'+esc(p.region||p.country_code||'여행')+'</span><a class="tt" href="https://travly.cocy.io/plan/'+p.id+'" target="_blank" rel="noopener">'+esc(p.title)+'</a><span class="dt">'+dt+'</span></li>';
+  }).join('');
+}).catch(function(){ $('trip').innerHTML='<li class="skel"><a href="https://travly.cocy.io" style="text-decoration:underline">travly.cocy.io</a>에서 여행을 계획해보세요.</li>'; });
+
+// PAGE latest published
+getJSON('https://page.cocy.io/api/sites').then(function(d){
+  var ss = (d.sites||[]).slice(0,5);
+  if(!ss.length){ $('pgs').innerHTML='<div class="skel">공개된 페이지가 아직 없습니다.</div>'; return; }
+  $('pgs').innerHTML = ss.map(function(s){
+    var cv = s.cover_image ? ' style="background-image:url(\''+esc(s.cover_image)+'\')"' : '';
+    return '<a href="https://page.cocy.io/'+esc(s.slug)+'" target="_blank" rel="noopener"><div class="cv"'+cv+'></div><div class="t">'+esc(s.title)+'</div><div class="v">'+esc(s.vertical||'')+(s.view_count?' · 조회 '+s.view_count:'')+'</div></a>';
+  }).join('');
+}).catch(function(){ $('pgs').innerHTML='<div class="skel"><a href="https://page.cocy.io" style="text-decoration:underline">page.cocy.io</a>에서 나만의 페이지를 만들어보세요.</div>'; });
+
+// stats from apps.json (same origin)
+getJSON('/apps.json').then(function(list){
+  var c = {game:0, tool:0, ai:0};
+  (list||[]).forEach(function(a){ if(c[a.category]!=null) c[a.category]++; else c.tool++; });
+  $('stats').textContent = '게임 '+c.game+' · 도구 '+(c.tool)+' · AI 서비스 '+Math.max(c.ai,6);
+}).catch(function(){});
+
+// HERO rotation
+var PICKS = [
+  {kick:'오늘의 픽 — ENHANCE 업데이트', title:'무기 강화, 오늘 새 옷을 입다<br>— 12무기 × 15단계 아트 전면 교체', desc:'낡은 무쇠에서 신성한 황금까지. 강화할수록 무기가 실제로 진화하는 모습을 눈으로 확인하세요.', cta:'지금 강화하러 가기 →', url:'https://game.cocy.io/enhance/'},
+  {kick:'오늘의 픽 — JOKERRUN', title:'포커 핸드로 던전을 뚫는다<br>— 조커런 던전 모드', desc:'족보를 조합하고 조커로 점수를 폭발시키는 포커 로그라이크. 최고 기록에 도전하세요.', cta:'조커런 플레이 →', url:'https://game.cocy.io/jokerrun/'},
+  {kick:'오늘의 픽 — PAGE', title:'링크 하나로 완성되는<br>나만의 페이지', desc:'청첩장, 메뉴판, 포트폴리오까지. AI가 대화로 만들어주는 맞춤 단일 페이지.', cta:'페이지 만들기 →', url:'https://page.cocy.io/'},
+  {kick:'오늘의 픽 — TRAVLY', title:'AI와 함께 짜는<br>완벽한 여행 일정', desc:'일정, 예산, 동선까지. 공개된 다른 여행자의 일정을 포크해서 시작할 수도 있습니다.', cta:'여행 계획하기 →', url:'https://travly.cocy.io/'}
+];
+var pick = PICKS[ (now.getFullYear()*372 + now.getMonth()*31 + now.getDate()) % PICKS.length ];
+$('heroKick').textContent = pick.kick;
+$('heroTitle').innerHTML = pick.title;
+$('heroDesc').textContent = pick.desc;
+$('heroCta').textContent = pick.cta;
+$('heroCta').href = pick.url;
+})();
+</script>
 </body>
 </html>
