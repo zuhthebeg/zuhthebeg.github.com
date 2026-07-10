@@ -159,7 +159,7 @@ section+section{border-top:1px solid var(--hair)}
           <a href="https://page.cocy.io"><em>📄</em>Page</a>
           <a href="https://slide.cocy.io"><em>📊</em>Slide</a>
           <a href="https://log.cocy.io"><em>📝</em>Log</a>
-          <a href="https://cook.cocy.io"><em>🍳</em>레시피</a>
+          <a href="https://recipe.cocy.io"><em>🍳</em>레시피</a>
           <a href="/list.html"><em>＋</em>전체</a>
         </div>
       </section>
@@ -177,7 +177,7 @@ section+section{border-top:1px solid var(--hair)}
         <ul class="trip" id="trip"><li class="skel">불러오는 중…</li></ul>
       </section>
       <section>
-        <h2>최신 레시피 <a class="more" href="https://cook.cocy.io" target="_blank" rel="noopener">cook.cocy.io →</a></h2>
+        <h2>최신 레시피 <a class="more" href="https://recipe.cocy.io" target="_blank" rel="noopener">recipe.cocy.io →</a></h2>
         <ul class="trip" id="rcp"><li class="skel">불러오는 중…</li></ul>
       </section>
       <section>
@@ -325,15 +325,16 @@ getJSON('https://page.cocy.io/api/sites').then(function(d){
   }).join('');
 }).catch(function(){ $('pgs').innerHTML='<div class="skel"><a href="https://page.cocy.io" style="text-decoration:underline">page.cocy.io</a>에서 나만의 페이지를 만들어보세요.</div>'; });
 
-// RECIPES: 최신 5 (cook.cocy.io)
-getJSON('https://cook.cocy.io/api/public-latest').then(function(d){
-  var rs = (d.recipes||[]).slice(0,5);
-  if(!rs.length){ $('rcp').innerHTML='<li class="skel">아직 등록된 레시피가 없습니다 — <a href="https://cook.cocy.io" style="text-decoration:underline">첫 레시피 기록하기</a></li>'; return; }
+// RECIPES: 최신 5 (recipe.cocy.io/recipes.json — 객체 삽입 순서 기준 마지막 5개가 최신)
+getJSON('https://recipe.cocy.io/recipes.json').then(function(d){
+  var keys = Object.keys(d||{});
+  var rs = keys.slice(-5).reverse().map(function(k){ return d[k]; });
+  if(!rs.length){ $('rcp').innerHTML='<li class="skel"><a href="https://recipe.cocy.io" style="text-decoration:underline">recipe.cocy.io</a>에서 레시피를 만나보세요.</li>'; return; }
   $('rcp').innerHTML = rs.map(function(r){
-    var dt = (r.created_at||'').slice(5,10).replace('-','.');
-    return '<li><span class="rg">'+esc(r.category||'요리')+'</span><a class="tt" href="https://cook.cocy.io" target="_blank" rel="noopener">'+esc(r.title)+'</a><span class="dt">'+dt+'</span></li>';
+    var t = r.cook_time_minutes ? r.cook_time_minutes+'분' : '';
+    return '<li><span class="rg">'+esc((r.category||'요리').split('/')[0])+'</span><a class="tt" href="https://recipe.cocy.io" target="_blank" rel="noopener">'+esc(r.name)+'</a><span class="dt">'+esc(t)+'</span></li>';
   }).join('');
-}).catch(function(){ $('rcp').innerHTML='<li class="skel"><a href="https://cook.cocy.io" style="text-decoration:underline">cook.cocy.io</a>에서 레시피를 기록해보세요.</li>'; });
+}).catch(function(){ $('rcp').innerHTML='<li class="skel"><a href="https://recipe.cocy.io" style="text-decoration:underline">recipe.cocy.io</a>에서 레시피를 만나보세요.</li>'; });
 
 // TOOLS: 변환(색상 제외)+네트워크 도구 (tool.cocy.io apps.json, inferGroup과 동일한 URL 키워드 규칙)
 getJSON('https://tool.cocy.io/apps.json').then(function(list){
