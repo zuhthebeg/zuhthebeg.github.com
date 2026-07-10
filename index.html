@@ -246,7 +246,7 @@ function getJSON(url){ return fetch(url).then(function(r){ if(!r.ok) throw new E
       var aitech = pool.filter(function(a){ return a.category==='ai-tech'; });
       var radarItems = aitech.slice(0,4);
       var arts = pool.filter(function(a){ return radarItems.indexOf(a)===-1; }).slice(0,5);
-      var cat = {world:'세계',tech:'테크',science:'과학',culture:'문화','ai-tech':'AI'};
+      var cat = {world:'세계',tech:'테크',science:'과학',culture:'문화',gaming:'게임','ai-tech':'AI'};
       $('news').innerHTML = arts.length ? arts.map(function(a,i){
         return '<li><span class="no">'+(i+1)+'</span><div><a class="t" href="'+esc(a.sourceUrl||'https://news.cocy.io')+'" target="_blank" rel="noopener">'+esc(a.title)+'</a><span class="s">'+esc(a.source||'')+' · '+esc(cat[a.category]||a.category||'')+'</span></div></li>';
       }).join('') : '<li class="skel">오늘의 테크 뉴스가 아직 없습니다 — <a href="https://news.cocy.io" style="text-decoration:underline">전체 뉴스 보기</a></li>';
