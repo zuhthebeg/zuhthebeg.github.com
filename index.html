@@ -65,6 +65,13 @@ section+section{border-top:1px solid var(--hair)}
 .news .t{font-size:13.5px;font-weight:500;line-height:1.45;display:block}
 .news .t:hover{color:var(--acc)}
 .news .s{display:block;font-size:10.5px;color:var(--mut);margin-top:2px;letter-spacing:.03em}
+.mini{list-style:none}
+.mini li{padding:4.5px 0;border-bottom:1px dotted var(--hair);font-size:12px;line-height:1.4;display:flex;gap:7px;align-items:baseline}
+.mini li:last-child{border-bottom:0}
+.mini .ic{flex:none}
+.mini a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.mini a:hover{color:var(--acc)}
+.mini .tag{font-size:10px;color:var(--mut);flex:none}
 .svc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .svc a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border:1px solid var(--hair);background:var(--card);font-size:10.5px;transition:border-color .15s}
 .svc a:hover{border-color:var(--acc)}
@@ -88,16 +95,15 @@ section+section{border-top:1px solid var(--hair)}
 .pgs .t{font-size:11.5px;font-weight:500;margin-top:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .pgs .v{font-size:10px;color:var(--mut)}
 .game{list-style:none}
-.game li{display:grid;grid-template-columns:26px 1fr auto;gap:4px 10px;padding:9px 0;border-bottom:1px solid var(--hair);align-items:center}
+.game li{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;padding:5px 0;border-bottom:1px solid var(--hair);align-items:center}
 .game li:last-child{border-bottom:0}
-.game .rk{font-family:var(--serif);font-weight:900;font-size:19px}
-.game .nm{font-family:var(--serif);font-weight:600;font-size:16px}
+.game .rk{font-family:var(--serif);font-weight:900;font-size:15px}
+.game .nm{font-family:var(--serif);font-weight:600;font-size:14.5px}
 .game .nm:hover{color:var(--acc)}
-.game .nm small{font-family:var(--sans);font-weight:300;font-size:11px;color:var(--mut);margin-left:7px}
-.game .champ{grid-column:2;font-size:11.5px;color:var(--mut)}
+.game .champ{grid-column:2/4;font-size:11px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .game .champ b{color:var(--ink);font-weight:500}
 .game .champ .sc{color:var(--acc);font-weight:700;font-variant-numeric:tabular-nums}
-.game .go{grid-row:1/3;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--acc);border:1px solid var(--acc);padding:5px 9px;transition:all .15s}
+.game .go{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--acc);border:1px solid var(--acc);padding:2.5px 7px;transition:all .15s}
 .game .go:hover{background:var(--acc);color:var(--card)}
 .hall{background:var(--card);border:1px solid var(--hair);padding:10px 12px;font-size:12px;line-height:1.7}
 .hall b{font-family:var(--serif)}
@@ -133,9 +139,17 @@ section+section{border-top:1px solid var(--hair)}
 
   <main class="sheet">
     <div class="col">
-      <section style="flex:1;min-height:0">
+      <section style="flex:1;min-height:0;overflow:hidden">
         <h2>오늘의 뉴스 <a class="more" href="https://news.cocy.io" target="_blank" rel="noopener">news.cocy.io →</a></h2>
         <ul class="news" id="news"><li class="skel">불러오는 중…</li></ul>
+      </section>
+      <section>
+        <h2>AI 모델 레이더 <a class="more" href="https://news.cocy.io" target="_blank" rel="noopener">매일 수집 →</a></h2>
+        <ul class="mini" id="radar"><li class="skel">불러오는 중…</li></ul>
+      </section>
+      <section>
+        <h2>새로 발견한 스킬</h2>
+        <ul class="mini" id="skills"><li class="skel">불러오는 중…</li></ul>
       </section>
       <section>
         <h2>서비스</h2>
@@ -206,37 +220,68 @@ $('clock').textContent = now.toTimeString().slice(0,8);
 
 function getJSON(url){ return fetch(url).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
 
-// NEWS: today -> fallback up to 3 days back
+// NEWS + AI RADAR: today -> fallback up to 3 days back
+// 일반 뉴스(비 ai-tech)는 뉴스 섹션, ai-tech는 AI 모델 레이더 섹션
 (function loadNews(){
   var tries = [];
   for (var i=0;i<4;i++){ var d=kstNow(); d.setDate(d.getDate()-i); tries.push(kstDateStr(d)); }
   (function attempt(idx){
-    if (idx>=tries.length){ $('news').innerHTML='<li class="skel">뉴스를 불러오지 못했습니다. <a href="https://news.cocy.io" style="text-decoration:underline">news.cocy.io</a></li>'; return; }
+    if (idx>=tries.length){
+      $('news').innerHTML='<li class="skel">뉴스를 불러오지 못했습니다. <a href="https://news.cocy.io" style="text-decoration:underline">news.cocy.io</a></li>';
+      $('radar').innerHTML='<li class="skel">수집된 모델 소식이 없습니다.</li>';
+      return;
+    }
     getJSON('https://news.cocy.io/articles/'+tries[idx]+'.json').then(function(d){
-      var arts = (Array.isArray(d)?d:(d.articles||[])).slice(0,5);
-      if(!arts.length) return attempt(idx+1);
-      var cat = {domestic:'국내',world:'세계',tech:'테크',economy:'경제',science:'과학'};
+      var all = Array.isArray(d)?d:(d.articles||[]);
+      if(!all.length) return attempt(idx+1);
+      var general = all.filter(function(a){ return a.category!=='ai-tech'; });
+      var aitech = all.filter(function(a){ return a.category==='ai-tech'; });
+      var arts = general.concat(aitech).slice(0,5);
+      var cat = {domestic:'국내',world:'세계',tech:'테크',economy:'경제',science:'과학','ai-tech':'AI'};
       $('news').innerHTML = arts.map(function(a,i){
         return '<li><span class="no">'+(i+1)+'</span><div><a class="t" href="'+esc(a.sourceUrl||'https://news.cocy.io')+'" target="_blank" rel="noopener">'+esc(a.title)+'</a><span class="s">'+esc(a.source||'')+' · '+esc(cat[a.category]||a.category||'')+'</span></div></li>';
       }).join('');
+      var radar = aitech.slice(0,4);
+      $('radar').innerHTML = radar.length ? radar.map(function(a){
+        return '<li><span class="ic">🤖</span><a href="'+esc(a.sourceUrl||'https://news.cocy.io')+'" target="_blank" rel="noopener">'+esc(a.title)+'</a></li>';
+      }).join('') : '<li class="skel">오늘 수집된 모델 소식이 없습니다.</li>';
     }).catch(function(){ attempt(idx+1); });
   })(0);
 })();
 
-// GAMES top5 + champions
+// SKILLS: 최근 발견한 스킬 3개 (skills-discovery cron이 갱신)
+getJSON('https://news.cocy.io/skills.json').then(function(d){
+  var sk = (d.skills||[]).slice().sort(function(a,b){ return String(b.addedAt||'').localeCompare(String(a.addedAt||'')); }).slice(0,3);
+  if(!sk.length){ $('skills').innerHTML='<li class="skel">아직 없습니다.</li>'; return; }
+  $('skills').innerHTML = sk.map(function(s){
+    return '<li><span class="ic">'+esc(s.icon||'🧩')+'</span><a href="'+esc(s.url||'#')+'" target="_blank" rel="noopener">'+esc(s.title)+' — '+esc((s.description||'').split('\n')[0])+'</a><span class="tag">'+esc(s.addedAt||'')+'</span></li>';
+  }).join('');
+}).catch(function(){ $('skills').innerHTML='<li class="skel">스킬 피드를 불러오지 못했습니다.</li>'; });
+
+// GAMES top10 + champions (게임별 점수 필드가 다름: best_score/best_profit/best_time_sec)
 var GAMES = [
-  {id:'jokerrun', name:'조커런', desc:'포커 로그라이크', url:'https://game.cocy.io/jokerrun/'},
-  {id:'mahjong', name:'마작', desc:'리치 마작', url:'https://game.cocy.io/mahjong/'},
-  {id:'gostop', name:'고스톱', desc:'맞고', url:'https://game.cocy.io/gostop/'},
-  {id:'linerush', name:'라인러시', desc:'영역 점령', url:'https://game.cocy.io/linerush/'},
-  {id:'minesweeper', name:'지뢰찾기', desc:'클래식', url:'https://game.cocy.io/minesweeper/'}
+  {id:'jokerrun', name:'조커런', url:'https://game.cocy.io/jokerrun/'},
+  {id:'mahjong', name:'마작', url:'https://game.cocy.io/mahjong/'},
+  {id:'gostop', name:'고스톱', url:'https://game.cocy.io/gostop/'},
+  {id:'blackjack', name:'블랙잭', url:'https://game.cocy.io/blackjack/'},
+  {id:'sudoku', name:'스도쿠', url:'https://game.cocy.io/sudoku/'},
+  {id:'pingtan', name:'삥탄', url:'https://game.cocy.io/pingtan/'},
+  {id:'ppingpae', name:'삥패', url:'https://game.cocy.io/ppingpae/'},
+  {id:'snake', name:'스네이크', url:'https://game.cocy.io/snake/'},
+  {id:'linerush', name:'라인러시', url:'https://game.cocy.io/linerush/'},
+  {id:'minesweeper', name:'지뢰찾기', url:'https://game.cocy.io/minesweeper/'}
 ];
+function champScore(r){
+  if (r.best_time_sec != null){ var m=Math.floor(r.best_time_sec/60), s=r.best_time_sec%60; return m? m+'분 '+s+'초' : s+'초'; }
+  var v = r.best_score != null ? r.best_score : r.best_profit;
+  return v != null ? fmt(v) : '';
+}
 Promise.all(GAMES.map(function(g){
   return getJSON('https://relay.cocy.io/api/rankings/'+g.id+'?limit=1').then(function(d){ g.top=(d.rankings||[])[0]||null; return g; }).catch(function(){ g.top=null; return g; });
 })).then(function(gs){
   $('game').innerHTML = gs.map(function(g,i){
-    var champ = g.top ? '👑 <b>'+esc(g.top.nickname)+'</b> <span class="sc">'+fmt(g.top.best_score)+'</span>' : '아직 기록 없음 — 1위에 도전!';
-    return '<li><span class="rk">'+(i+1)+'</span><a class="nm" href="'+g.url+'">'+esc(g.name)+'<small>'+esc(g.desc)+'</small></a><a class="go" href="'+g.url+'">PLAY</a><span class="champ">'+champ+'</span></li>';
+    var champ = g.top ? '👑 <b>'+esc(g.top.nickname)+'</b> <span class="sc">'+champScore(g.top)+'</span>' : '아직 기록 없음 — 1위에 도전!';
+    return '<li><span class="rk">'+(i+1)+'</span><a class="nm" href="'+g.url+'">'+esc(g.name)+'</a><a class="go" href="'+g.url+'">PLAY</a><span class="champ">'+champ+'</span></li>';
   }).join('');
 });
 
