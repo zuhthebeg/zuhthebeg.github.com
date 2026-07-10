@@ -75,7 +75,8 @@ section+section{border-top:1px solid var(--hair)}
 .svc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .svc a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border:1px solid var(--hair);background:var(--card);font-size:10.5px;transition:border-color .15s}
 .svc a:hover{border-color:var(--acc)}
-.svc a em{font-style:normal;font-size:17px}
+.svc a em{font-style:normal;font-size:17px;line-height:1}
+#tools{grid-template-columns:repeat(3,1fr)}
 .hero{padding-top:0}
 .hero .kick{font-size:11px;letter-spacing:.2em;color:var(--acc);font-weight:700;margin-bottom:6px}
 .hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(22px,2.4vw,34px);line-height:1.25;letter-spacing:-.01em}
@@ -167,7 +168,7 @@ section+section{border-top:1px solid var(--hair)}
     </div>
 
     <div class="col">
-      <section class="hero" id="hero">
+      <section class="hero" id="hero" style="flex:1;min-height:0">
         <div class="kick" id="heroKick">오늘의 픽</div>
         <h1 id="heroTitle">무기 강화, 오늘 새 옷을 입다<br>— 12무기 × 15단계 아트 전면 교체</h1>
         <p id="heroDesc">낡은 무쇠에서 신성한 황금까지. 강화할수록 무기가 실제로 진화하는 모습을 눈으로 확인하세요.</p>
@@ -176,6 +177,10 @@ section+section{border-top:1px solid var(--hair)}
       <section>
         <h2>Travly 공개 여행 <a class="more" href="https://travly.cocy.io" target="_blank" rel="noopener">travly.cocy.io →</a></h2>
         <ul class="trip" id="trip"><li class="skel">불러오는 중…</li></ul>
+      </section>
+      <section>
+        <h2>최신 레시피 <a class="more" href="https://cook.cocy.io" target="_blank" rel="noopener">cook.cocy.io →</a></h2>
+        <ul class="trip" id="rcp"><li class="skel">불러오는 중…</li></ul>
       </section>
       <section>
         <h2>Page 최신 공개 페이지 <a class="more" href="https://page.cocy.io" target="_blank" rel="noopener">page.cocy.io →</a></h2>
@@ -191,6 +196,10 @@ section+section{border-top:1px solid var(--hair)}
       <section>
         <h2>명예의 전당</h2>
         <div class="hall" id="hall"><span class="skel">불러오는 중…</span></div>
+      </section>
+      <section>
+        <h2>도구 <a class="more" href="https://tool.cocy.io" target="_blank" rel="noopener">tool.cocy.io →</a></h2>
+        <div class="svc" id="tools"><div class="skel">불러오는 중…</div></div>
       </section>
     </div>
   </main>
@@ -317,6 +326,29 @@ getJSON('https://page.cocy.io/api/sites').then(function(d){
     return '<a href="https://page.cocy.io/'+esc(s.slug)+'" target="_blank" rel="noopener"><div class="cv"'+cv+'></div><div class="t">'+esc(s.title)+'</div><div class="v">'+esc(s.vertical||'')+(s.view_count?' · 조회 '+s.view_count:'')+'</div></a>';
   }).join('');
 }).catch(function(){ $('pgs').innerHTML='<div class="skel"><a href="https://page.cocy.io" style="text-decoration:underline">page.cocy.io</a>에서 나만의 페이지를 만들어보세요.</div>'; });
+
+// RECIPES: 최신 5 (cook.cocy.io)
+getJSON('https://cook.cocy.io/api/public-latest').then(function(d){
+  var rs = (d.recipes||[]).slice(0,5);
+  if(!rs.length){ $('rcp').innerHTML='<li class="skel">아직 등록된 레시피가 없습니다 — <a href="https://cook.cocy.io" style="text-decoration:underline">첫 레시피 기록하기</a></li>'; return; }
+  $('rcp').innerHTML = rs.map(function(r){
+    var dt = (r.created_at||'').slice(5,10).replace('-','.');
+    return '<li><span class="rg">'+esc(r.category||'요리')+'</span><a class="tt" href="https://cook.cocy.io" target="_blank" rel="noopener">'+esc(r.title)+'</a><span class="dt">'+dt+'</span></li>';
+  }).join('');
+}).catch(function(){ $('rcp').innerHTML='<li class="skel"><a href="https://cook.cocy.io" style="text-decoration:underline">cook.cocy.io</a>에서 레시피를 기록해보세요.</li>'; });
+
+// TOOLS: 변환(색상 제외)+네트워크 도구 (tool.cocy.io apps.json, inferGroup과 동일한 URL 키워드 규칙)
+getJSON('https://tool.cocy.io/apps.json').then(function(list){
+  var picks = (list||[]).filter(function(t){
+    var u=(t.url||'').toLowerCase();
+    if (u.indexOf('/color')>-1) return false;
+    return ['/json','/base64','/url','/qr','/cidr','/net'].some(function(k){ return u.indexOf(k)>-1; });
+  }).slice(0,8);
+  if(!picks.length){ $('tools').innerHTML='<div class="skel"><a href="https://tool.cocy.io" style="text-decoration:underline">tool.cocy.io →</a></div>'; return; }
+  $('tools').innerHTML = picks.map(function(t){
+    return '<a href="'+esc(t.url)+'" target="_blank" rel="noopener"><em><img src="'+esc(t.icon||'')+'" alt="" style="width:17px;height:17px" onerror="this.outerHTML=\'🛠️\'"></em>'+esc(t.title.replace(/ (인코더|포맷터|생성기)$/,''))+'</a>';
+  }).join('');
+}).catch(function(){ $('tools').innerHTML='<div class="skel"><a href="https://tool.cocy.io" style="text-decoration:underline">tool.cocy.io →</a></div>'; });
 
 // stats from apps.json (same origin)
 getJSON('/apps.json').then(function(list){
