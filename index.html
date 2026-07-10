@@ -241,14 +241,16 @@ function getJSON(url){ return fetch(url).then(function(r){ if(!r.ok) throw new E
     getJSON('https://news.cocy.io/articles/'+tries[idx]+'.json').then(function(d){
       var all = Array.isArray(d)?d:(d.articles||[]);
       if(!all.length) return attempt(idx+1);
-      var general = all.filter(function(a){ return a.category!=='ai-tech'; });
-      var aitech = all.filter(function(a){ return a.category==='ai-tech'; });
-      var arts = general.concat(aitech).slice(0,5);
-      var cat = {domestic:'국내',world:'세계',tech:'테크',economy:'경제',science:'과학','ai-tech':'AI'};
-      $('news').innerHTML = arts.map(function(a,i){
+      // 정치(domestic)·경제 제외 (cocy 지시 2026-07-10)
+      var pool = all.filter(function(a){ return ['domestic','economy','politics'].indexOf(a.category)===-1; });
+      var aitech = pool.filter(function(a){ return a.category==='ai-tech'; });
+      var radarItems = aitech.slice(0,4);
+      var arts = pool.filter(function(a){ return radarItems.indexOf(a)===-1; }).slice(0,5);
+      var cat = {world:'세계',tech:'테크',science:'과학',culture:'문화','ai-tech':'AI'};
+      $('news').innerHTML = arts.length ? arts.map(function(a,i){
         return '<li><span class="no">'+(i+1)+'</span><div><a class="t" href="'+esc(a.sourceUrl||'https://news.cocy.io')+'" target="_blank" rel="noopener">'+esc(a.title)+'</a><span class="s">'+esc(a.source||'')+' · '+esc(cat[a.category]||a.category||'')+'</span></div></li>';
-      }).join('');
-      var radar = aitech.slice(0,4);
+      }).join('') : '<li class="skel">오늘의 테크 뉴스가 아직 없습니다 — <a href="https://news.cocy.io" style="text-decoration:underline">전체 뉴스 보기</a></li>';
+      var radar = radarItems;
       $('radar').innerHTML = radar.length ? radar.map(function(a){
         return '<li><span class="ic">🤖</span><a href="'+esc(a.sourceUrl||'https://news.cocy.io')+'" target="_blank" rel="noopener">'+esc(a.title)+'</a></li>';
       }).join('') : '<li class="skel">오늘 수집된 모델 소식이 없습니다.</li>';
