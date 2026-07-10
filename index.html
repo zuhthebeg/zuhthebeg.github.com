@@ -96,16 +96,14 @@ section+section{border-top:1px solid var(--hair)}
 .pgs .t{font-size:11.5px;font-weight:500;margin-top:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .pgs .v{font-size:10px;color:var(--mut)}
 .game{list-style:none}
-.game li{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;padding:5px 0;border-bottom:1px solid var(--hair);align-items:center}
+.game li{display:grid;grid-template-columns:18px 86px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--hair);align-items:baseline}
 .game li:last-child{border-bottom:0}
-.game .rk{font-family:var(--serif);font-weight:900;font-size:15px}
-.game .nm{font-family:var(--serif);font-weight:600;font-size:14.5px}
+.game .rk{font-family:var(--serif);font-weight:900;font-size:14px}
+.game .nm{font-family:var(--serif);font-weight:600;font-size:14px;white-space:nowrap}
 .game .nm:hover{color:var(--acc)}
-.game .champ{grid-column:2/4;font-size:11px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.game .champ{font-size:11px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
 .game .champ b{color:var(--ink);font-weight:500}
 .game .champ .sc{color:var(--acc);font-weight:700;font-variant-numeric:tabular-nums}
-.game .go{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--acc);border:1px solid var(--acc);padding:2.5px 7px;transition:all .15s}
-.game .go:hover{background:var(--acc);color:var(--card)}
 .hall{background:var(--card);border:1px solid var(--hair);padding:10px 12px;font-size:12px;line-height:1.7}
 .hall b{font-family:var(--serif)}
 .hall .sc{color:var(--acc);font-weight:700}
@@ -189,7 +187,7 @@ section+section{border-top:1px solid var(--hair)}
     </div>
 
     <div class="col">
-      <section style="flex:1">
+      <section style="flex:1;min-height:0;overflow:hidden">
         <h2>게임 랭킹 <a class="more" href="https://game.cocy.io" target="_blank" rel="noopener">game.cocy.io →</a></h2>
         <ul class="game" id="game"><li class="skel">불러오는 중…</li></ul>
       </section>
@@ -290,8 +288,8 @@ Promise.all(GAMES.map(function(g){
   return getJSON('https://relay.cocy.io/api/rankings/'+g.id+'?limit=1').then(function(d){ g.top=(d.rankings||[])[0]||null; return g; }).catch(function(){ g.top=null; return g; });
 })).then(function(gs){
   $('game').innerHTML = gs.map(function(g,i){
-    var champ = g.top ? '👑 <b>'+esc(g.top.nickname)+'</b> <span class="sc">'+champScore(g.top)+'</span>' : '아직 기록 없음 — 1위에 도전!';
-    return '<li><span class="rk">'+(i+1)+'</span><a class="nm" href="'+g.url+'">'+esc(g.name)+'</a><a class="go" href="'+g.url+'">PLAY</a><span class="champ">'+champ+'</span></li>';
+    var champ = g.top ? '👑 <b>'+esc(g.top.nickname)+'</b> <span class="sc">'+champScore(g.top)+'</span>' : '1위에 도전!';
+    return '<li><span class="rk">'+(i+1)+'</span><a class="nm" href="'+g.url+'">'+esc(g.name)+'</a><span class="champ">'+champ+'</span></li>';
   }).join('');
 });
 
