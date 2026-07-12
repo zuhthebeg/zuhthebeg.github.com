@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>개인정보처리방침 — cocy.io</title>
-<meta name="description" content="cocy.io 서비스 공통 개인정보처리방침">
+<meta name="description" content="cocy.io 서비스 공통 개인정보처리방침 / Privacy Policy">
 <style>
   body { background:#101015; color:#e2e4ee; font-family:'Noto Sans KR','Segoe UI',system-ui,sans-serif;
-    max-width:760px; margin:0 auto; padding:36px 20px 90px; line-height:1.75; font-size:14.5px; }
+    max-width:760px; margin:0 auto; padding:28px 20px 90px; line-height:1.75; font-size:14.5px; }
   h1 { font-size:23px; color:#fff; margin-bottom:4px; }
-  .date { color:#8f93a8; font-size:12.5px; margin-bottom:26px; }
-  h2 { font-size:16px; color:#8ec9ff; margin:30px 0 8px; }
+  .date { color:#8f93a8; font-size:12.5px; margin-bottom:18px; }
+  h2 { font-size:16px; color:#8ec9ff; margin:28px 0 8px; }
   ul { padding-left:18px; }
   li { margin:4px 0; }
   table { border-collapse:collapse; width:100%; font-size:13px; margin:8px 0; }
@@ -18,14 +18,24 @@
   th { background:#1c1e2c; color:#c4c8dc; white-space:nowrap; }
   .muted { color:#8f93a8; font-size:13px; }
   a { color:#8ec9ff; }
+  #langs { display:flex; gap:6px; margin-bottom:22px; flex-wrap:wrap; }
+  #langs button { padding:6px 14px; border-radius:16px; border:1px solid #33364a;
+    background:#1c1e2c; color:#c4c8dc; cursor:pointer; font-size:13px; }
+  #langs button.on { background:#2d4a7a; color:#fff; border-color:#4a6ea8; }
+  section[data-lang] { display:none; }
 </style>
 </head>
 <body>
+<div id="langs">
+  <button data-l="ko">한국어</button>
+  <button data-l="en">English</button>
+  <button data-l="ja">日本語</button>
+  <button data-l="zh-TW">繁體中文</button>
+</div>
+<section data-lang="ko">
 <h1>개인정보처리방침</h1>
 <p class="date">시행일: 2026년 7월 12일 · 적용 범위: cocy.io 및 하위 서비스 전체</p>
-
 <p>cocy.io(이하 "서비스")는 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의 개인정보를 아래와 같이 처리합니다. 본 방침은 아래 서비스에 공통 적용됩니다.</p>
-
 <h2>1. 적용 서비스</h2>
 <table>
   <tr><th>서비스</th><th>내용</th></tr>
@@ -35,7 +45,6 @@
   <tr><td>tool.cocy.io</td><td>웹 도구 모음</td></tr>
   <tr><td>기타 *.cocy.io</td><td>cocy.io가 운영하는 하위 서비스</td></tr>
 </table>
-
 <h2>2. 수집하는 개인정보 항목</h2>
 <table>
   <tr><th>구분</th><th>항목</th><th>수집 시점</th></tr>
@@ -46,7 +55,6 @@
 </table>
 <p class="muted">※ 서비스는 <b>위치정보를 수집하지 않으며</b>, 별도의 위치기반서비스를 제공하지 않습니다.<br>
 ※ 일부 게임은 로그인 없이 익명(게스트)으로 이용 가능하며, 이 경우 기기 내 임의 식별자만 사용됩니다.</p>
-
 <h2>3. 개인정보의 처리 목적</h2>
 <ul>
   <li>회원 식별, 로그인 및 통합 계정 관리</li>
@@ -54,23 +62,19 @@
   <li>이용자가 명시적으로 요청한 계정 공유 기능 제공</li>
   <li>서비스 품질 개선을 위한 이용 통계 분석(Google Analytics 등, 개인 식별 목적 아님)</li>
 </ul>
-
 <h2>4. 인공지능(AI) 처리에 관한 사항</h2>
 <ul>
   <li>일부 서비스(log 등)에서 이용자가 입력한 텍스트·이미지는 <b>자동 분류·구조화를 위해 AI 모델에 전달</b>됩니다.</li>
   <li>전달된 데이터는 결과 생성에만 사용되며, <b>AI 모델 학습에 사용하지 않습니다.</b></li>
   <li>AI 처리를 원하지 않는 경우 해당 기능을 사용하지 않거나(로컬 모드 등) 이용을 중단할 수 있습니다.</li>
 </ul>
-
 <h2>5. 개인정보의 보유 및 이용 기간</h2>
 <ul>
   <li>회원 탈퇴 또는 삭제 요청 시 지체 없이 파기합니다.</li>
   <li>관계 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관 후 파기합니다.</li>
 </ul>
-
 <h2>6. 개인정보의 제3자 제공</h2>
 <p>서비스는 이용자의 개인정보를 제3자에게 제공하지 않습니다.</p>
-
 <h2>7. 개인정보 처리의 위탁 및 국외 이전</h2>
 <table>
   <tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가</th></tr>
@@ -79,42 +83,261 @@
   <tr><td>Google LLC</td><td>소셜 로그인, 이용 통계(Analytics)</td><td>미국</td></tr>
 </table>
 <p class="muted">서비스 인프라 특성상 데이터가 국외 서버에 저장·처리될 수 있으며, 회원가입 시 이에 동의한 것으로 봅니다.</p>
-
 <h2>8. 만 14세 미만 아동의 개인정보</h2>
 <p>서비스는 <b>만 14세 미만 아동의 회원가입을 받지 않으며</b>, 만 14세 미만 아동의 개인정보를 수집하지 않습니다. 가입 과정에서 만 14세 이상임을 확인합니다.</p>
-
 <h2>9. 쿠키 및 유사 기술</h2>
 <ul>
   <li>로그인 세션 유지를 위한 필수 쿠키를 사용합니다.</li>
   <li>이용 통계를 위해 Google Analytics(GTM) 쿠키가 사용될 수 있으며, 브라우저 설정으로 거부할 수 있습니다.</li>
   <li>일부 페이지에는 Google AdSense 광고가 게재될 수 있습니다.</li>
 </ul>
-
 <h2>10. 개인정보의 파기 절차 및 방법</h2>
-<ul>
-  <li>전자적 파일 형태의 정보는 복구할 수 없는 방법으로 영구 삭제합니다.</li>
-</ul>
-
+<ul><li>전자적 파일 형태의 정보는 복구할 수 없는 방법으로 영구 삭제합니다.</li></ul>
 <h2>11. 개인정보의 안전성 확보 조치</h2>
-<ul>
-  <li>비밀번호 일방향 암호화 저장, HTTPS 통신 암호화, 세션 기반 접근 통제</li>
-</ul>
-
+<ul><li>비밀번호 일방향 암호화 저장, HTTPS 통신 암호화, 세션 기반 접근 통제</li></ul>
 <h2>12. 정보주체의 권리와 행사 방법</h2>
 <ul>
   <li>이용자는 언제든지 자신의 개인정보에 대한 열람·정정·삭제·처리정지를 요구할 수 있습니다.</li>
   <li>아래 연락처로 요청하시면 지체 없이 처리합니다.</li>
 </ul>
-
 <h2>13. 개인정보 보호책임자</h2>
 <ul>
   <li>보호책임자: cocy (서비스 운영자)</li>
   <li>문의: <a href="mailto:cocy@kakao.com">cocy@kakao.com</a></li>
 </ul>
-
-<h2>14. 방침의 변경</h2>
-<p>본 방침이 변경되는 경우 본 페이지에 게시하여 안내합니다.</p>
-
-<p class="muted" style="margin-top:36px">cocy.io services do not accept sign-ups from children under 14 and do not collect location data. For privacy inquiries (access, correction, deletion), contact cocy@kakao.com.</p>
+<h2>14. 방침의 변경 및 언어</h2>
+<p>본 방침이 변경되는 경우 본 페이지에 게시하여 안내합니다. 본 방침은 한국어를 정본으로 하며, 번역본과 차이가 있는 경우 한국어본이 우선합니다.</p>
+</section>
+<section data-lang="en">
+<h1>Privacy Policy</h1>
+<p class="date">Effective: July 12, 2026 · Scope: cocy.io and all sub-services</p>
+<p>cocy.io ("the Service") complies with applicable privacy laws, including the Personal Information Protection Act of Korea. This policy applies to all services below.</p>
+<h2>1. Covered Services</h2>
+<table>
+  <tr><th>Service</th><th>Description</th></tr>
+  <tr><td>cocy.io</td><td>Portal</td></tr>
+  <tr><td>game.cocy.io · relay.cocy.io</td><td>Web games and unified game account (wallet, rankings)</td></tr>
+  <tr><td>log.cocy.io</td><td>AI journaling & inventory</td></tr>
+  <tr><td>tool.cocy.io</td><td>Web tools</td></tr>
+  <tr><td>other *.cocy.io</td><td>Sub-services operated by cocy.io</td></tr>
+</table>
+<h2>2. Data We Collect</h2>
+<table>
+  <tr><th>Type</th><th>Items</th><th>When</th></tr>
+  <tr><td>Account (email)</td><td>Email address, password (hashed), name (optional)</td><td>At sign-up</td></tr>
+  <tr><td>Account (Google)</td><td>Google account ID, email, name, profile picture</td><td>At Google login</td></tr>
+  <tr><td>Games</td><td>Nickname, game progress (scores, gold, rankings)</td><td>While playing</td></tr>
+  <tr><td>Journaling</td><td>User-entered records (text/images), inventory data</td><td>When creating records</td></tr>
+</table>
+<p class="muted">※ The Service <b>does not collect location data</b> and provides no location-based services.<br>
+※ Some games can be played anonymously (guest); only a random device-local identifier is used.</p>
+<h2>3. Purposes of Processing</h2>
+<ul>
+  <li>Member identification, login, and unified account management</li>
+  <li>Core features: record storage/statistics, game progress, rankings</li>
+  <li>Account sharing explicitly requested by the user</li>
+  <li>Usage analytics for service improvement (Google Analytics; not for personal identification)</li>
+</ul>
+<h2>4. AI Processing</h2>
+<ul>
+  <li>In some services (e.g., log), user-entered text/images are <b>sent to AI models for automatic classification</b>.</li>
+  <li>Such data is used only to generate results and is <b>never used to train AI models</b>.</li>
+  <li>If you do not want AI processing, you may use local mode or stop using the feature.</li>
+</ul>
+<h2>5. Retention</h2>
+<ul>
+  <li>Data is destroyed without delay upon account deletion or user request.</li>
+  <li>Data required by law is kept for the legally mandated period, then destroyed.</li>
+</ul>
+<h2>6. Third-Party Provision</h2>
+<p>We do not provide personal data to third parties.</p>
+<h2>7. Processors & International Transfer</h2>
+<table>
+  <tr><th>Processor</th><th>Task</th><th>Country</th></tr>
+  <tr><td>Cloudflare, Inc.</td><td>Hosting, data storage (database/storage)</td><td>USA and Cloudflare global regions</td></tr>
+  <tr><td>GitHub, Inc.</td><td>Static page hosting</td><td>USA</td></tr>
+  <tr><td>Google LLC</td><td>Social login, analytics</td><td>USA</td></tr>
+</table>
+<h2>8. Children Under 14</h2>
+<p>The Service <b>does not accept sign-ups from children under 14</b> and does not collect their personal data. Age (14+) is confirmed during sign-up.</p>
+<h2>9. Cookies</h2>
+<ul>
+  <li>Essential cookies for login sessions.</li>
+  <li>Google Analytics (GTM) cookies for usage statistics; can be blocked in browser settings.</li>
+  <li>Some pages may display Google AdSense ads.</li>
+</ul>
+<h2>10. Destruction</h2>
+<ul><li>Electronic data is permanently deleted using irrecoverable methods.</li></ul>
+<h2>11. Security Measures</h2>
+<ul><li>One-way password hashing, HTTPS encryption, session-based access control</li></ul>
+<h2>12. Your Rights</h2>
+<ul><li>You may request access, correction, deletion, or suspension of processing at any time via the contact below.</li></ul>
+<h2>13. Privacy Officer</h2>
+<ul><li>Officer: cocy (service operator) · Contact: <a href="mailto:cocy@kakao.com">cocy@kakao.com</a></li></ul>
+<h2>14. Changes & Language</h2>
+<p>Changes will be posted on this page. The Korean version is authoritative; in case of discrepancies, the Korean text prevails.</p>
+</section>
+<section data-lang="ja">
+<h1>プライバシーポリシー</h1>
+<p class="date">施行日: 2026年7月12日 · 適用範囲: cocy.io および全サブサービス</p>
+<p>cocy.io（以下「本サービス」）は、韓国の個人情報保護法等の関連法令を遵守し、利用者の個人情報を以下のとおり取り扱います。</p>
+<h2>1. 適用サービス</h2>
+<table>
+  <tr><th>サービス</th><th>内容</th></tr>
+  <tr><td>cocy.io</td><td>ポータル</td></tr>
+  <tr><td>game.cocy.io · relay.cocy.io</td><td>ウェブゲームおよび統合ゲームアカウント（ウォレット・ランキング）</td></tr>
+  <tr><td>log.cocy.io</td><td>AI記録・在庫管理</td></tr>
+  <tr><td>tool.cocy.io</td><td>ウェブツール</td></tr>
+  <tr><td>その他 *.cocy.io</td><td>cocy.ioが運営するサブサービス</td></tr>
+</table>
+<h2>2. 収集する個人情報</h2>
+<table>
+  <tr><th>区分</th><th>項目</th><th>時点</th></tr>
+  <tr><td>アカウント（メール）</td><td>メールアドレス、パスワード（暗号化保存）、名前（任意）</td><td>会員登録時</td></tr>
+  <tr><td>アカウント（Google）</td><td>Googleアカウント識別子、メール、名前、プロフィール画像</td><td>Googleログイン時</td></tr>
+  <tr><td>ゲーム利用</td><td>ニックネーム、ゲーム進行データ（スコア・ゴールド・ランキング）</td><td>ゲーム利用時</td></tr>
+  <tr><td>記録サービス</td><td>利用者が入力した記録（テキスト・画像）、在庫情報</td><td>記録作成時</td></tr>
+</table>
+<p class="muted">※ 本サービスは<b>位置情報を収集せず</b>、位置情報サービスを提供しません。<br>
+※ 一部ゲームはログインなしの匿名（ゲスト）利用が可能で、端末内のランダム識別子のみ使用します。</p>
+<h2>3. 処理目的</h2>
+<ul>
+  <li>会員識別、ログイン、統合アカウント管理</li>
+  <li>記録の保存・統計、ゲーム進行の保存、ランキング等のコア機能提供</li>
+  <li>利用者が明示的に要請したアカウント共有機能</li>
+  <li>サービス改善のための利用統計（Google Analytics等、個人識別目的ではない）</li>
+</ul>
+<h2>4. AI処理について</h2>
+<ul>
+  <li>一部サービス（log等）では、入力されたテキスト・画像が<b>自動分類のためAIモデルに送信</b>されます。</li>
+  <li>送信データは結果生成のみに使用され、<b>AIモデルの学習には使用しません。</b></li>
+  <li>AI処理を望まない場合、ローカルモードの利用または機能の不使用が可能です。</li>
+</ul>
+<h2>5. 保有期間</h2>
+<ul><li>退会または削除要請時、遅滞なく破棄します。法令上必要な場合は該当期間保管後に破棄します。</li></ul>
+<h2>6. 第三者提供</h2>
+<p>個人情報を第三者に提供しません。</p>
+<h2>7. 処理委託および国外移転</h2>
+<table>
+  <tr><th>受託者</th><th>業務</th><th>移転先</th></tr>
+  <tr><td>Cloudflare, Inc.</td><td>ホスティング、データ保存</td><td>米国等</td></tr>
+  <tr><td>GitHub, Inc.</td><td>静的ページホスティング</td><td>米国</td></tr>
+  <tr><td>Google LLC</td><td>ソーシャルログイン、利用統計</td><td>米国</td></tr>
+</table>
+<h2>8. 14歳未満の児童</h2>
+<p>本サービスは<b>14歳未満の会員登録を受け付けず</b>、その個人情報を収集しません。登録時に14歳以上であることを確認します。</p>
+<h2>9. クッキー</h2>
+<ul>
+  <li>ログインセッション維持のための必須クッキーを使用します。</li>
+  <li>Google Analytics（GTM）クッキーが使用されることがあり、ブラウザ設定で拒否できます。</li>
+  <li>一部ページにGoogle AdSense広告が表示されることがあります。</li>
+</ul>
+<h2>10. 破棄</h2>
+<ul><li>電子ファイルは復元不可能な方法で完全に削除します。</li></ul>
+<h2>11. 安全性確保措置</h2>
+<ul><li>パスワードの一方向暗号化、HTTPS通信暗号化、セッションベースのアクセス制御</li></ul>
+<h2>12. 利用者の権利</h2>
+<ul><li>閲覧・訂正・削除・処理停止をいつでも下記連絡先に請求できます。</li></ul>
+<h2>13. 個人情報保護責任者</h2>
+<ul><li>責任者: cocy（サービス運営者） · 連絡先: <a href="mailto:cocy@kakao.com">cocy@kakao.com</a></li></ul>
+<h2>14. 改定および言語</h2>
+<p>改定時は本ページで告知します。本ポリシーは韓国語版を正本とし、相違がある場合は韓国語版が優先します。</p>
+</section>
+<section data-lang="zh-TW">
+<h1>隱私權政策</h1>
+<p class="date">生效日: 2026年7月12日 · 適用範圍: cocy.io 及全部子服務</p>
+<p>cocy.io（以下稱「本服務」）遵守韓國個人資料保護法等相關法令，依下列方式處理使用者個人資料。</p>
+<h2>1. 適用服務</h2>
+<table>
+  <tr><th>服務</th><th>內容</th></tr>
+  <tr><td>cocy.io</td><td>入口網站</td></tr>
+  <tr><td>game.cocy.io · relay.cocy.io</td><td>網頁遊戲與整合遊戲帳號（錢包・排行榜）</td></tr>
+  <tr><td>log.cocy.io</td><td>AI 記錄・庫存管理</td></tr>
+  <tr><td>tool.cocy.io</td><td>網頁工具</td></tr>
+  <tr><td>其他 *.cocy.io</td><td>cocy.io 營運之子服務</td></tr>
+</table>
+<h2>2. 蒐集之個人資料</h2>
+<table>
+  <tr><th>類別</th><th>項目</th><th>時點</th></tr>
+  <tr><td>帳號（電子郵件）</td><td>電子郵件、密碼（加密儲存）、姓名（選填）</td><td>註冊時</td></tr>
+  <tr><td>帳號（Google）</td><td>Google 帳號識別碼、電子郵件、姓名、頭像</td><td>Google 登入時</td></tr>
+  <tr><td>遊戲使用</td><td>暱稱、遊戲進度資料（分數・金幣・排行榜）</td><td>遊戲時</td></tr>
+  <tr><td>記錄服務</td><td>使用者輸入之記錄（文字・圖片）、庫存資訊</td><td>建立記錄時</td></tr>
+</table>
+<p class="muted">※ 本服務<b>不蒐集位置資訊</b>，不提供位置相關服務。<br>
+※ 部分遊戲可匿名（訪客）使用，僅使用裝置內隨機識別碼。</p>
+<h2>3. 處理目的</h2>
+<ul>
+  <li>會員識別、登入及整合帳號管理</li>
+  <li>記錄儲存・統計、遊戲進度、排行榜等核心功能</li>
+  <li>使用者明示要求之帳號共享功能</li>
+  <li>服務改善之使用統計（Google Analytics 等，非用於識別個人）</li>
+</ul>
+<h2>4. 人工智慧（AI）處理</h2>
+<ul>
+  <li>部分服務（如 log）中，使用者輸入之文字・圖片會<b>傳送至 AI 模型進行自動分類</b>。</li>
+  <li>該資料僅用於產生結果，<b>不用於 AI 模型訓練。</b></li>
+  <li>不希望 AI 處理時，可使用本機模式或停用該功能。</li>
+</ul>
+<h2>5. 保存期間</h2>
+<ul><li>退會或請求刪除時，將立即銷毀。法令要求保存者，於期間屆滿後銷毀。</li></ul>
+<h2>6. 第三方提供</h2>
+<p>不向第三方提供個人資料。</p>
+<h2>7. 委託處理及跨境傳輸</h2>
+<table>
+  <tr><th>受託者</th><th>業務</th><th>國家</th></tr>
+  <tr><td>Cloudflare, Inc.</td><td>主機代管、資料儲存</td><td>美國等</td></tr>
+  <tr><td>GitHub, Inc.</td><td>靜態頁面代管</td><td>美國</td></tr>
+  <tr><td>Google LLC</td><td>社群登入、使用統計</td><td>美國</td></tr>
+</table>
+<h2>8. 未滿14歲兒童</h2>
+<p>本服務<b>不接受未滿14歲之註冊</b>，亦不蒐集其個人資料。註冊時將確認年滿14歲。</p>
+<h2>9. Cookie</h2>
+<ul>
+  <li>使用維持登入工作階段之必要 Cookie。</li>
+  <li>可能使用 Google Analytics（GTM）Cookie，可於瀏覽器設定拒絕。</li>
+  <li>部分頁面可能顯示 Google AdSense 廣告。</li>
+</ul>
+<h2>10. 銷毀</h2>
+<ul><li>電子檔案以無法復原之方式永久刪除。</li></ul>
+<h2>11. 安全措施</h2>
+<ul><li>密碼單向加密、HTTPS 通訊加密、工作階段存取控制</li></ul>
+<h2>12. 使用者權利</h2>
+<ul><li>可隨時向下列聯絡方式請求查閱・更正・刪除・停止處理。</li></ul>
+<h2>13. 個人資料保護負責人</h2>
+<ul><li>負責人: cocy（服務營運者） · 聯絡: <a href="mailto:cocy@kakao.com">cocy@kakao.com</a></li></ul>
+<h2>14. 修訂及語言</h2>
+<p>修訂時將於本頁公告。本政策以韓文版為正本，如有歧異以韓文版為準。</p>
+</section>
+<script>
+(function(){
+  var LANGS=['ko','en','ja','zh-TW'];
+  function pick(){
+    var q=new URLSearchParams(location.search).get('lang');
+    if(LANGS.indexOf(q)>=0) return q;
+    var s=localStorage.getItem('cocy_privacy_lang');
+    if(LANGS.indexOf(s)>=0) return s;
+    var n=(navigator.language||'en').toLowerCase();
+    if(n.indexOf('ko')===0) return 'ko';
+    if(n.indexOf('ja')===0) return 'ja';
+    if(n==='zh-tw'||n==='zh-hant'||n.indexOf('zh')===0) return 'zh-TW';
+    return 'en';
+  }
+  function apply(l){
+    document.documentElement.lang=l;
+    document.querySelectorAll('section[data-lang]').forEach(function(s){
+      s.style.display = s.dataset.lang===l ? 'block':'none';
+    });
+    document.querySelectorAll('#langs button').forEach(function(b){
+      b.classList.toggle('on', b.dataset.l===l);
+    });
+    localStorage.setItem('cocy_privacy_lang', l);
+  }
+  document.querySelectorAll('#langs button').forEach(function(b){
+    b.onclick=function(){ apply(b.dataset.l); };
+  });
+  apply(pick());
+})();
+</script>
 </body>
 </html>
