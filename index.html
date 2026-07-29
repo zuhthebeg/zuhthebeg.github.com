@@ -225,23 +225,38 @@ $('edition').innerHTML = esc(ed)+'<br><b>'+now.getFullYear()+'년 '+(now.getMont
 setInterval(function(){ $('clock').textContent = kstNow().toTimeString().slice(0,8); }, 1000);
 $('clock').textContent = now.toTimeString().slice(0,8);
 
-function getJSON(url){ return fetch(url).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+function getJSON(url){
+  // 모바일 콜드 커넥션에서 fetch가 무한 스톨하면 스켈레톤이 영영 남으므로 10초 타임아웃
+  var ctl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+  var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 10000) : null;
+  return fetch(url, ctl?{signal:ctl.signal}:{}).then(function(r){
+    if(tm) clearTimeout(tm);
+    if(!r.ok) throw new Error(r.status);
+    return r.json();
+  }, function(e){ if(tm) clearTimeout(tm); throw e; });
+}
 
 // NEWS + AI RADAR: today -> fallback up to 3 days back
 // 일반 뉴스(비 ai-tech)는 뉴스 섹션, ai-tech는 AI 모델 레이더 섹션
-(function loadNews(){
+var newsLoading = false, newsLoaded = false, newsRetries = 0;
+function loadNews(){
+  if (newsLoading || newsLoaded) return;
+  newsLoading = true;
   var tries = [];
   for (var i=0;i<4;i++){ var d=kstNow(); d.setDate(d.getDate()-i); tries.push(kstDateStr(d)); }
   (function attempt(idx){
     if (idx>=tries.length){
+      newsLoading = false;
       $('news').innerHTML='<li class="skel">뉴스를 불러오지 못했습니다. <a href="https://news.cocy.io" style="text-decoration:underline">news.cocy.io</a></li>';
       $('radar').innerHTML='<li class="skel">수집된 모델 소식이 없습니다.</li>';
+      if (++newsRetries <= 3) setTimeout(loadNews, 5000); // 일시적 네트워크 실패 대비 자동 재시도(최대 3회)
       return;
     }
     getJSON('https://news.cocy.io/articles/'+tries[idx]+'.json').then(function(d){
       var all = Array.isArray(d)?d:(d.articles||[]);
       if(!all.length) return attempt(idx+1);
       // 정치(domestic)·경제 제외 (cocy 지시 2026-07-10)
+      newsLoading = false; newsLoaded = true;
       var pool = all.filter(function(a){ return ['domestic','economy','politics'].indexOf(a.category)===-1; });
       var aitech = pool.filter(function(a){ return a.category==='ai-tech'; });
       var radarItems = aitech.slice(0,4);
@@ -256,7 +271,13 @@ function getJSON(url){ return fetch(url).then(function(r){ if(!r.ok) throw new E
       }).join('') : '<li class="skel">오늘 수집된 모델 소식이 없습니다.</li>';
     }).catch(function(){ attempt(idx+1); });
   })(0);
-})();
+}
+loadNews();
+// 모바일 웹뷰가 로딩 중 백그라운드로 내려가면 fetch가 죽고 스켈레톤만 남는다 —
+// 화면 복귀(bfcache 포함) 시 뉴스가 아직 안 떠 있으면 다시 시도
+function retryNewsIfEmpty(){ if (!newsLoaded){ newsLoading=false; newsRetries=0; loadNews(); } }
+window.addEventListener('pageshow', function(e){ if(e.persisted) retryNewsIfEmpty(); });
+document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='visible') retryNewsIfEmpty(); });
 
 // SKILLS: 최근 발견한 스킬 3개 (skills-discovery cron이 갱신)
 getJSON('https://news.cocy.io/skills.json').then(function(d){
