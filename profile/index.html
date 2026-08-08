@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>내 프로필 — COCY.IO</title>
+<meta name="description" content="cocy.io 통합 프로필 — 내 보이스 매치, 얼굴상, 게임 기록을 한 곳에서.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://cocy.io/profile/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f6f2e9;--card:#fffdf7;--ink:#191713;--mut:#847d6f;--hair:#d9d2c2;--acc:#bf3b21;--ok:#2e7d4f;--serif:'Noto Serif KR',serif;--sans:'Noto Sans KR',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:640px;margin:0 auto;padding:18px 20px 60px}
+.mast{display:flex;align-items:flex-end;justify-content:space-between;padding:6px 0 10px}
+.logo{font-family:var(--serif);font-weight:900;font-size:30px;letter-spacing:.06em}
+.logo span{color:var(--acc)}
+.mast .tag{font-size:11.5px;color:var(--mut);letter-spacing:.12em}
+.rule{border:0;border-top:2px solid var(--ink);position:relative;margin-bottom:2px}
+.rule::after{content:'';display:block;border-top:1px solid var(--ink);margin-top:2px}
+h1{font-family:var(--serif);font-size:24px;font-weight:900;margin:20px 0 4px}
+.sub{font-size:12.5px;color:var(--mut);margin-bottom:18px}
+h2{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin:26px 0 12px}
+h2::before{content:'';width:8px;height:8px;background:var(--acc);flex:none}
+.card{background:var(--card);border:1px solid var(--hair);padding:18px;box-shadow:2px 2px 0 rgba(25,23,19,.06)}
+.card+.card{margin-top:12px}
+.row{display:flex;align-items:center;gap:12px}
+input,button,select{font-family:var(--sans);font-size:14px}
+input{width:100%;padding:10px 12px;border:1px solid var(--hair);background:#fff;border-radius:0;margin-bottom:8px}
+input:focus{outline:2px solid var(--ink);outline-offset:-1px}
+.btn{display:inline-block;width:100%;padding:11px 14px;background:var(--ink);color:#fff;border:0;cursor:pointer;font-weight:700;letter-spacing:.05em}
+.btn:hover{background:#000}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn.sm{width:auto;padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;border-bottom:1px solid var(--hair);margin-bottom:14px}
+.tabs button{flex:1;padding:10px;background:none;border:0;border-bottom:2px solid transparent;cursor:pointer;font-weight:700;color:var(--mut)}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--acc)}
+.msg{font-size:12.5px;padding:8px 0;min-height:20px}
+.msg.err{color:var(--acc)}.msg.ok{color:var(--ok)}
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:24px;font-weight:900;flex:none;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.nick{font-family:var(--serif);font-size:21px;font-weight:900;line-height:1.2}
+.meta{font-size:12px;color:var(--mut);margin-top:2px}
+.badge{display:inline-block;font-size:10.5px;padding:1px 7px;border:1px solid var(--hair);color:var(--mut);letter-spacing:.06em;vertical-align:1px}
+.badge.g{border-color:var(--ok);color:var(--ok)}
+.trait{display:flex;align-items:baseline;gap:10px;padding:10px 0}
+.trait+.trait{border-top:1px dashed var(--hair)}
+.trait .ico{font-size:20px;flex:none}
+.trait .k{font-size:11px;color:var(--mut);letter-spacing:.1em;text-transform:uppercase}
+.trait .v{font-family:var(--serif);font-size:17px;font-weight:700}
+.trait .d{font-size:11.5px;color:var(--mut)}
+.trait .v .pct{color:var(--acc);font-size:14px;margin-left:6px}
+.trait.empty .v{color:var(--mut);font-weight:400;font-size:13.5px;font-family:var(--sans)}
+.trait .go{margin-left:auto;font-size:11.5px;color:var(--acc);white-space:nowrap;flex:none}
+.glist{font-size:13.5px}
+.glist .g{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--hair)}
+.glist .g:last-child{border-bottom:0}
+.glist .g b{font-variant-numeric:tabular-nums}
+.glist .g .lb{color:var(--ink)}
+.vm-sub{font-size:12px;color:var(--mut);margin-top:6px;line-height:1.7}
+.foot{margin-top:34px;font-size:11px;color:var(--mut);text-align:center;letter-spacing:.06em}
+.hidden{display:none!important}
+.inline-edit{display:flex;gap:6px}
+.inline-edit input{margin:0}
+details{margin-top:10px}
+summary{cursor:pointer;font-size:13px;font-weight:700;padding:6px 0}
+.soon{opacity:.55}
+#gBtn{margin-top:10px;display:flex;justify-content:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mast">
+    <a class="logo" href="https://cocy.io/">COCY<span>.</span>IO</a>
+    <div class="tag">MY PROFILE</div>
+  </div>
+  <hr class="rule">
+
+  <!-- 로딩 -->
+  <div id="loading" class="sub" style="padding:30px 0">불러오는 중…</div>
+
+  <!-- 비로그인: 로그인/가입 -->
+  <div id="authView" class="hidden">
+    <h1>프로필</h1>
+    <div class="sub">보이스 매치·얼굴상·게임 기록이 계정에 모입니다. 로그인하고 시작하세요.</div>
+    <div class="card">
+      <div class="tabs">
+        <button id="tabLogin" class="on">로그인</button>
+        <button id="tabJoin">가입</button>
+      </div>
+      <div id="formLogin">
+        <input id="liEmail" type="email" placeholder="이메일" autocomplete="email">
+        <input id="liPw" type="password" placeholder="비밀번호" autocomplete="current-password">
+        <button class="btn" id="btnLogin">로그인</button>
+      </div>
+      <div id="formJoin" class="hidden">
+        <input id="joNick" type="text" placeholder="닉네임 (2~12자)" autocomplete="nickname">
+        <input id="joEmail" type="email" placeholder="이메일" autocomplete="email">
+        <input id="joPw" type="password" placeholder="비밀번호 (8자 이상)" autocomplete="new-password">
+        <button class="btn" id="btnJoin">가입하기</button>
+      </div>
+      <div id="gBtn"></div>
+      <div class="msg" id="authMsg"></div>
+    </div>
+  </div>
+
+  <!-- 로그인됨: 프로필 -->
+  <div id="profileView" class="hidden">
+    <div class="card">
+      <div class="row">
+        <div class="avatar" id="avatar">?</div>
+        <div style="flex:1;min-width:0">
+          <div class="nick" id="pNick">—</div>
+          <div class="meta" id="pMeta">—</div>
+        </div>
+        <button class="btn sec sm" id="btnEditNick">✎ 닉네임</button>
+      </div>
+      <div class="inline-edit hidden" id="nickEdit" style="margin-top:10px">
+        <input id="nickInput" maxlength="12" placeholder="새 닉네임 (2~12자)">
+        <button class="btn sm" id="nickSave">저장</button>
+        <button class="btn sec sm" id="nickCancel">취소</button>
+      </div>
+      <div class="msg" id="pMsg"></div>
+    </div>
+
+    <h2>내 특성</h2>
+    <div class="card" id="traitCard">
+      <div class="trait" id="trVoice">
+        <span class="ico">🎤</span>
+        <div>
+          <div class="k">보이스 매치</div>
+          <div class="v">—</div>
+          <div class="vm-sub hidden"></div>
+        </div>
+        <a class="go" href="https://game.cocy.io/voicematch/">측정하기 →</a>
+      </div>
+      <div class="trait" id="trFace">
+        <span class="ico">🦊</span>
+        <div>
+          <div class="k">얼굴상</div>
+          <div class="v">—</div>
+          <div class="d"></div>
+        </div>
+        <a class="go" href="https://game.cocy.io/animalface/">판독하기 →</a>
+      </div>
+      <div class="trait empty soon">
+        <span class="ico">🧭</span>
+        <div><div class="k">MBTI</div><div class="v">준비 중</div></div>
+      </div>
+      <div class="trait empty soon">
+        <span class="ico">🍜</span>
+        <div><div class="k">음식 취향</div><div class="v">준비 중</div></div>
+      </div>
+    </div>
+
+    <h2>게임 기록</h2>
+    <div class="card">
+      <div class="glist" id="gameList"><div class="sub">기록이 아직 없습니다. <a href="https://game.cocy.io" style="color:var(--acc)">게임하러 가기 →</a></div></div>
+    </div>
+
+    <h2>계정 관리</h2>
+    <div class="card">
+      <details id="pwBox">
+        <summary>비밀번호 변경</summary>
+        <div style="padding-top:8px">
+          <input id="pwOld" type="password" placeholder="기존 비밀번호" autocomplete="current-password">
+          <input id="pwNew" type="password" placeholder="새 비밀번호 (8자 이상)" autocomplete="new-password">
+          <input id="pwNew2" type="password" placeholder="새 비밀번호 확인" autocomplete="new-password">
+          <button class="btn" id="btnPw">변경하기</button>
+          <div class="msg" id="pwMsg"></div>
+        </div>
+      </details>
+      <div id="noPwNote" class="sub hidden" style="margin-top:6px"></div>
+      <button class="btn sec" id="btnLogout" style="margin-top:12px">로그아웃</button>
+    </div>
+  </div>
+
+  <div class="foot">COCY.IO — 계정 하나로 모든 서비스</div>
+</div>
+
+<script>
+const API = 'https://relay.cocy.io/api';
+const GOOGLE_CLIENT_ID = '402340265805-ogo2c09qujqk6gape9oea7sfh8lsegln.apps.googleusercontent.com';
+const $ = id => document.getElementById(id);
+
+/* ---- 토큰: auth-bridge와 같은 키를 쓴다 (accessToken 우선, cocy_auth_token 병기).
+   두 키 다 쓰는 이유: 게임들의 shared-wallet이 cocy.io 브리지에서 두 이름 모두 읽어가서,
+   여기서 로그인하면 게임 쪽도 같은 계정으로 붙는다. ---- */
+const getToken = () => localStorage.getItem('accessToken') || localStorage.getItem('cocy_auth_token');
+const getRefresh = () => localStorage.getItem('refreshToken') || localStorage.getItem('cocy_refresh_token');
+function setTokens(access, refresh) {
+  if (access) { localStorage.setItem('accessToken', access); localStorage.setItem('cocy_auth_token', access); }
+  if (refresh) { localStorage.setItem('refreshToken', refresh); localStorage.setItem('cocy_refresh_token', refresh); }
+}
+function clearTokens() {
+  for (const k of ['accessToken','cocy_auth_token','refreshToken','cocy_refresh_token','cocy_user_id']) localStorage.removeItem(k);
+}
+
+/* access 만료(15분) 시 refresh로 한 번 재시도하는 fetch 래퍼 */
+async function api(path, opts = {}, retried = false) {
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  const tok = getToken();
+  if (tok) headers['Authorization'] = 'Bearer ' + tok;
+  const res = await fetch(API + path, { ...opts, headers });
+  if (res.status === 401 && !retried && getRefresh()) {
+    const rr = await fetch(API + '/auth/refresh', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken: getRefresh() }),
+    });
+    if (rr.ok) {
+      const d = await rr.json();
+      setTokens(d.accessToken, d.refreshToken);
+      return api(path, opts, true);
+    }
+  }
+  return res;
+}
+
+const show = v => {
+  for (const id of ['loading','authView','profileView']) $(id).classList.add('hidden');
+  $(v).classList.remove('hidden');
+};
+const msg = (el, text, ok) => { el.textContent = text; el.className = 'msg ' + (ok ? 'ok' : 'err'); };
+
+/* ---- 로그인/가입 ---- */
+$('tabLogin').onclick = () => { $('tabLogin').classList.add('on'); $('tabJoin').classList.remove('on'); $('formLogin').classList.remove('hidden'); $('formJoin').classList.add('hidden'); };
+$('tabJoin').onclick = () => { $('tabJoin').classList.add('on'); $('tabLogin').classList.remove('on'); $('formJoin').classList.remove('hidden'); $('formLogin').classList.add('hidden'); };
+
+$('btnLogin').onclick = async () => {
+  $('btnLogin').disabled = true;
+  try {
+    const res = await fetch(API + '/auth/login', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email: $('liEmail').value.trim(), password: $('liPw').value }) });
+    const d = await res.json();
+    if (!res.ok) return msg($('authMsg'), d.error || '로그인 실패');
+    setTokens(d.accessToken, d.refreshToken);
+    loadProfile();
+  } catch (e) { msg($('authMsg'), '네트워크 오류: ' + e.message); }
+  finally { $('btnLogin').disabled = false; }
+};
+$('liPw').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnLogin').click(); });
+
+$('btnJoin').onclick = async () => {
+  $('btnJoin').disabled = true;
+  try {
+    const res = await fetch(API + '/auth/register', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email: $('joEmail').value.trim(), password: $('joPw').value, nickname: $('joNick').value.trim() }) });
+    const d = await res.json();
+    if (!res.ok) return msg($('authMsg'), d.error || '가입 실패');
+    setTokens(d.accessToken, d.refreshToken);
+    loadProfile();
+  } catch (e) { msg($('authMsg'), '네트워크 오류: ' + e.message); }
+  finally { $('btnJoin').disabled = false; }
+};
+
+/* 구글 로그인 (GSI). cocy.io 오리진이 콘솔에 등록 안 돼 있으면 버튼이 안 뜰 뿐, 이메일 로그인엔 영향 없다. */
+(function initGoogle(){
+  const s = document.createElement('script');
+  s.src = 'https://accounts.google.com/gsi/client'; s.async = true;
+  s.onload = () => {
+    try {
+      google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: async (resp) => {
+        const res = await fetch(API + '/auth/google/signin', { method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ credential: resp.credential }) });
+        const d = await res.json();
+        if (!res.ok) return msg($('authMsg'), d.error || '구글 로그인 실패');
+        setTokens(d.token || d.accessToken, d.refreshToken);
+        loadProfile();
+      }});
+      google.accounts.id.renderButton($('gBtn'), { theme:'outline', size:'large', width: 280, text:'signin_with' });
+    } catch (e) { /* GSI 초기화 실패 — 이메일 로그인만 노출 */ }
+  };
+  document.head.appendChild(s);
+})();
+
+/* ---- 프로필 렌더 ---- */
+let PROFILE = null;
+
+async function loadProfile() {
+  if (!getToken()) return show('authView');
+  show('loading');
+  let res;
+  try { res = await api('/user/profile'); }
+  catch (e) { return show('authView'); }
+  if (!res.ok) { if (res.status === 401) clearTokens(); return show('authView'); }
+  PROFILE = (await res.json());
+  renderProfile();
+  show('profileView');
+  hydrateNames();   // 가수/동물 표시명은 뒤에 천천히 채운다
+}
+
+function renderProfile() {
+  const a = PROFILE.account;
+  $('pNick').textContent = a.nickname || '이름 없는 사용자';
+  const parts = [];
+  if (a.isAnonymous) parts.push('<span class="badge">게스트</span>');
+  else if (a.email) parts.push(esc(a.email) + (a.hasGoogle ? ' <span class="badge g">Google</span>' : ''));
+  if (a.createdAt) parts.push('가입 ' + a.createdAt.slice(0, 10));
+  $('pMeta').innerHTML = parts.join(' · ');
+  if (a.avatarUrl) $('avatar').innerHTML = '<img src="' + esc(a.avatarUrl) + '" alt="">';
+  else $('avatar').textContent = (a.nickname || '?').slice(0, 1).toUpperCase();
+
+  /* 보이스 매치: 최신 행 = 마지막으로 닮았던 가수 */
+  const vm = PROFILE.voicematch || [];
+  const tv = $('trVoice');
+  if (vm.length) {
+    tv.querySelector('.v').innerHTML = '<span data-slug="' + esc(vm[0].artist) + '">' + esc(vm[0].artist) + '</span><span class="pct">' + Math.round(vm[0].pct) + '%</span>';
+    const others = vm.slice(1, 4);
+    if (others.length) {
+      const sub = tv.querySelector('.vm-sub');
+      sub.classList.remove('hidden');
+      sub.innerHTML = '이전 매치: ' + others.map(r => '<span data-slug="' + esc(r.artist) + '">' + esc(r.artist) + '</span> ' + Math.round(r.pct) + '%').join(' · ');
+    }
+    tv.querySelector('.go').textContent = '다시 측정 →';
+  } else {
+    tv.classList.add('empty');
+    tv.querySelector('.v').textContent = '아직 기록이 없습니다';
+  }
+
+  /* 얼굴상 */
+  const face = PROFILE.traits?.animalface;
+  const tf = $('trFace');
+  if (face?.value?.animal) {
+    tf.querySelector('.v').innerHTML = '<span data-animal="' + esc(face.value.animal) + '">' + esc(face.value.animal) + '</span>';
+    tf.querySelector('.d').textContent = '마지막 판독 ' + (face.updated_at || '').slice(0, 10);
+    tf.querySelector('.go').textContent = '다시 판독 →';
+  } else {
+    tf.classList.add('empty');
+    tf.querySelector('.v').textContent = '아직 기록이 없습니다';
+  }
+
+  /* 게임 기록 */
+  const games = PROFILE.games || [];
+  if (games.length) {
+    $('gameList').innerHTML = games.map(g =>
+      '<div class="g"><span class="lb">' + esc(g.label) + (g.detail ? ' <span style="color:var(--mut)">· ' + esc(g.detail) + '</span>' : '') + '</span><b>' + fmt(g.value) + (g.unit || '') + '</b></div>'
+    ).join('');
+  }
+
+  /* 계정 관리: 비번 없는 계정(구글 전용/게스트)은 변경 폼 대신 안내 */
+  if (!a.hasPassword) {
+    $('pwBox').classList.add('hidden');
+    const note = $('noPwNote');
+    note.classList.remove('hidden');
+    note.textContent = a.isAnonymous
+      ? '게스트 계정입니다. 이메일로 가입하면 기록이 계정에 안전하게 보관됩니다.'
+      : 'Google 로그인 전용 계정이라 비밀번호가 없습니다.';
+  }
+}
+
+/* 가수 slug·동물 id → 표시 이름. 데이터가 있을 때만 그 서비스의 정본 JSON을 가져온다. */
+async function hydrateNames() {
+  const slugEls = document.querySelectorAll('[data-slug]');
+  if (slugEls.length) {
+    try {
+      const singers = await fetch('https://game.cocy.io/voicematch/singers.json').then(r => r.json());
+      const byManifest = {}; for (const s of singers) byManifest[s.slug] = s.name;
+      slugEls.forEach(el => { const n = byManifest[el.dataset.slug]; if (n) el.textContent = n; });
+    } catch (e) {}
+  }
+  const aniEls = document.querySelectorAll('[data-animal]');
+  if (aniEls.length) {
+    try {
+      const d = await fetch('https://game.cocy.io/animalface/animals.json?v=10').then(r => r.json());
+      const byId = {}; for (const a of d.animals) byId[a.id] = a.name;
+      aniEls.forEach(el => { const n = byId[el.dataset.animal]; if (n) el.textContent = n; });
+    } catch (e) {}
+  }
+}
+
+/* ---- 닉네임 변경 ---- */
+$('btnEditNick').onclick = () => {
+  $('nickEdit').classList.toggle('hidden');
+  $('nickInput').value = PROFILE?.account?.nickname || '';
+  $('nickInput').focus();
+};
+$('nickCancel').onclick = () => $('nickEdit').classList.add('hidden');
+$('nickSave').onclick = async () => {
+  const nick = $('nickInput').value.trim();
+  if (nick.length < 2 || nick.length > 12) return msg($('pMsg'), '닉네임은 2~12자');
+  const res = await api('/auth/nickname', { method:'POST', body: JSON.stringify({ nickname: nick }) });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok) return msg($('pMsg'), d.error || '변경 실패');
+  PROFILE.account.nickname = nick;
+  $('pNick').textContent = nick;
+  $('nickEdit').classList.add('hidden');
+  msg($('pMsg'), '닉네임이 변경됐습니다', true);
+};
+
+/* ---- 비밀번호 변경 ---- */
+$('btnPw').onclick = async () => {
+  const o = $('pwOld').value, n = $('pwNew').value, n2 = $('pwNew2').value;
+  if (n.length < 8) return msg($('pwMsg'), '새 비밀번호는 8자 이상');
+  if (n !== n2) return msg($('pwMsg'), '새 비밀번호가 서로 다릅니다');
+  $('btnPw').disabled = true;
+  try {
+    const res = await api('/auth/password', { method:'POST', body: JSON.stringify({ oldPassword: o, newPassword: n }) });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) return msg($('pwMsg'), d.error || '변경 실패');
+    msg($('pwMsg'), '변경 완료. 보안을 위해 다시 로그인해주세요.', true);
+    setTimeout(() => { clearTokens(); location.reload(); }, 1600);
+  } finally { $('btnPw').disabled = false; }
+};
+
+$('btnLogout').onclick = () => { clearTokens(); location.reload(); };
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = v => typeof v === 'number' ? v.toLocaleString('ko-KR') : v;
+
+loadProfile();
+</script>
+</body>
+</html>
