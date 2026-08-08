@@ -411,6 +411,19 @@ $('btnLogout').onclick = () => { clearTokens(); location.reload(); };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = v => typeof v === 'number' ? v.toLocaleString('ko-KR') : v;
 
+/* 게임 포털(game.cocy.io)에서 넘어온 로그인 핸드오프.
+   토큰 저장소가 도메인별이라 게임 로그인이 여기 안 보인다 → 포털이 #at/#rt 프래그먼트로
+   토큰을 실어 보내고, 여기서 저장 즉시 URL에서 지운다(프래그먼트는 서버로 안 나간다). */
+(function importHandoff(){
+  if (!location.hash.startsWith('#at=')) return;
+  try {
+    const q = new URLSearchParams(location.hash.slice(1));
+    const at = q.get('at'), rt = q.get('rt');
+    if (at) setTokens(at, rt || null);
+  } catch (e) {}
+  history.replaceState(null, '', location.pathname + location.search);
+})();
+
 loadProfile();
 </script>
 </body>
