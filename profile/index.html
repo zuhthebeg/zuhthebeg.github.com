@@ -592,7 +592,7 @@ $('langBtn').onclick = () => {
   LANG = LANG_ORDER[(LANG_ORDER.indexOf(LANG) + 1) % LANG_ORDER.length];
   try { localStorage.setItem('profile_lang', LANG); } catch (e) {}
   applyLang();
-  if (PROFILE) renderProfile();   // 동적 문자열(기록 없음/이전 매치 등)도 새 언어로
+  if (PROFILE) { renderProfile(); hydrateNames(); }   // 동적 문자열 + 가수/동물 표시명 다시
 };
 
 applyLang();
