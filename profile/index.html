@@ -79,32 +79,35 @@ summary{cursor:pointer;font-size:13px;font-weight:700;padding:6px 0}
 <div class="wrap">
   <div class="mast">
     <a class="logo" href="https://cocy.io/">COCY<span>.</span>IO</a>
-    <div class="tag">MY PROFILE</div>
+    <div class="tag" style="display:flex;align-items:center;gap:10px">
+      <button id="langBtn" style="background:none;border:1px solid var(--hair);padding:3px 8px;cursor:pointer;font-size:11px;color:var(--mut)">🌐 한국어</button>
+      <span>MY PROFILE</span>
+    </div>
   </div>
   <hr class="rule">
 
   <!-- 로딩 -->
-  <div id="loading" class="sub" style="padding:30px 0">불러오는 중…</div>
+  <div id="loading" class="sub" style="padding:30px 0" data-i18n="loading">불러오는 중…</div>
 
   <!-- 비로그인: 로그인/가입 -->
   <div id="authView" class="hidden">
-    <h1>프로필</h1>
-    <div class="sub">보이스 매치·얼굴상·게임 기록이 계정에 모입니다. 로그인하고 시작하세요.</div>
+    <h1 data-i18n="title">프로필</h1>
+    <div class="sub" data-i18n="intro">보이스 매치·얼굴상·게임 기록이 계정에 모입니다. 로그인하고 시작하세요.</div>
     <div class="card">
       <div class="tabs">
-        <button id="tabLogin" class="on">로그인</button>
-        <button id="tabJoin">가입</button>
+        <button id="tabLogin" class="on" data-i18n="login">로그인</button>
+        <button id="tabJoin" data-i18n="join">가입</button>
       </div>
       <div id="formLogin">
-        <input id="liEmail" type="email" placeholder="이메일" autocomplete="email">
-        <input id="liPw" type="password" placeholder="비밀번호" autocomplete="current-password">
-        <button class="btn" id="btnLogin">로그인</button>
+        <input id="liEmail" type="email" data-ph="email" placeholder="이메일" autocomplete="email">
+        <input id="liPw" type="password" data-ph="pw" placeholder="비밀번호" autocomplete="current-password">
+        <button class="btn" id="btnLogin" data-i18n="login">로그인</button>
       </div>
       <div id="formJoin" class="hidden">
-        <input id="joNick" type="text" placeholder="닉네임 (2~12자)" autocomplete="nickname">
-        <input id="joEmail" type="email" placeholder="이메일" autocomplete="email">
-        <input id="joPw" type="password" placeholder="비밀번호 (8자 이상)" autocomplete="new-password">
-        <button class="btn" id="btnJoin">가입하기</button>
+        <input id="joNick" type="text" data-ph="nickPh" placeholder="닉네임 (2~12자)" autocomplete="nickname">
+        <input id="joEmail" type="email" data-ph="email" placeholder="이메일" autocomplete="email">
+        <input id="joPw" type="password" data-ph="pwNew" placeholder="비밀번호 (8자 이상)" autocomplete="new-password">
+        <button class="btn" id="btnJoin" data-i18n="joinDo">가입하기</button>
       </div>
       <div id="gBtn"></div>
       <div class="msg" id="authMsg"></div>
@@ -120,97 +123,170 @@ summary{cursor:pointer;font-size:13px;font-weight:700;padding:6px 0}
           <div class="nick" id="pNick">—</div>
           <div class="meta" id="pMeta">—</div>
         </div>
-        <button class="btn sec sm" id="btnEditNick">✎ 닉네임</button>
+        <button class="btn sec sm" id="btnEditNick" data-i18n="editNick">✎ 닉네임</button>
       </div>
       <div class="inline-edit hidden" id="nickEdit" style="margin-top:10px">
-        <input id="nickInput" maxlength="12" placeholder="새 닉네임 (2~12자)">
-        <button class="btn sm" id="nickSave">저장</button>
-        <button class="btn sec sm" id="nickCancel">취소</button>
+        <input id="nickInput" maxlength="12" data-ph="nickPh" placeholder="새 닉네임 (2~12자)">
+        <button class="btn sm" id="nickSave" data-i18n="save">저장</button>
+        <button class="btn sec sm" id="nickCancel" data-i18n="cancel">취소</button>
       </div>
       <div class="msg" id="pMsg"></div>
     </div>
 
-    <h2>내 특성</h2>
+    <h2 data-i18n="secTraits">내 특성</h2>
     <div class="card" id="traitCard">
       <div class="trait" id="trVoice">
         <span class="ico">🎤</span>
         <div>
-          <div class="k">보이스 매치</div>
+          <div class="k" data-i18n="voice">보이스 매치</div>
           <div class="v">—</div>
           <div class="vm-sub hidden"></div>
         </div>
-        <a class="go" href="https://game.cocy.io/voicematch/">측정하기 →</a>
+        <a class="go" href="https://game.cocy.io/voicematch/" data-i18n="goVoice">측정하기 →</a>
       </div>
       <div class="trait" id="trFace">
         <span class="ico">🦊</span>
         <div>
-          <div class="k">얼굴상</div>
+          <div class="k" data-i18n="face">얼굴상</div>
           <div class="v">—</div>
           <div class="d"></div>
         </div>
-        <a class="go" href="https://game.cocy.io/animalface/">판독하기 →</a>
+        <a class="go" href="https://game.cocy.io/animalface/" data-i18n="goFace">판독하기 →</a>
       </div>
       <div class="trait empty soon">
         <span class="ico">🧭</span>
-        <div><div class="k">MBTI</div><div class="v">준비 중</div></div>
+        <div><div class="k">MBTI</div><div class="v" data-i18n="soon">준비 중</div></div>
       </div>
       <div class="trait empty soon">
         <span class="ico">🍜</span>
-        <div><div class="k">음식 취향</div><div class="v">준비 중</div></div>
+        <div><div class="k" data-i18n="food">음식 취향</div><div class="v" data-i18n="soon">준비 중</div></div>
       </div>
     </div>
 
-    <h2>게임 기록</h2>
+    <h2 data-i18n="secGames">게임 기록</h2>
     <div class="card">
-      <div class="glist" id="gameList"><div class="sub">기록이 아직 없습니다. <a href="https://game.cocy.io" style="color:var(--acc)">게임하러 가기 →</a></div></div>
+      <div class="glist" id="gameList"><div class="sub"><span data-i18n="noGames">기록이 아직 없습니다.</span> <a href="https://game.cocy.io" style="color:var(--acc)" data-i18n="goPlay">게임하러 가기 →</a></div></div>
     </div>
 
-    <h2>바로가기</h2>
+    <h2 data-i18n="secLinks">바로가기</h2>
     <div class="card">
       <div class="shortcuts">
-        <a href="https://game.cocy.io">🎮 게임 포털</a>
-        <a href="https://game.cocy.io/voicematch/">🎤 보이스 매치</a>
-        <a href="https://game.cocy.io/animalface/">🦊 동물상 판독</a>
-        <a href="https://tool.cocy.io">🛠️ 도구</a>
-        <a href="https://recipe.cocy.io">🍳 레시피</a>
+        <a href="https://game.cocy.io">🎮 <span data-i18n="scGames">게임 포털</span></a>
+        <a href="https://game.cocy.io/voicematch/">🎤 <span data-i18n="scVoice">보이스 매치</span></a>
+        <a href="https://game.cocy.io/animalface/">🦊 <span data-i18n="scFace">동물상 판독</span></a>
+        <a href="https://tool.cocy.io">🛠️ <span data-i18n="scTools">도구</span></a>
+        <a href="https://recipe.cocy.io">🍳 <span data-i18n="scRecipe">레시피</span></a>
         <a href="https://travly.cocy.io">✈️ Travly</a>
         <a href="https://log.cocy.io">📝 Log</a>
-        <a href="https://cocy.io">📰 메인</a>
+        <a href="https://cocy.io">📰 <span data-i18n="scMain">메인</span></a>
       </div>
     </div>
 
-    <h2>계정 관리</h2>
+    <h2 data-i18n="secAccount">계정 관리</h2>
     <div class="card">
       <details id="pwBox">
-        <summary>비밀번호 변경</summary>
+        <summary data-i18n="pwChange">비밀번호 변경</summary>
         <div style="padding-top:8px">
-          <input id="pwOld" type="password" placeholder="기존 비밀번호" autocomplete="current-password">
-          <input id="pwNew" type="password" placeholder="새 비밀번호 (8자 이상)" autocomplete="new-password">
-          <input id="pwNew2" type="password" placeholder="새 비밀번호 확인" autocomplete="new-password">
-          <button class="btn" id="btnPw">변경하기</button>
+          <input id="pwOld" type="password" data-ph="pwOld" placeholder="기존 비밀번호" autocomplete="current-password">
+          <input id="pwNew" type="password" data-ph="pwNew" placeholder="새 비밀번호 (8자 이상)" autocomplete="new-password">
+          <input id="pwNew2" type="password" data-ph="pwNew2" placeholder="새 비밀번호 확인" autocomplete="new-password">
+          <button class="btn" id="btnPw" data-i18n="doChange">변경하기</button>
           <div class="msg" id="pwMsg"></div>
         </div>
       </details>
       <div id="noPwNote" class="sub hidden" style="margin-top:6px"></div>
-      <button class="btn sec" id="btnLogout" style="margin-top:12px">로그아웃</button>
+      <button class="btn sec" id="btnLogout" style="margin-top:12px" data-i18n="logout">로그아웃</button>
       <!-- 탈퇴는 일부러 눈에 안 띄게. details 안에 최종 확인까지 이중 잠금 -->
       <details id="delBox" style="margin-top:14px">
-        <summary style="font-weight:400;color:var(--mut);font-size:11.5px">탈퇴하기</summary>
+        <summary style="font-weight:400;color:var(--mut);font-size:11.5px" data-i18n="delete">탈퇴하기</summary>
         <div style="padding-top:8px">
-          <div class="sub" style="margin-bottom:8px">계정과 모든 기록(게임 점수·보이스 매치·얼굴상)이 즉시 삭제되며 되돌릴 수 없습니다.</div>
-          <input id="delPw" type="password" placeholder="비밀번호 확인" autocomplete="current-password">
-          <button class="btn" id="btnDel" style="background:var(--acc)">계정 영구 삭제</button>
+          <div class="sub" style="margin-bottom:8px" data-i18n="delWarn">계정과 모든 기록(게임 점수·보이스 매치·얼굴상)이 즉시 삭제되며 되돌릴 수 없습니다.</div>
+          <input id="delPw" type="password" data-ph="pwConfirm" placeholder="비밀번호 확인" autocomplete="current-password">
+          <button class="btn" id="btnDel" style="background:var(--acc)" data-i18n="delDo">계정 영구 삭제</button>
           <div class="msg" id="delMsg"></div>
         </div>
       </details>
     </div>
   </div>
 
-  <div class="foot">COCY.IO — 계정 하나로 모든 서비스</div>
+  <div class="foot" data-i18n="foot">COCY.IO — 계정 하나로 모든 서비스</div>
 </div>
 
 <script>
 const API = 'https://relay.cocy.io/api';
+
+/* ---- i18n (ko/en/ja/tw) — 게임들과 같은 4개 언어. 서버 에러 메시지는 한국어 그대로 온다. ---- */
+const I18N = {
+  ko: { loading:'불러오는 중…', title:'프로필', intro:'보이스 매치·얼굴상·게임 기록이 계정에 모입니다. 로그인하고 시작하세요.',
+    login:'로그인', join:'가입', joinDo:'가입하기', email:'이메일', pw:'비밀번호', nickPh:'닉네임 (2~12자)', pwNew:'새 비밀번호 (8자 이상)',
+    editNick:'✎ 닉네임', save:'저장', cancel:'취소', secTraits:'내 특성', voice:'보이스 매치', face:'얼굴상', food:'음식 취향', soon:'준비 중',
+    goVoice:'측정하기 →', goFace:'판독하기 →', reVoice:'다시 측정 →', reFace:'다시 판독 →', noData:'아직 기록이 없습니다',
+    prevMatch:'이전 매치: ', lastRead:'마지막 판독 ', secGames:'게임 기록', noGames:'기록이 아직 없습니다.', goPlay:'게임하러 가기 →',
+    secLinks:'바로가기', scGames:'게임 포털', scVoice:'보이스 매치', scFace:'동물상 판독', scTools:'도구', scRecipe:'레시피', scMain:'메인',
+    secAccount:'계정 관리', pwChange:'비밀번호 변경', pwOld:'기존 비밀번호', pwNew2:'새 비밀번호 확인', doChange:'변경하기', logout:'로그아웃',
+    delete:'탈퇴하기', delWarn:'계정과 모든 기록(게임 점수·보이스 매치·얼굴상)이 즉시 삭제되며 되돌릴 수 없습니다.', pwConfirm:'비밀번호 확인', delDo:'계정 영구 삭제',
+    foot:'COCY.IO — 계정 하나로 모든 서비스', guest:'게스트', joined:'가입 ', noName:'이름 없는 사용자',
+    guestNote:'게스트 계정입니다. 이메일로 가입하면 기록이 계정에 안전하게 보관됩니다.', googleNote:'Google 로그인 전용 계정이라 비밀번호가 없습니다.',
+    nickLen:'닉네임은 2~12자', failChange:'변경 실패', nickDone:'닉네임이 변경됐습니다', pwLen:'새 비밀번호는 8자 이상', pwMismatch:'새 비밀번호가 서로 다릅니다',
+    pwDone:'변경 완료. 보안을 위해 다시 로그인해주세요.', netErr:'네트워크 오류: ', loginFail:'로그인 실패', joinFail:'가입 실패', googleFail:'구글 로그인 실패',
+    delNeedPw:'비밀번호를 입력해주세요', delConfirm:'정말 탈퇴할까요? 모든 기록이 삭제되며 되돌릴 수 없습니다.', delDone:'탈퇴가 완료됐습니다. 이용해주셔서 감사합니다.', delFail:'탈퇴 실패' },
+  en: { loading:'Loading…', title:'Profile', intro:'Your voice match, animal face and game records, all in one account.',
+    login:'Log in', join:'Sign up', joinDo:'Create account', email:'Email', pw:'Password', nickPh:'Nickname (2–12 chars)', pwNew:'New password (8+ chars)',
+    editNick:'✎ Nickname', save:'Save', cancel:'Cancel', secTraits:'My Traits', voice:'Voice Match', face:'Animal Face', food:'Food Taste', soon:'Coming soon',
+    goVoice:'Measure →', goFace:'Analyze →', reVoice:'Measure again →', reFace:'Analyze again →', noData:'No record yet',
+    prevMatch:'Previous: ', lastRead:'Last read ', secGames:'Game Records', noGames:'No records yet.', goPlay:'Play games →',
+    secLinks:'Shortcuts', scGames:'Game Portal', scVoice:'Voice Match', scFace:'Animal Face', scTools:'Tools', scRecipe:'Recipes', scMain:'Home',
+    secAccount:'Account', pwChange:'Change password', pwOld:'Current password', pwNew2:'Confirm new password', doChange:'Change', logout:'Log out',
+    delete:'Delete account', delWarn:'Your account and all records (game scores, voice match, animal face) will be deleted immediately. This cannot be undone.', pwConfirm:'Confirm password', delDo:'Delete permanently',
+    foot:'COCY.IO — one account for everything', guest:'Guest', joined:'Joined ', noName:'Unnamed user',
+    guestNote:'Guest account. Sign up with email to keep your records safe.', googleNote:'Google-only account — no password set.',
+    nickLen:'Nickname must be 2–12 chars', failChange:'Failed', nickDone:'Nickname updated', pwLen:'New password must be 8+ chars', pwMismatch:'Passwords do not match',
+    pwDone:'Done. Please log in again.', netErr:'Network error: ', loginFail:'Login failed', joinFail:'Sign-up failed', googleFail:'Google sign-in failed',
+    delNeedPw:'Enter your password', delConfirm:'Delete your account? All records will be lost forever.', delDone:'Account deleted. Thank you.', delFail:'Delete failed' },
+  ja: { loading:'読み込み中…', title:'プロフィール', intro:'ボイスマッチ・動物顔・ゲーム記録がひとつのアカウントに。',
+    login:'ログイン', join:'登録', joinDo:'アカウント作成', email:'メール', pw:'パスワード', nickPh:'ニックネーム（2〜12字）', pwNew:'新しいパスワード（8字以上）',
+    editNick:'✎ ニックネーム', save:'保存', cancel:'キャンセル', secTraits:'マイ特性', voice:'ボイスマッチ', face:'動物顔', food:'食の好み', soon:'準備中',
+    goVoice:'測定する →', goFace:'診断する →', reVoice:'もう一度測定 →', reFace:'もう一度診断 →', noData:'まだ記録がありません',
+    prevMatch:'過去のマッチ: ', lastRead:'最終診断 ', secGames:'ゲーム記録', noGames:'まだ記録がありません。', goPlay:'ゲームで遊ぶ →',
+    secLinks:'ショートカット', scGames:'ゲームポータル', scVoice:'ボイスマッチ', scFace:'動物顔診断', scTools:'ツール', scRecipe:'レシピ', scMain:'ホーム',
+    secAccount:'アカウント', pwChange:'パスワード変更', pwOld:'現在のパスワード', pwNew2:'新しいパスワード（確認）', doChange:'変更する', logout:'ログアウト',
+    delete:'退会する', delWarn:'アカウントとすべての記録（スコア・ボイスマッチ・動物顔）が即時削除され、元に戻せません。', pwConfirm:'パスワード確認', delDo:'完全に削除',
+    foot:'COCY.IO — ひとつのアカウントですべてを', guest:'ゲスト', joined:'登録 ', noName:'名無しユーザー',
+    guestNote:'ゲストアカウントです。メール登録で記録を安全に保管できます。', googleNote:'Google専用アカウントのためパスワードはありません。',
+    nickLen:'ニックネームは2〜12字', failChange:'失敗しました', nickDone:'ニックネームを変更しました', pwLen:'新しいパスワードは8字以上', pwMismatch:'パスワードが一致しません',
+    pwDone:'完了。再ログインしてください。', netErr:'ネットワークエラー: ', loginFail:'ログイン失敗', joinFail:'登録失敗', googleFail:'Googleログイン失敗',
+    delNeedPw:'パスワードを入力してください', delConfirm:'本当に退会しますか？すべての記録が失われます。', delDone:'退会が完了しました。ご利用ありがとうございました。', delFail:'退会失敗' },
+  tw: { loading:'載入中…', title:'個人檔案', intro:'聲音配對・動物臉・遊戲紀錄，全部在一個帳號。',
+    login:'登入', join:'註冊', joinDo:'建立帳號', email:'電子郵件', pw:'密碼', nickPh:'暱稱（2～12字）', pwNew:'新密碼（8字以上）',
+    editNick:'✎ 暱稱', save:'儲存', cancel:'取消', secTraits:'我的特質', voice:'聲音配對', face:'動物臉', food:'飲食偏好', soon:'即將推出',
+    goVoice:'開始測定 →', goFace:'開始診斷 →', reVoice:'再次測定 →', reFace:'再次診斷 →', noData:'尚無紀錄',
+    prevMatch:'先前配對: ', lastRead:'最後診斷 ', secGames:'遊戲紀錄', noGames:'尚無紀錄。', goPlay:'去玩遊戲 →',
+    secLinks:'捷徑', scGames:'遊戲入口', scVoice:'聲音配對', scFace:'動物臉診斷', scTools:'工具', scRecipe:'食譜', scMain:'首頁',
+    secAccount:'帳號管理', pwChange:'變更密碼', pwOld:'目前密碼', pwNew2:'確認新密碼', doChange:'變更', logout:'登出',
+    delete:'刪除帳號', delWarn:'帳號與所有紀錄（分數・聲音配對・動物臉）將立即刪除且無法復原。', pwConfirm:'確認密碼', delDo:'永久刪除',
+    foot:'COCY.IO — 一個帳號，全部服務', guest:'訪客', joined:'註冊 ', noName:'未命名用戶',
+    guestNote:'目前是訪客帳號。以電子郵件註冊可安全保存紀錄。', googleNote:'Google專用帳號，未設定密碼。',
+    nickLen:'暱稱須為2～12字', failChange:'變更失敗', nickDone:'暱稱已變更', pwLen:'新密碼須8字以上', pwMismatch:'兩次密碼不一致',
+    pwDone:'完成。請重新登入。', netErr:'網路錯誤: ', loginFail:'登入失敗', joinFail:'註冊失敗', googleFail:'Google登入失敗',
+    delNeedPw:'請輸入密碼', delConfirm:'確定要刪除帳號嗎？所有紀錄將永久消失。', delDone:'帳號已刪除。感謝使用。', delFail:'刪除失敗' },
+};
+const LANG_ORDER = ['ko','en','ja','tw'];
+const LANG_LABEL = { ko:'🌐 한국어', en:'🌐 English', ja:'🌐 日本語', tw:'🌐 繁中' };
+let LANG = (function(){
+  try { const v = localStorage.getItem('profile_lang'); if (I18N[v]) return v; } catch (e) {}
+  const l = (navigator.language || '').toLowerCase();
+  if (l.startsWith('ko')) return 'ko';
+  if (l.startsWith('ja')) return 'ja';
+  if (l.startsWith('zh')) return 'tw';
+  return 'en';
+})();
+const T = k => (I18N[LANG] || I18N.ko)[k] || I18N.ko[k] || k;
+function applyLang() {
+  document.documentElement.lang = LANG === 'tw' ? 'zh-Hant' : LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = T(el.dataset.i18n); });
+  document.querySelectorAll('[data-ph]').forEach(el => { el.placeholder = T(el.dataset.ph); });
+  document.getElementById('langBtn').textContent = LANG_LABEL[LANG];
+}
 const GOOGLE_CLIENT_ID = '402340265805-ogo2c09qujqk6gape9oea7sfh8lsegln.apps.googleusercontent.com';
 const $ = id => document.getElementById(id);
 
@@ -263,10 +339,10 @@ $('btnLogin').onclick = async () => {
     const res = await fetch(API + '/auth/login', { method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ email: $('liEmail').value.trim(), password: $('liPw').value }) });
     const d = await res.json();
-    if (!res.ok) return msg($('authMsg'), d.error || '로그인 실패');
+    if (!res.ok) return msg($('authMsg'), d.error || T('loginFail'));
     setTokens(d.accessToken, d.refreshToken);
     loadProfile();
-  } catch (e) { msg($('authMsg'), '네트워크 오류: ' + e.message); }
+  } catch (e) { msg($('authMsg'), T('netErr') + e.message); }
   finally { $('btnLogin').disabled = false; }
 };
 $('liPw').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnLogin').click(); });
@@ -277,10 +353,10 @@ $('btnJoin').onclick = async () => {
     const res = await fetch(API + '/auth/register', { method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ email: $('joEmail').value.trim(), password: $('joPw').value, nickname: $('joNick').value.trim() }) });
     const d = await res.json();
-    if (!res.ok) return msg($('authMsg'), d.error || '가입 실패');
+    if (!res.ok) return msg($('authMsg'), d.error || T('joinFail'));
     setTokens(d.accessToken, d.refreshToken);
     loadProfile();
-  } catch (e) { msg($('authMsg'), '네트워크 오류: ' + e.message); }
+  } catch (e) { msg($('authMsg'), T('netErr') + e.message); }
   finally { $('btnJoin').disabled = false; }
 };
 
@@ -294,7 +370,7 @@ $('btnJoin').onclick = async () => {
         const res = await fetch(API + '/auth/google/signin', { method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ credential: resp.credential }) });
         const d = await res.json();
-        if (!res.ok) return msg($('authMsg'), d.error || '구글 로그인 실패');
+        if (!res.ok) return msg($('authMsg'), d.error || T('googleFail'));
         setTokens(d.token || d.accessToken, d.refreshToken);
         loadProfile();
       }});
@@ -347,11 +423,11 @@ async function loadProfile() {
 
 function renderProfile() {
   const a = PROFILE.account;
-  $('pNick').textContent = a.nickname || '이름 없는 사용자';
+  $('pNick').textContent = a.nickname || T('noName');
   const parts = [];
-  if (a.isAnonymous) parts.push('<span class="badge">게스트</span>');
+  if (a.isAnonymous) parts.push('<span class="badge">' + T('guest') + '</span>');
   else if (a.email) parts.push(esc(a.email) + (a.hasGoogle ? ' <span class="badge g">Google</span>' : ''));
-  if (a.createdAt) parts.push('가입 ' + a.createdAt.slice(0, 10));
+  if (a.createdAt) parts.push(T('joined') + a.createdAt.slice(0, 10));
   $('pMeta').innerHTML = parts.join(' · ');
   if (a.avatarUrl) $('avatar').innerHTML = '<img src="' + esc(a.avatarUrl) + '" alt="">';
   else $('avatar').textContent = (a.nickname || '?').slice(0, 1).toUpperCase();
@@ -365,12 +441,12 @@ function renderProfile() {
     if (others.length) {
       const sub = tv.querySelector('.vm-sub');
       sub.classList.remove('hidden');
-      sub.innerHTML = '이전 매치: ' + others.map(r => '<span data-slug="' + esc(r.artist) + '">' + esc(r.artist) + '</span> ' + Math.round(r.pct) + '%').join(' · ');
+      sub.innerHTML = T('prevMatch') + others.map(r => '<span data-slug="' + esc(r.artist) + '">' + esc(r.artist) + '</span> ' + Math.round(r.pct) + '%').join(' · ');
     }
-    tv.querySelector('.go').textContent = '다시 측정 →';
+    tv.querySelector('.go').textContent = T('reVoice');
   } else {
     tv.classList.add('empty');
-    tv.querySelector('.v').textContent = '아직 기록이 없습니다';
+    tv.querySelector('.v').textContent = T('noData');
   }
 
   /* 얼굴상 */
@@ -378,11 +454,11 @@ function renderProfile() {
   const tf = $('trFace');
   if (face?.value?.animal) {
     tf.querySelector('.v').innerHTML = '<span data-animal="' + esc(face.value.animal) + '">' + esc(face.value.animal) + '</span>';
-    tf.querySelector('.d').textContent = '마지막 판독 ' + (face.updated_at || '').slice(0, 10);
-    tf.querySelector('.go').textContent = '다시 판독 →';
+    tf.querySelector('.d').textContent = T('lastRead') + (face.updated_at || '').slice(0, 10);
+    tf.querySelector('.go').textContent = T('reFace');
   } else {
     tf.classList.add('empty');
-    tf.querySelector('.v').textContent = '아직 기록이 없습니다';
+    tf.querySelector('.v').textContent = T('noData');
   }
 
   /* 게임 기록 */
@@ -399,9 +475,7 @@ function renderProfile() {
     $('pwBox').classList.add('hidden');
     const note = $('noPwNote');
     note.classList.remove('hidden');
-    note.textContent = a.isAnonymous
-      ? '게스트 계정입니다. 이메일로 가입하면 기록이 계정에 안전하게 보관됩니다.'
-      : 'Google 로그인 전용 계정이라 비밀번호가 없습니다.';
+    note.textContent = a.isAnonymous ? T('guestNote') : T('googleNote');
   }
 }
 
@@ -455,27 +529,27 @@ $('btnEditNick').onclick = () => {
 $('nickCancel').onclick = () => $('nickEdit').classList.add('hidden');
 $('nickSave').onclick = async () => {
   const nick = $('nickInput').value.trim();
-  if (nick.length < 2 || nick.length > 12) return msg($('pMsg'), '닉네임은 2~12자');
+  if (nick.length < 2 || nick.length > 12) return msg($('pMsg'), T('nickLen'));
   const res = await api('/auth/nickname', { method:'POST', body: JSON.stringify({ nickname: nick }) });
   const d = await res.json().catch(() => ({}));
-  if (!res.ok) return msg($('pMsg'), d.error || '변경 실패');
+  if (!res.ok) return msg($('pMsg'), d.error || T('failChange'));
   PROFILE.account.nickname = nick;
   $('pNick').textContent = nick;
   $('nickEdit').classList.add('hidden');
-  msg($('pMsg'), '닉네임이 변경됐습니다', true);
+  msg($('pMsg'), T('nickDone'), true);
 };
 
 /* ---- 비밀번호 변경 ---- */
 $('btnPw').onclick = async () => {
   const o = $('pwOld').value, n = $('pwNew').value, n2 = $('pwNew2').value;
-  if (n.length < 8) return msg($('pwMsg'), '새 비밀번호는 8자 이상');
-  if (n !== n2) return msg($('pwMsg'), '새 비밀번호가 서로 다릅니다');
+  if (n.length < 8) return msg($('pwMsg'), T('pwLen'));
+  if (n !== n2) return msg($('pwMsg'), T('pwMismatch'));
   $('btnPw').disabled = true;
   try {
     const res = await api('/auth/password', { method:'POST', body: JSON.stringify({ oldPassword: o, newPassword: n }) });
     const d = await res.json().catch(() => ({}));
-    if (!res.ok) return msg($('pwMsg'), d.error || '변경 실패');
-    msg($('pwMsg'), '변경 완료. 보안을 위해 다시 로그인해주세요.', true);
+    if (!res.ok) return msg($('pwMsg'), d.error || T('failChange'));
+    msg($('pwMsg'), T('pwDone'), true);
     setTimeout(() => { clearTokens(); location.reload(); }, 1600);
   } finally { $('btnPw').disabled = false; }
 };
@@ -485,15 +559,15 @@ $('btnLogout').onclick = () => { clearTokens(); localStorage.removeItem(CACHE_KE
 /* ---- 탈퇴 ---- */
 $('btnDel').onclick = async () => {
   const hasPw = !!PROFILE?.account?.hasPassword;
-  if (hasPw && !$('delPw').value) return msg($('delMsg'), '비밀번호를 입력해주세요');
-  if (!confirm('정말 탈퇴할까요? 모든 기록이 삭제되며 되돌릴 수 없습니다.')) return;
+  if (hasPw && !$('delPw').value) return msg($('delMsg'), T('delNeedPw'));
+  if (!confirm(T('delConfirm'))) return;
   $('btnDel').disabled = true;
   try {
     const res = await api('/auth/delete', { method:'POST', body: JSON.stringify({ password: $('delPw').value }) });
     const d = await res.json().catch(() => ({}));
-    if (!res.ok) return msg($('delMsg'), d.error || '탈퇴 실패');
+    if (!res.ok) return msg($('delMsg'), d.error || T('delFail'));
     clearTokens(); localStorage.removeItem(CACHE_KEY);
-    alert('탈퇴가 완료됐습니다. 이용해주셔서 감사합니다.');
+    alert(T('delDone'));
     location.href = 'https://cocy.io/';
   } finally { $('btnDel').disabled = false; }
 };
@@ -514,6 +588,14 @@ const fmt = v => typeof v === 'number' ? v.toLocaleString('ko-KR') : v;
   history.replaceState(null, '', location.pathname + location.search);
 })();
 
+$('langBtn').onclick = () => {
+  LANG = LANG_ORDER[(LANG_ORDER.indexOf(LANG) + 1) % LANG_ORDER.length];
+  try { localStorage.setItem('profile_lang', LANG); } catch (e) {}
+  applyLang();
+  if (PROFILE) renderProfile();   // 동적 문자열(기록 없음/이전 매치 등)도 새 언어로
+};
+
+applyLang();
 loadProfile();
 </script>
 </body>
