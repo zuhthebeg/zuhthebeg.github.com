@@ -69,6 +69,9 @@ input:focus{outline:2px solid var(--ink);outline-offset:-1px}
 details{margin-top:10px}
 summary{cursor:pointer;font-size:13px;font-weight:700;padding:6px 0}
 .soon{opacity:.55}
+.shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px}
+.shortcuts a{display:block;padding:10px 12px;border:1px solid var(--hair);background:#fff;transition:border-color .1s}
+.shortcuts a:hover{border-color:var(--ink)}
 #gBtn{margin-top:10px;display:flex;justify-content:center}
 </style>
 </head>
@@ -162,6 +165,20 @@ summary{cursor:pointer;font-size:13px;font-weight:700;padding:6px 0}
       <div class="glist" id="gameList"><div class="sub">기록이 아직 없습니다. <a href="https://game.cocy.io" style="color:var(--acc)">게임하러 가기 →</a></div></div>
     </div>
 
+    <h2>바로가기</h2>
+    <div class="card">
+      <div class="shortcuts">
+        <a href="https://game.cocy.io">🎮 게임 포털</a>
+        <a href="https://game.cocy.io/voicematch/">🎤 보이스 매치</a>
+        <a href="https://game.cocy.io/animalface/">🦊 동물상 판독</a>
+        <a href="https://tool.cocy.io">🛠️ 도구</a>
+        <a href="https://recipe.cocy.io">🍳 레시피</a>
+        <a href="https://travly.cocy.io">✈️ Travly</a>
+        <a href="https://log.cocy.io">📝 Log</a>
+        <a href="https://cocy.io">📰 메인</a>
+      </div>
+    </div>
+
     <h2>계정 관리</h2>
     <div class="card">
       <details id="pwBox">
@@ -176,6 +193,16 @@ summary{cursor:pointer;font-size:13px;font-weight:700;padding:6px 0}
       </details>
       <div id="noPwNote" class="sub hidden" style="margin-top:6px"></div>
       <button class="btn sec" id="btnLogout" style="margin-top:12px">로그아웃</button>
+      <!-- 탈퇴는 일부러 눈에 안 띄게. details 안에 최종 확인까지 이중 잠금 -->
+      <details id="delBox" style="margin-top:14px">
+        <summary style="font-weight:400;color:var(--mut);font-size:11.5px">탈퇴하기</summary>
+        <div style="padding-top:8px">
+          <div class="sub" style="margin-bottom:8px">계정과 모든 기록(게임 점수·보이스 매치·얼굴상)이 즉시 삭제되며 되돌릴 수 없습니다.</div>
+          <input id="delPw" type="password" placeholder="비밀번호 확인" autocomplete="current-password">
+          <button class="btn" id="btnDel" style="background:var(--acc)">계정 영구 삭제</button>
+          <div class="msg" id="delMsg"></div>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -280,17 +307,42 @@ $('btnJoin').onclick = async () => {
 /* ---- 프로필 렌더 ---- */
 let PROFILE = null;
 
+/* stale-while-revalidate: 캐시가 있으면 즉시 그리고, 뒤에서 새로 받아 갱신한다.
+   프로필 API가 D1 조인 4개라 체감이 느리다는 피드백 → 재방문은 0ms 렌더가 목표. */
+const CACHE_KEY = 'profile_cache_v1';
+const CACHE_TTL = 10 * 60 * 1000;   // 이보다 오래된 캐시는 그리지 않고 버린다
+
+function readCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY));
+    if (c && c.at && Date.now() - c.at < CACHE_TTL) return c.data;
+  } catch (e) {}
+  return null;
+}
+
 async function loadProfile() {
   if (!getToken()) return show('authView');
-  show('loading');
+  const cached = readCache();
+  if (cached) {           // 캐시 즉시 렌더 → 아래에서 조용히 재검증
+    PROFILE = cached;
+    renderProfile();
+    show('profileView');
+    hydrateNames();
+  } else {
+    show('loading');
+  }
   let res;
   try { res = await api('/user/profile'); }
-  catch (e) { return show('authView'); }
-  if (!res.ok) { if (res.status === 401) clearTokens(); return show('authView'); }
-  PROFILE = (await res.json());
+  catch (e) { return cached ? undefined : show('authView'); }
+  if (!res.ok) {
+    if (res.status === 401) { clearTokens(); localStorage.removeItem(CACHE_KEY); return show('authView'); }
+    return cached ? undefined : show('authView');
+  }
+  PROFILE = await res.json();
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), data: PROFILE })); } catch (e) {}
   renderProfile();
   show('profileView');
-  hydrateNames();   // 가수/동물 표시명은 뒤에 천천히 채운다
+  hydrateNames();
 }
 
 function renderProfile() {
@@ -343,6 +395,7 @@ function renderProfile() {
 
   /* 계정 관리: 비번 없는 계정(구글 전용/게스트)은 변경 폼 대신 안내 */
   if (!a.hasPassword) {
+    $('delPw').classList.add('hidden');   // 확인할 비번이 없는 계정
     $('pwBox').classList.add('hidden');
     const note = $('noPwNote');
     note.classList.remove('hidden');
@@ -353,21 +406,42 @@ function renderProfile() {
 }
 
 /* 가수 slug·동물 id → 표시 이름. 데이터가 있을 때만 그 서비스의 정본 JSON을 가져온다. */
+/* 표시명 매핑도 캐시한다. singers.json이 680KB라(임베딩 포함) 매번 받으면
+   그게 제일 느리다 — 이름 맵만 뽑아 7일 보관. */
+const NAMES_KEY = 'names_cache_v1';
+const NAMES_TTL = 7 * 24 * 3600 * 1000;
+
+async function getNameMap(kind) {
+  let cache = {};
+  try { cache = JSON.parse(localStorage.getItem(NAMES_KEY)) || {}; } catch (e) {}
+  const hit = cache[kind];
+  if (hit && Date.now() - hit.at < NAMES_TTL) return hit.map;
+  const map = {};
+  if (kind === 'singers') {
+    const singers = await fetch('https://game.cocy.io/voicematch/singers.json').then(r => r.json());
+    for (const x of singers) map[x.slug] = x.name;
+  } else {
+    const d = await fetch('https://game.cocy.io/animalface/animals.json?v=10').then(r => r.json());
+    for (const a of d.animals) map[a.id] = a.name;
+  }
+  cache[kind] = { at: Date.now(), map };
+  try { localStorage.setItem(NAMES_KEY, JSON.stringify(cache)); } catch (e) {}
+  return map;
+}
+
 async function hydrateNames() {
   const slugEls = document.querySelectorAll('[data-slug]');
   if (slugEls.length) {
     try {
-      const singers = await fetch('https://game.cocy.io/voicematch/singers.json').then(r => r.json());
-      const byManifest = {}; for (const s of singers) byManifest[s.slug] = s.name;
-      slugEls.forEach(el => { const n = byManifest[el.dataset.slug]; if (n) el.textContent = n; });
+      const m = await getNameMap('singers');
+      slugEls.forEach(el => { const n = m[el.dataset.slug]; if (n) el.textContent = n; });
     } catch (e) {}
   }
   const aniEls = document.querySelectorAll('[data-animal]');
   if (aniEls.length) {
     try {
-      const d = await fetch('https://game.cocy.io/animalface/animals.json?v=10').then(r => r.json());
-      const byId = {}; for (const a of d.animals) byId[a.id] = a.name;
-      aniEls.forEach(el => { const n = byId[el.dataset.animal]; if (n) el.textContent = n; });
+      const m = await getNameMap('animals');
+      aniEls.forEach(el => { const n = m[el.dataset.animal]; if (n) el.textContent = n; });
     } catch (e) {}
   }
 }
@@ -406,7 +480,23 @@ $('btnPw').onclick = async () => {
   } finally { $('btnPw').disabled = false; }
 };
 
-$('btnLogout').onclick = () => { clearTokens(); location.reload(); };
+$('btnLogout').onclick = () => { clearTokens(); localStorage.removeItem(CACHE_KEY); location.reload(); };
+
+/* ---- 탈퇴 ---- */
+$('btnDel').onclick = async () => {
+  const hasPw = !!PROFILE?.account?.hasPassword;
+  if (hasPw && !$('delPw').value) return msg($('delMsg'), '비밀번호를 입력해주세요');
+  if (!confirm('정말 탈퇴할까요? 모든 기록이 삭제되며 되돌릴 수 없습니다.')) return;
+  $('btnDel').disabled = true;
+  try {
+    const res = await api('/auth/delete', { method:'POST', body: JSON.stringify({ password: $('delPw').value }) });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) return msg($('delMsg'), d.error || '탈퇴 실패');
+    clearTokens(); localStorage.removeItem(CACHE_KEY);
+    alert('탈퇴가 완료됐습니다. 이용해주셔서 감사합니다.');
+    location.href = 'https://cocy.io/';
+  } finally { $('btnDel').disabled = false; }
+};
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt = v => typeof v === 'number' ? v.toLocaleString('ko-KR') : v;
