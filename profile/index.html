@@ -62,6 +62,18 @@ input:focus{outline:2px solid var(--ink);outline-offset:-1px}
 .glist .g b{font-variant-numeric:tabular-nums}
 .glist .g .lb{color:var(--ink)}
 .vm-sub{font-size:12px;color:var(--mut);margin-top:6px;line-height:1.7}
+.spud-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.spud-title{font-family:var(--serif);font-size:17px;font-weight:700}
+.spud-head .go{font-size:11.5px;color:var(--acc);white-space:nowrap}
+.spud-stats{display:flex;flex-wrap:wrap;gap:8px 18px;margin:12px 0;font-size:12px}
+.spud-stats b{font-variant-numeric:tabular-nums;font-size:14px}
+.spud-collection{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;border-top:1px dashed var(--hair);padding-top:12px}
+.spud-collection div{font-size:11px;color:var(--mut)}
+.spud-collection b{display:block;color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}
+.spud-chars{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.spud-char{position:relative;width:38px;height:38px}
+.spud-char img{width:100%;height:100%;object-fit:contain}
+.spud-char .crown{position:absolute;top:-7px;right:-6px;font-size:13px}
 .foot{margin-top:34px;font-size:11px;color:var(--mut);text-align:center;letter-spacing:.06em}
 .hidden{display:none!important}
 .inline-edit{display:flex;gap:6px}
@@ -168,6 +180,25 @@ summary{cursor:pointer;font-size:13px;font-weight:700;padding:6px 0}
       <div class="glist" id="gameList"><div class="sub"><span data-i18n="noGames">기록이 아직 없습니다.</span> <a href="https://game.cocy.io" style="color:var(--acc)" data-i18n="goPlay">게임하러 가기 →</a></div></div>
     </div>
 
+    <div class="card hidden" id="spudCard">
+      <div class="spud-head">
+        <div class="spud-title" data-i18n="spudTitle">감자특공대 도감</div>
+        <a class="go" href="https://game.cocy.io/spudsquad/" data-i18n="spudGo">플레이하기 →</a>
+      </div>
+      <div class="spud-stats">
+        <span><span data-i18n="spudWave">최고 웨이브</span> <b id="spudWave">0</b></span>
+        <span><span data-i18n="spudPlayed">플레이한 캐릭터</span> <b id="spudPlayed">0</b></span>
+        <span>👑 <span data-i18n="spudWins">승리</span> <b id="spudWins">0</b></span>
+      </div>
+      <div class="spud-collection">
+        <div><span data-i18n="spudHeroes">영웅</span><b id="spudHeroes">0 / 15</b></div>
+        <div><span data-i18n="spudWeapons">무기</span><b id="spudWeapons">0 / 14</b></div>
+        <div><span data-i18n="spudItems">아이템</span><b id="spudItems">0 / 63</b></div>
+        <div><span data-i18n="spudEnemies">적</span><b id="spudEnemies">0 / 14</b></div>
+      </div>
+      <div class="spud-chars" id="spudChars"></div>
+    </div>
+
     <h2 data-i18n="secLinks">바로가기</h2>
     <div class="card">
       <div class="shortcuts">
@@ -222,6 +253,7 @@ const I18N = {
     editNick:'✎ 닉네임', save:'저장', cancel:'취소', secTraits:'내 특성', voice:'보이스 매치', face:'얼굴상', food:'음식 취향', soon:'준비 중',
     goVoice:'측정하기 →', goFace:'판독하기 →', reVoice:'다시 측정 →', reFace:'다시 판독 →', noData:'아직 기록이 없습니다',
     prevMatch:'이전 매치: ', lastRead:'마지막 판독 ', secGames:'게임 기록', noGames:'기록이 아직 없습니다.', goPlay:'게임하러 가기 →',
+    spudTitle:'감자특공대 도감', spudGo:'플레이하기 →', spudWave:'최고 웨이브', spudPlayed:'플레이한 캐릭터', spudWins:'승리', spudHeroes:'영웅', spudWeapons:'무기', spudItems:'아이템', spudEnemies:'적',
     secLinks:'바로가기', scGames:'게임 포털', scVoice:'보이스 매치', scFace:'동물상 판독', scTools:'도구', scRecipe:'레시피', scMain:'메인',
     secAccount:'계정 관리', pwChange:'비밀번호 변경', pwOld:'기존 비밀번호', pwNew2:'새 비밀번호 확인', doChange:'변경하기', logout:'로그아웃',
     delete:'탈퇴하기', delWarn:'계정과 모든 기록(게임 점수·보이스 매치·얼굴상)이 즉시 삭제되며 되돌릴 수 없습니다.', pwConfirm:'비밀번호 확인', delDo:'계정 영구 삭제',
@@ -235,6 +267,7 @@ const I18N = {
     editNick:'✎ Nickname', save:'Save', cancel:'Cancel', secTraits:'My Traits', voice:'Voice Match', face:'Animal Face', food:'Food Taste', soon:'Coming soon',
     goVoice:'Measure →', goFace:'Analyze →', reVoice:'Measure again →', reFace:'Analyze again →', noData:'No record yet',
     prevMatch:'Previous: ', lastRead:'Last read ', secGames:'Game Records', noGames:'No records yet.', goPlay:'Play games →',
+    spudTitle:'Spud Squad Collection', spudGo:'Play →', spudWave:'Best wave', spudPlayed:'Heroes played', spudWins:'Wins', spudHeroes:'Heroes', spudWeapons:'Weapons', spudItems:'Items', spudEnemies:'Enemies',
     secLinks:'Shortcuts', scGames:'Game Portal', scVoice:'Voice Match', scFace:'Animal Face', scTools:'Tools', scRecipe:'Recipes', scMain:'Home',
     secAccount:'Account', pwChange:'Change password', pwOld:'Current password', pwNew2:'Confirm new password', doChange:'Change', logout:'Log out',
     delete:'Delete account', delWarn:'Your account and all records (game scores, voice match, animal face) will be deleted immediately. This cannot be undone.', pwConfirm:'Confirm password', delDo:'Delete permanently',
@@ -248,6 +281,7 @@ const I18N = {
     editNick:'✎ ニックネーム', save:'保存', cancel:'キャンセル', secTraits:'マイ特性', voice:'ボイスマッチ', face:'動物顔', food:'食の好み', soon:'準備中',
     goVoice:'測定する →', goFace:'診断する →', reVoice:'もう一度測定 →', reFace:'もう一度診断 →', noData:'まだ記録がありません',
     prevMatch:'過去のマッチ: ', lastRead:'最終診断 ', secGames:'ゲーム記録', noGames:'まだ記録がありません。', goPlay:'ゲームで遊ぶ →',
+    spudTitle:'ポテト部隊図鑑', spudGo:'プレイする →', spudWave:'最高ウェーブ', spudPlayed:'プレイしたキャラ', spudWins:'勝利', spudHeroes:'ヒーロー', spudWeapons:'武器', spudItems:'アイテム', spudEnemies:'敵',
     secLinks:'ショートカット', scGames:'ゲームポータル', scVoice:'ボイスマッチ', scFace:'動物顔診断', scTools:'ツール', scRecipe:'レシピ', scMain:'ホーム',
     secAccount:'アカウント', pwChange:'パスワード変更', pwOld:'現在のパスワード', pwNew2:'新しいパスワード（確認）', doChange:'変更する', logout:'ログアウト',
     delete:'退会する', delWarn:'アカウントとすべての記録（スコア・ボイスマッチ・動物顔）が即時削除され、元に戻せません。', pwConfirm:'パスワード確認', delDo:'完全に削除',
@@ -261,6 +295,7 @@ const I18N = {
     editNick:'✎ 暱稱', save:'儲存', cancel:'取消', secTraits:'我的特質', voice:'聲音配對', face:'動物臉', food:'飲食偏好', soon:'即將推出',
     goVoice:'開始測定 →', goFace:'開始診斷 →', reVoice:'再次測定 →', reFace:'再次診斷 →', noData:'尚無紀錄',
     prevMatch:'先前配對: ', lastRead:'最後診斷 ', secGames:'遊戲紀錄', noGames:'尚無紀錄。', goPlay:'去玩遊戲 →',
+    spudTitle:'馬鈴薯特攻隊圖鑑', spudGo:'開始遊戲 →', spudWave:'最高波次', spudPlayed:'玩過的角色', spudWins:'勝利', spudHeroes:'英雄', spudWeapons:'武器', spudItems:'道具', spudEnemies:'敵人',
     secLinks:'捷徑', scGames:'遊戲入口', scVoice:'聲音配對', scFace:'動物臉診斷', scTools:'工具', scRecipe:'食譜', scMain:'首頁',
     secAccount:'帳號管理', pwChange:'變更密碼', pwOld:'目前密碼', pwNew2:'確認新密碼', doChange:'變更', logout:'登出',
     delete:'刪除帳號', delWarn:'帳號與所有紀錄（分數・聲音配對・動物臉）將立即刪除且無法復原。', pwConfirm:'確認密碼', delDo:'永久刪除',
@@ -459,6 +494,28 @@ function renderProfile() {
   } else {
     tf.classList.add('empty');
     tf.querySelector('.v').textContent = T('noData');
+  }
+
+  /* 감자특공대 도감. 총수는 spudsquad/js/data.js (2026-09-28) 기준. */
+  const squad = PROFILE.traits?.spudsquad?.value;
+  $('spudCard').classList.toggle('hidden', !squad || typeof squad !== 'object');
+  if (squad && typeof squad === 'object') {
+    const total = { heroes:15, weapons:14, items:63, enemies:14 };
+    const chars = squad.c && typeof squad.c === 'object' && !Array.isArray(squad.c) ?
+      Object.entries(squad.c).filter(([id, record]) => /^[a-z0-9_-]+$/.test(id) && record && typeof record === 'object') : [];
+    const num = n => Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+    const count = (arr, max) => Math.min(max, Array.isArray(arr) ? new Set(arr.filter(id => typeof id === 'string')).size : 0);
+    $('spudWave').textContent = Math.max(0, ...chars.map(([, r]) => num(r.b)));
+    $('spudPlayed').textContent = chars.length;
+    $('spudWins').textContent = chars.reduce((sum, [, r]) => sum + num(r.w), 0);
+    $('spudHeroes').textContent = Math.min(total.heroes, chars.length) + ' / ' + total.heroes;
+    $('spudWeapons').textContent = count(squad.w, total.weapons) + ' / ' + total.weapons;
+    $('spudItems').textContent = count(squad.i, total.items) + ' / ' + total.items;
+    $('spudEnemies').textContent = count(squad.e, total.enemies) + ' / ' + total.enemies;
+    $('spudChars').innerHTML = chars.map(([id, r]) =>
+      '<span class="spud-char"><img src="https://game.cocy.io/spudsquad/assets/char_' + esc(id) + '.webp" alt="' + esc(T('spudHeroes') + ' ' + id) + '">' +
+      (num(r.w) ? '<span class="crown" aria-label="' + esc(T('spudWins')) + '">👑</span>' : '') + '</span>'
+    ).join('');
   }
 
   /* 게임 기록 */
